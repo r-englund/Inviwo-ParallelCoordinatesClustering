@@ -1,5 +1,5 @@
-#ifndef IVW_DENSITYMAPRENDERER_H
-#define IVW_DENSITYMAPRENDERER_H
+#ifndef IVW_DENSITYMAPFILTERING_H
+#define IVW_DENSITYMAPFILTERING_H
 
 #include <inviwo/core/processors/processor.h>
 
@@ -7,6 +7,7 @@
 #include <inviwo/core/common/inviwo.h>
 #include <inviwo/core/properties/fileproperty.h>
 #include <inviwo/core/properties/buttonproperty.h>
+#include <inviwo/core/properties/optionproperty.h>
 
 #include <modules/pcclustering/datastructures/pcpdata.h>
 
@@ -17,27 +18,28 @@
 
 namespace inviwo {
 
-class IVW_MODULE_PCCLUSTERING_API DensityMapRenderer : public Processor {
+class IVW_MODULE_PCCLUSTERING_API DensityMapFiltering : public Processor {
 public:
     const ProcessorInfo getProcessorInfo() const override;
     static const ProcessorInfo processorInfo_;
-    DensityMapRenderer();
-    ~DensityMapRenderer();
+    DensityMapFiltering();
+    ~DensityMapFiltering();
 
     void process() override;
 
 private:
     BinningDataInport _inport;
+    BinningDataOutport _outport;
 
-    ImageOutport _outport;
+    OptionPropertyInt _filteringMethod;
 
-    FloatProperty _renderScaling;
+    // Percentage
+    FloatProperty _percentage;
 
-    Shader _shader;
-    GLuint _vao;
-    GLuint _countBuffer;
+    //Shader _shader;
+    //GLuint _vao;
 };
 
 }  // namespace
 
-#endif  // IVW_PCPRENDERER_H
+#endif  // IVW_DENSITYMAPGENERATOR_H

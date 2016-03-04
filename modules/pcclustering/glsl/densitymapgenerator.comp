@@ -1,4 +1,4 @@
-layout (local_size_x = 32) in;
+layout (local_size_variable) in;
 
 layout (std430, binding = 0) readonly buffer Values {
     float data[];
@@ -40,7 +40,7 @@ int getBinIndex(float value) {
 
 void incrementBin(int bin, int dim) {
     atomicAdd(
-        outputValues.values[bin * _nDimensions + dim],
+        outputValues.values[dim * _nBins + bin],
         1
     );
 }

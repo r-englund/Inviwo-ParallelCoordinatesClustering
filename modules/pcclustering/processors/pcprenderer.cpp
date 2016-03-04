@@ -57,11 +57,14 @@ PCPRenderer::~PCPRenderer() {
 void PCPRenderer::process() {
     if (!_inport.hasData())
         return;
-
     std::shared_ptr<const ParallelCoordinatesPlotData> data = _inport.getData();
 
-
+    utilgl::ClearColor colorState(glm::vec4(0.0));
     utilgl::activateAndClearTarget(_outport);
+
+    utilgl::GlBoolState blendModeEnableState(GL_BLEND, true);
+    utilgl::BlendModeEquationState blendModeState(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA, GL_FUNC_ADD);
+    //utilgl::BlendModeState blendModeState(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
     _shader.activate();
 
@@ -71,9 +74,6 @@ void PCPRenderer::process() {
 
     glBindVertexArray(_vao);
 
-
-    glEnable(GL_BLEND);
-    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
     glBindBuffer(GL_ARRAY_BUFFER, data->ssboData);
     glEnableVertexAttribArray(0);
@@ -86,8 +86,6 @@ void PCPRenderer::process() {
 
     glBindBuffer(GL_ARRAY_BUFFER, 0);
     glBindVertexArray(0);
-
-    glDisable(GL_BLEND);
 
     _shader.deactivate();
 

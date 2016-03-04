@@ -6,6 +6,7 @@ ivw_module(PCClustering)
 # Add header files
 set(HEADER_FILES   
     ${CMAKE_CURRENT_SOURCE_DIR}/datastructures/pcpdata.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/processors/densitymapfiltering.h
     ${CMAKE_CURRENT_SOURCE_DIR}/processors/densitymapgenerator.h
     ${CMAKE_CURRENT_SOURCE_DIR}/processors/densitymaprenderer.h
     ${CMAKE_CURRENT_SOURCE_DIR}/processors/pcpreader.h
@@ -17,6 +18,7 @@ ivw_group("Header Files" ${HEADER_FILES})
 #--------------------------------------------------------------------
 # Add source files
 set(SOURCE_FILES
+    ${CMAKE_CURRENT_SOURCE_DIR}/processors/densitymapfiltering.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/processors/densitymapgenerator.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/processors/densitymaprenderer.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/processors/pcpreader.cpp

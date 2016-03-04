@@ -7,6 +7,7 @@ layout (std430, binding = 0) buffer BinningValues {
 
 uniform int _nBins;
 uniform int _nDimensions;
+uniform float _renderScaling;
 
 uniform ivec2 _outportSize;
 
@@ -31,7 +32,8 @@ float getDimensionNormalized(int dim) {
 }
 
 int getValue(int bin, int dimension) {
-    return binning.values[bin * _nDimensions + dimension];
+    return binning.values[dimension * _nBins + bin];
+    // return binning.values[bin * _nDimensions + dimension];
 }
 
 void main() {
@@ -52,7 +54,7 @@ void main() {
 
 
     FragData0 = vec4(
-        vec3(value / 3001.0),
+        vec3(value / _renderScaling),
         1.0
     );
 

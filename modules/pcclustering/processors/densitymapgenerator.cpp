@@ -36,7 +36,7 @@ DensityMapGenerator::DensityMapGenerator()
     , _inport("in.data")
     , _outport("out.data")
     , _nBins("_nBins", "# Bins", 32, 1, 2048)
-    , _shader({{ShaderType::Compute, "densitymapgenerator.comp" }})
+    , _shader({{ShaderType::Compute, "densitymapgenerator.comp" }}, Shader::Build::No)
 {
     glGenVertexArrays(1, &_vao);
 
@@ -44,6 +44,13 @@ DensityMapGenerator::DensityMapGenerator()
     addPort(_outport);
 
     addProperty(_nBins);
+
+    _shader.getShaderObject(ShaderType::Compute)->addShaderExtension(
+        "GL_ARB_compute_variable_group_size",
+        true
+    );
+
+    _shader.build();
 
     _shader.onReload([this]() {invalidate(InvalidationLevel::InvalidOutput); });
 }
@@ -79,25 +86,17 @@ void DensityMapGenerator::process() {
     glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 2, outData->ssboBins);
 
     glMemoryBarrier(GL_ALL_BARRIER_BITS);
-    //glDispatchCompute(_nBins / 8, 1, 1);
-    glDispatchCompute(data->nValues / 32, 1, 1);
+    //glDispatchCompute(data->nValues / 32, 1, 1);
+    glDispatchComputeGroupSizeARB(
+        data->nValues / 32, 1, 1,
+        32, 1, 1
+    );
     glMemoryBarrier(GL_ALL_BARRIER_BITS);
 
     _shader.deactivate();
 
     _outport.setData(outData);
     LGL_ERROR;
-
-    //glBindBuffer(GL_SHADER_STORAGE_BUFFER, outData->ssboBins);
-    //int* ptr = (int*)glMapBuffer(GL_SHADER_STORAGE_BUFFER, GL_READ_ONLY);
-    //for (int i = 0; i < _nBins * nDimensions; ++i) {
-    //    if (ptr[i] != 0) {
-    //        LogInfo(i << ": " << ptr[i]);
-    //    }
-    //}
-
-    //glUnmapBuffer(GL_SHADER_STORAGE_BUFFER);
-
 }
 
 

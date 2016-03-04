@@ -35,6 +35,7 @@ DensityMapRenderer::DensityMapRenderer()
     : Processor()
     , _inport("data")
     , _outport("outport")
+    , _renderScaling("_renderScaling", "Scaling Factor", 1.f, 1.f, 5000.f)
     , _shader("densitymaprenderer.frag")
 {
     glGenVertexArrays(1, &_vao);
@@ -42,6 +43,8 @@ DensityMapRenderer::DensityMapRenderer()
 
     addPort(_inport);
     addPort(_outport);
+
+    addProperty(_renderScaling);
 
     _shader.onReload([this]() {invalidate(InvalidationLevel::InvalidOutput); });
 }
@@ -64,6 +67,7 @@ void DensityMapRenderer::process() {
 
     _shader.setUniform("_nBins", data->nBins);
     _shader.setUniform("_nDimensions", data->nDimensions);
+    _shader.setUniform("_renderScaling", _renderScaling);
     _shader.setUniform(
         "_outportSize",
         glm::ivec2(_outport.getDimensions().x, _outport.getDimensions().y)
