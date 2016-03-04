@@ -88,8 +88,8 @@ void DensityMapGenerator::process() {
     glMemoryBarrier(GL_ALL_BARRIER_BITS);
     //glDispatchCompute(data->nValues / 32, 1, 1);
     glDispatchComputeGroupSizeARB(
-        data->nValues / 32, 1, 1,
-        32, 1, 1
+        data->nValues / _nBins, 1, 1,
+        _nBins, 1, 1
     );
     glMemoryBarrier(GL_ALL_BARRIER_BITS);
 

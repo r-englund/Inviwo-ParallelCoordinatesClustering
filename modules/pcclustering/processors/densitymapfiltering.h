@@ -28,15 +28,24 @@ public:
     void process() override;
 
 private:
-    BinningDataInport _inport;
-    BinningDataOutport _outport;
+    void filterBins(const BinningData* inData, BinningData* outData);
+    void filterBinsPercentage(const BinningData* inData, BinningData* outData, std::vector<int>& values);
+    void filterBinsTopology(const BinningData* inData, BinningData* outData, std::vector<int>& values);
+
+    BinningDataInport _binInport;
+    PCPDataInport _pcpInport;
+    
+    BinningDataOutport _binOutport;
+    PCPDataOutport _pcpOutport;
+
 
     OptionPropertyInt _filteringMethod;
 
     // Percentage
     FloatProperty _percentage;
 
-    //Shader _shader;
+    Shader _shader;
+    //GLuint _accumulationBuffer;
     //GLuint _vao;
 };
 

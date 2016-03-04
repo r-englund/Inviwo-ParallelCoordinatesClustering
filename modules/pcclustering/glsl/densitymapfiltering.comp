@@ -1,0 +1,76 @@
+layout (local_size_variable) in;
+
+// layout (std430, binding = 0) buffer Accumulation {
+//     int value;
+// } accumulation;
+
+layout (binding = 0, offset = 0) uniform atomic_uint accumulation;
+
+layout (std430, binding = 1) readonly buffer MinMaxValues {
+    // min/max .. min/max .. min/max .....
+    float values[];
+} minMaxValues;
+
+layout (std430, binding = 2) readonly buffer Values {
+    float data[];
+} values;
+
+layout (std430, binding = 3) readonly buffer Bins {
+    int data[];
+} bins;
+
+layout (std430, binding = 4) writeonly buffer OutValues {
+    float data[];
+} outValues;
+
+uniform int _nBins;
+uniform int _nDimensions;
+
+// Returns 0-based dimensions between [0, _nDimensions - 1] for a GID
+int getDimension(int gid) {
+    return gid % _nDimensions;
+}
+
+float getValue(int gid) {
+    return values.data[gid];
+}
+
+float normalizeValue(float value, int dimension) {
+    const vec2 minMax = vec2(
+        minMaxValues.values[dimension * 2],
+        minMaxValues.values[dimension * 2 + 1]
+    );
+
+    return (value - minMax.x) / (minMax.y - minMax.x);
+}
+
+int getBinIndex(float value) {
+    return int(floor(value * _nBins));
+}
+
+// void incrementBin(int bin, int dim) {
+//     atomicAdd(
+//         outputValues.values[dim * _nBins + bin],
+//         1
+//     );
+// }
+
+void main() {
+    // gl_GlobalInvocationID.x \in [0, _nBins - 1]
+    // const int gid = int(gl_GlobalInvocationID.x);
+
+    
+
+    atomicCounterIncrement(accumulation);
+
+    // gl_GlobalInvocationID.x \in [0, _nBins - 1]
+    // const int gid = int(gl_GlobalInvocationID.x);
+
+    // const int dim = getDimension(gid);
+    // const float value = getValue(gid);
+    // const float normalizedValue = normalizeValue(value, dim);
+    // const int bin = getBinIndex(normalizedValue);
+
+    // incrementBin(bin, dim);
+    // outputValues.values[gid] = int(gid);
+}

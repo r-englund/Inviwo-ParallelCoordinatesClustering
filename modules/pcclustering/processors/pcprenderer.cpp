@@ -62,9 +62,9 @@ void PCPRenderer::process() {
     utilgl::ClearColor colorState(glm::vec4(0.0));
     utilgl::activateAndClearTarget(_outport);
 
-    utilgl::GlBoolState blendModeEnableState(GL_BLEND, true);
-    utilgl::BlendModeEquationState blendModeState(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA, GL_FUNC_ADD);
-    //utilgl::BlendModeState blendModeState(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+    utilgl::GlBoolState depthTest(GL_DEPTH_TEST, false);
+    //utilgl::DepthMaskState depthMask(GL_FALSE);
+    utilgl::BlendModeEquationState blendEquation(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA, GL_FUNC_ADD);
 
     _shader.activate();
 
@@ -90,6 +90,8 @@ void PCPRenderer::process() {
     _shader.deactivate();
 
     utilgl::deactivateCurrentTarget();
+
+    glScissor(0, 0, 0, 0);
     LGL_ERROR;
 }
 

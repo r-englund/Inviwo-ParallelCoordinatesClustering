@@ -28,12 +28,12 @@ public:
 
 private:
     PCPDataInport _inport;
-    //PCPRawDataInport _inport;
 
     ImageOutport _outport;
 
     FloatProperty _horizontalBorder;
     FloatProperty _verticalBorder;
+
 
     Shader _shader;
     GLuint _vao;
