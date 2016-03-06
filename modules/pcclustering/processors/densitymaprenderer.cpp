@@ -60,10 +60,12 @@ void DensityMapRenderer::process() {
 
     std::shared_ptr<const BinningData> data = _inport.getData();
 
-
+    LGL_ERROR;
     utilgl::activateAndClearTarget(_outport);
+    LGL_ERROR;
 
     _shader.activate();
+    LGL_ERROR;
 
     _shader.setUniform("_nBins", data->nBins);
     _shader.setUniform("_nDimensions", data->nDimensions);
