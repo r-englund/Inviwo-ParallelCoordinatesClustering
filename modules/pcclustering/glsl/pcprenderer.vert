@@ -55,7 +55,7 @@ float valueLocation(float value, vec2 minMax) {
 }
 
 void main() {
-    int dimension = gl_VertexID % 5;
+    int dimension = gl_VertexID % _nDimensions;
     
     float location = dimensionLocation(dimension);
     

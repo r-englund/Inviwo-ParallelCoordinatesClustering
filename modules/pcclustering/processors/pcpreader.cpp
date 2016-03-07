@@ -78,6 +78,11 @@ void PCPReader::load() {
         ++i;
     }
 
+    LogInfo("Dataset information: " << fileName);
+    for (int i = 0; i < dimensions; ++i) {
+        LogInfo("Min/Max (dimension " << i << "): " << data->minMax[i].first << " / " << data->minMax[i].second);
+    }
+
     _outport.setData(data);
 }
 
