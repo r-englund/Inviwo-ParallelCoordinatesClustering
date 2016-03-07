@@ -1,5 +1,5 @@
-#ifndef IVW_DENSITYMAPFILTERING_H
-#define IVW_DENSITYMAPFILTERING_H
+#ifndef IVW_PCPFILTERING_H
+#define IVW_PCPFILTERING_H
 
 #include <inviwo/core/processors/processor.h>
 
@@ -18,35 +18,31 @@
 
 namespace inviwo {
 
-class IVW_MODULE_PCCLUSTERING_API DensityMapFiltering : public Processor {
+class IVW_MODULE_PCCLUSTERING_API PCPFiltering : public Processor {
 public:
     const ProcessorInfo getProcessorInfo() const override;
     static const ProcessorInfo processorInfo_;
-    DensityMapFiltering();
-    ~DensityMapFiltering();
+    PCPFiltering();
+    ~PCPFiltering();
 
     void process() override;
 
 private:
-    void filterBins(const BinningData* inData, BinningData* outData);
-    void filterBinsPercentage(const BinningData* inData, BinningData* outData, std::vector<int>& values);
-    void filterBinsTopology(const BinningData* inData, BinningData* outData, std::vector<int>& values);
+    void filterData(const ParallelCoordinatesPlotData* inData, const BinningData* data, ParallelCoordinatesPlotData* outData);
 
     BinningDataInport _binInport;
     PCPDataInport _pcpInport;
     
-    BinningDataOutport _binOutport;
+    PCPDataOutport _pcpOutport;
 
     OptionPropertyInt _filteringMethod;
 
-    // Percentage
-    FloatProperty _percentage;
-
-    //Shader _percentageFiltering;
+    Shader _countingShader;
+    Shader _filteringShader;
     //GLuint _accumulationBuffer;
     //GLuint _vao;
 };
 
 }  // namespace
 
-#endif  // IVW_DENSITYMAPGENERATOR_H
+#endif  // IVW_PCPFILTERING_H
