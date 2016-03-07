@@ -43,8 +43,6 @@ void PCPUpload::process() {
     if (inData->data.empty())
         return;
 
-    LogInfo("PCPUpload::process");
-
     ParallelCoordinatesPlotData* outData = new ParallelCoordinatesPlotData;
 
     glGenBuffers(1, &(outData->ssboData));
@@ -73,8 +71,6 @@ void PCPUpload::process() {
         GL_STATIC_DRAW
     );
     glBindBuffer(GL_SHADER_STORAGE_BUFFER, 0);
-
-    //glScissor(0, 0, 0, 0);
 
     _outport.setData(outData);
     LGL_ERROR;

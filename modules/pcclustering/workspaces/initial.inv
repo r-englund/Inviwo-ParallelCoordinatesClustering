@@ -476,9 +476,9 @@
             </OutPorts>
             <Properties>
                 <Property type="org.inviwo.FileProperty" identifier="filename">
-                    <absolutePath content="F:/Dropbox/University/Projects/ParallelCoordinatesClustering/out5d.txt" />
-                    <workspaceRelativePath content="../../../../../Dropbox/University/Projects/ParallelCoordinatesClustering//out5d.txt" />
-                    <ivwdataRelativePath content="../../../Dropbox/University/Projects/ParallelCoordinatesClustering/out5d.txt" />
+                    <absolutePath content="D:/alebo68/Dropbox/University/Projects/ParallelCoordinatesClustering/out5d.txt" />
+                    <workspaceRelativePath content="D:/alebo68/Dropbox/University/Projects/ParallelCoordinatesClustering/out5d.txt" />
+                    <ivwdataRelativePath content="D:/alebo68/Dropbox/University/Projects/ParallelCoordinatesClustering/out5d.txt" />
                     <nameFilter>
                         <filter>
                             <extension content="*" />

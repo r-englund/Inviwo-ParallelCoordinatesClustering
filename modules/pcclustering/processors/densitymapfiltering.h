@@ -29,8 +29,8 @@ public:
 
 private:
     void filterBins(const BinningData* inData, BinningData* outData);
-    void filterBinsPercentage(const BinningData* inData, BinningData* outData, std::vector<int>& values);
-    void filterBinsTopology(const BinningData* inData, BinningData* outData, std::vector<int>& values);
+    void filterBinsPercentage(const BinningData* inData, BinningData* outData);
+    void filterBinsTopology(const BinningData* inData, BinningData* outData);
 
     BinningDataInport _binInport;
     PCPDataInport _pcpInport;
@@ -42,7 +42,7 @@ private:
     // Percentage
     FloatProperty _percentage;
 
-    //Shader _percentageFiltering;
+    Shader _percentageFiltering;
     //GLuint _accumulationBuffer;
     //GLuint _vao;
 };

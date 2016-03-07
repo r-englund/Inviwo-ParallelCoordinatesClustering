@@ -20,18 +20,14 @@ public:
     PCPReader();
     virtual ~PCPReader() = default;
 
-    //virtual void deserialize(Deserializer& d) override;
     virtual void process() override;
 
 private:
     void load();
-    //void addFileNameFilters();
-
 
     PCPRawDataOutport _outport;
 
     FileProperty _file;
-    IntProperty _dimensions;
     ButtonProperty _reload;
 
     bool isDeserializing_;

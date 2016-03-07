@@ -43,7 +43,7 @@ DensityMapFiltering::DensityMapFiltering()
     , _binOutport("out.bins")
     , _filteringMethod("_filteringMethod", "Filtering Method")
     , _percentage("_percentage", "Percentage")
-    //, _percentageFiltering({{ShaderType::Compute, "densitymapfiltering_percentage.comp" }}, Shader::Build::No)
+    , _percentageFiltering({{ShaderType::Compute, "densitymapfiltering_percentage.comp" }}, Shader::Build::No)
 {
     addPort(_binInport);
     addPort(_pcpInport);
@@ -56,14 +56,14 @@ DensityMapFiltering::DensityMapFiltering()
     addProperty(_percentage);
 
 
-    //_percentageFiltering.getShaderObject(ShaderType::Compute)->addShaderExtension(
-    //    "GL_ARB_compute_variable_group_size",
-    //    true
-    //);
+    _percentageFiltering.getShaderObject(ShaderType::Compute)->addShaderExtension(
+        "GL_ARB_compute_variable_group_size",
+        true
+    );
 
-    //_percentageFiltering.build();
+    _percentageFiltering.build();
 
-    //_percentageFiltering.onReload([this]() {invalidate(InvalidationLevel::InvalidOutput); });
+    _percentageFiltering.onReload([this]() {invalidate(InvalidationLevel::InvalidOutput); });
 }
 
 DensityMapFiltering::~DensityMapFiltering() {}
@@ -86,53 +86,77 @@ void DensityMapFiltering::process() {
 }
 
 void DensityMapFiltering::filterBins(const BinningData* inData, BinningData* outData) {
-    std::vector<int> values(outData->nBins * outData->nDimensions);
     if (_filteringMethod.get() == FilteringMethodOptionPercentage)
-        filterBinsPercentage(inData, outData, values);
+        filterBinsPercentage(inData, outData);
     else
-        filterBinsTopology(inData, outData, values);
+        filterBinsTopology(inData, outData);
+}
+
+void DensityMapFiltering::filterBinsPercentage(
+    const BinningData* inData, BinningData* outData)
+{
+    _percentageFiltering.activate();
 
     glBindBuffer(GL_SHADER_STORAGE_BUFFER, outData->ssboBins);
     glBufferData(
         GL_SHADER_STORAGE_BUFFER,
-        values.size() * sizeof(int),
-        values.data(),
+        inData->nBins * inData->nDimensions * sizeof(int),
+        nullptr,
         GL_DYNAMIC_DRAW
-        );
+    );
     glBindBuffer(GL_SHADER_STORAGE_BUFFER, 0);
-}
 
-void DensityMapFiltering::filterBinsPercentage(
-    const BinningData* inData, BinningData* outData, std::vector<int>& values)
-{
-    glBindBuffer(GL_SHADER_STORAGE_BUFFER, inData->ssboBins);
-    int* mappedData = reinterpret_cast<int*>(glMapBuffer(GL_SHADER_STORAGE_BUFFER, GL_READ_ONLY));
+    _percentageFiltering.setUniform("_nBins", outData->nBins);
+    _percentageFiltering.setUniform("_nDimensions", outData->nDimensions);
+    _percentageFiltering.setUniform("_percentage", _percentage);
 
-    for (int i = 0; i < outData->nDimensions; ++i) {
-        // First find min-max values
-        auto minMax = std::minmax_element(
-            mappedData + i * outData->nBins,
-            mappedData + i * outData->nBins + outData->nBins
+    _percentageFiltering.setUniform("INT_MAX", std::numeric_limits<int>::max());
+
+    glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 0, inData->ssboBins);
+    glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 1, outData->ssboBins);
+    
+
+    LGL_ERROR;
+    glMemoryBarrier(GL_ALL_BARRIER_BITS);
+    glDispatchComputeGroupSizeARB(
+        outData->nBins, 1, 1,
+        outData->nDimensions, 1, 1
         );
+    glMemoryBarrier(GL_ALL_BARRIER_BITS);
+    LGL_ERROR;
 
-        // Then do a binary selection of the values
-        float percentage = _percentage;
-        std::transform(
-            mappedData + i * outData->nBins,
-            mappedData + i * outData->nBins + outData->nBins,
-            values.begin() + i * outData->nBins,
-            [minMax, percentage](int v) {
-            float normalized = static_cast<float>(v - *minMax.first) / static_cast<float>(*minMax.second - *minMax.first);
-            return normalized >= percentage ? 1 : 0;
-        }
-        );
-    }
-    glUnmapBuffer(GL_SHADER_STORAGE_BUFFER);
-    glBindBuffer(GL_SHADER_STORAGE_BUFFER, 0);
+    _percentageFiltering.deactivate();
+
+
+
+    //glBindBuffer(GL_SHADER_STORAGE_BUFFER, inData->ssboBins);
+    //int* mappedData = reinterpret_cast<int*>(glMapBuffer(GL_SHADER_STORAGE_BUFFER, GL_READ_ONLY));
+
+    //for (int i = 0; i < outData->nDimensions; ++i) {
+    //    // First find min-max values
+    //    auto minMax = std::minmax_element(
+    //        mappedData + i * outData->nBins,
+    //        mappedData + i * outData->nBins + outData->nBins
+    //    );
+
+    //    // Then do a binary selection of the values
+    //    float percentage = _percentage;
+    //    std::transform(
+    //        mappedData + i * outData->nBins,
+    //        mappedData + i * outData->nBins + outData->nBins,
+    //        values.begin() + i * outData->nBins,
+    //        [minMax, percentage](int v) {
+    //        float normalized = static_cast<float>(v - *minMax.first) / static_cast<float>(*minMax.second - *minMax.first);
+    //        return normalized >= percentage ? 1 : 0;
+    //    }
+    //    );
+    //}
+    //glUnmapBuffer(GL_SHADER_STORAGE_BUFFER);
+    //glBindBuffer(GL_SHADER_STORAGE_BUFFER, 0);
 }
 
 void DensityMapFiltering::filterBinsTopology(
-    const BinningData* inData, BinningData* outData, std::vector<int>& values)
+    const BinningData* inData, BinningData* outData)
 {
 }
 

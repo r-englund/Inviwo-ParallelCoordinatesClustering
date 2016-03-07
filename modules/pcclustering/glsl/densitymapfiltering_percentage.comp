@@ -1,55 +1,47 @@
 layout (local_size_variable) in;
 
-layout (binding = 0, offset = 0) uniform atomic_uint accumulation;
+layout (std430, binding = 0) readonly buffer Input {
+    int values[];
+} inputBin;
 
-layout (std430, binding = 1) readonly buffer MinMaxValues {
-    // min/max .. min/max .. min/max .....
-    float values[];
-} minMaxValues;
-
-layout (std430, binding = 2) readonly buffer Values {
-    float data[];
-} values;
-
-layout (std430, binding = 3) readonly buffer Bins {
-    int data[];
-} bins;
+layout (std430, binding = 1) buffer Output {
+    int values[];
+} outputBin;
 
 uniform int _nBins;
 uniform int _nDimensions;
+uniform float _percentage;
+uniform int INT_MAX;
 
-float normalizeValue(float value, int dimension) {
-    const vec2 minMax = vec2(
-        minMaxValues.values[dimension * 2],
-        minMaxValues.values[dimension * 2 + 1]
-    );
-
-    return (value - minMax.x) / (minMax.y - minMax.x);
+int getValue(int bin, int dim) {
+    return inputBin.values[dim * _nBins + bin];
 }
 
-int getBinIndex(float value) {
-    return int(floor(value * _nBins));
-}
-
-bool isBinOccupied(int index, int dimension) {
-    return (bins.data[dimension * _nBins + index] == 1);
-}
-
-float getValue(int id, int dim) {
-    return values.data[id * _nDimensions + dim];
+void setValue(int bin, int dim, int value) {
+    outputBin.values[dim * _nBins + bin] = value;
 }
 
 void main() {
-    // gl_GlobalInvocationID.x \in [0, _nValues / _nDimensions]
-    bool isValidDataPoint = true;
-    for (int dimension = 0; dimension < _nDimensions; ++dimension) {
-        float value = getValue(int(gl_GlobalInvocationID), dimension);
-        float normalizedValue = normalizeValue(value, dimension);
-        int binIndex = getBinIndex(normalizedValue);
-        bool isValid = isBinOccupied(binIndex, dimension);
-        isValidDataPoint = isValidDataPoint && isValid;
+    // number of workgroups = number of bins    -> gl_WorkGroupID.x = bin
+    // number of items in workgroup = number of dimensions    -> gl_LocalInvocationID.x = dimension
+
+
+    // First, get the min/max for all bins in the current dimension
+    int min = INT_MAX;
+    int max = -INT_MAX;
+    for (int i = 0; i < _nDimensions; ++i) {
+        int value = getValue(int(gl_WorkGroupID.x), i);
+        if (value < min)
+            min = value;
+        if (value > max)
+            max = value;
     }
 
-    if (isValidDataPoint)
-        atomicCounterIncrement(accumulation);
+    int v = getValue(int(gl_WorkGroupID.x), int(gl_LocalInvocationID.x));
+    float normalized = (float(v) - float(min)) / (float(max) - float(min));
+
+    if (normalized >= _percentage)
+        setValue(int(gl_WorkGroupID.x), int(gl_LocalInvocationID.x), 1);
+    else
+        setValue(int(gl_WorkGroupID.x), int(gl_LocalInvocationID.x), 0);
 }
