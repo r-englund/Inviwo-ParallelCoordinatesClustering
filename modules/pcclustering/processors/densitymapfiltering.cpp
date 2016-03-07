@@ -2,21 +2,6 @@
 
 #include <modules/opengl/texture/textureutils.h>
 
-//#include "volumesource.h"
-//#include <inviwo/core/resources/resourcemanager.h>
-//#include <inviwo/core/resources/templateresource.h>
-//#include <inviwo/core/common/inviwoapplication.h>
-//#include <inviwo/core/util/filesystem.h>
-//#include <inviwo/core/util/raiiutils.h>
-//#include <inviwo/core/io/datareaderfactory.h>
-//#include <inviwo/core/io/rawvolumereader.h>
-//#include <inviwo/core/network/processornetwork.h>
-//#include <inviwo/core/datastructures/volume/volumeram.h>
-//#include <inviwo/core/common/inviwoapplication.h>
-//#include <inviwo/core/io/datareaderexception.h>
-//
-//#include <math.h>
-
 namespace {
     const int FilteringMethodOptionPercentage = 0;
     const int FilteringMethodOptionTopological = 1;
@@ -42,8 +27,12 @@ DensityMapFiltering::DensityMapFiltering()
     , _pcpInport("in.pcp")
     , _binOutport("out.bins")
     , _filteringMethod("_filteringMethod", "Filtering Method")
+    , _percentageComposite("_percentageComposite", "Percentage-based Filtering")
     , _percentage("_percentage", "Percentage")
+    , _topologyComposite("_topologyComposite", "Topology-based Filtering")
+    , _nClusters("_nClusters", "Number of Clusters", 1, 0, 64)
     , _percentageFiltering({{ShaderType::Compute, "densitymapfiltering_percentage.comp" }}, Shader::Build::No)
+    , _topologyFiltering({{ShaderType::Compute, "densitymapfiltering_topology.comp", }}, Shader::Build::No)
 {
     addPort(_binInport);
     addPort(_pcpInport);
@@ -53,17 +42,26 @@ DensityMapFiltering::DensityMapFiltering()
     _filteringMethod.addOption("percentage", "Percentage", FilteringMethodOptionPercentage);
     addProperty(_filteringMethod);
 
-    addProperty(_percentage);
+    _percentageComposite.addProperty(_percentage);
+    addProperty(_percentageComposite);
+
+    _topologyComposite.addProperty(_nClusters);
+    addProperty(_topologyComposite);
 
 
     _percentageFiltering.getShaderObject(ShaderType::Compute)->addShaderExtension(
         "GL_ARB_compute_variable_group_size",
         true
     );
-
     _percentageFiltering.build();
-
     _percentageFiltering.onReload([this]() {invalidate(InvalidationLevel::InvalidOutput); });
+
+    _topologyFiltering.getShaderObject(ShaderType::Compute)->addShaderExtension(
+        "GL_ARB_compute_variable_group_size",
+        true
+    );
+    _topologyFiltering.build();
+    _topologyFiltering.onReload([this]() {invalidate(InvalidationLevel::InvalidOutput); });
 }
 
 DensityMapFiltering::~DensityMapFiltering() {}
@@ -126,38 +124,45 @@ void DensityMapFiltering::filterBinsPercentage(
     LGL_ERROR;
 
     _percentageFiltering.deactivate();
-
-
-
-    //glBindBuffer(GL_SHADER_STORAGE_BUFFER, inData->ssboBins);
-    //int* mappedData = reinterpret_cast<int*>(glMapBuffer(GL_SHADER_STORAGE_BUFFER, GL_READ_ONLY));
-
-    //for (int i = 0; i < outData->nDimensions; ++i) {
-    //    // First find min-max values
-    //    auto minMax = std::minmax_element(
-    //        mappedData + i * outData->nBins,
-    //        mappedData + i * outData->nBins + outData->nBins
-    //    );
-
-    //    // Then do a binary selection of the values
-    //    float percentage = _percentage;
-    //    std::transform(
-    //        mappedData + i * outData->nBins,
-    //        mappedData + i * outData->nBins + outData->nBins,
-    //        values.begin() + i * outData->nBins,
-    //        [minMax, percentage](int v) {
-    //        float normalized = static_cast<float>(v - *minMax.first) / static_cast<float>(*minMax.second - *minMax.first);
-    //        return normalized >= percentage ? 1 : 0;
-    //    }
-    //    );
-    //}
-    //glUnmapBuffer(GL_SHADER_STORAGE_BUFFER);
-    //glBindBuffer(GL_SHADER_STORAGE_BUFFER, 0);
 }
 
 void DensityMapFiltering::filterBinsTopology(
     const BinningData* inData, BinningData* outData)
 {
+    _topologyFiltering.activate();
+
+    LGL_ERROR;
+    glBindBuffer(GL_SHADER_STORAGE_BUFFER, outData->ssboBins);
+    LGL_ERROR;
+    glBufferData(
+        GL_SHADER_STORAGE_BUFFER,
+        inData->nBins * inData->nDimensions * sizeof(int),
+        nullptr,
+        GL_DYNAMIC_DRAW
+    );
+    LGL_ERROR;
+    glBindBuffer(GL_SHADER_STORAGE_BUFFER, 0);
+    LGL_ERROR;
+
+    _topologyFiltering.setUniform("_nBins", outData->nBins);
+    _topologyFiltering.setUniform("_nDimensions", outData->nDimensions);
+    _topologyFiltering.setUniform("_nClusters", _nClusters);
+    _topologyFiltering.setUniform("INT_MAX", std::numeric_limits<int>::max());
+    LGL_ERROR;
+
+    glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 0, inData->ssboBins);
+    glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 1, outData->ssboBins);
+
+    LGL_ERROR;
+    glMemoryBarrier(GL_ALL_BARRIER_BITS);
+    glDispatchComputeGroupSizeARB(
+        outData->nDimensions, 1, 1,
+        1, 1, 1
+        );
+    glMemoryBarrier(GL_ALL_BARRIER_BITS);
+    LGL_ERROR;
+
+    _topologyFiltering.deactivate();
 }
 
 }  // namespace
