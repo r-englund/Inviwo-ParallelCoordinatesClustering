@@ -29,6 +29,7 @@ using PCPDataOutport = inviwo::DataOutport<ParallelCoordinatesPlotData>;
 
 struct BinningData {
     GLuint ssboBins;
+    GLuint ssboMinMax;
     int nBins;
     int nDimensions;
 };

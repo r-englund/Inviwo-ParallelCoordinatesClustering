@@ -84,6 +84,8 @@ void DensityMapRenderer::process() {
 
     glBindVertexArray(_vao);
     glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 0, data->ssboBins);
+    glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 1, data->ssboMinMax);
+
 
     utilgl::singleDrawImagePlaneRect();
 

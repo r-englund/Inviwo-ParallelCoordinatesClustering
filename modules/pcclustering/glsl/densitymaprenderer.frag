@@ -1,13 +1,18 @@
 #include "utils/structs.glsl"
 
-layout (std430, binding = 0) buffer BinningValues {
+layout (std430, binding = 0) readonly buffer BinningValues {
     int values[];
 } binning;
+
+layout (std430, binding = 1) readonly buffer MinMax {
+    int values[];
+} minMax;
+
 
 
 uniform int _nBins;
 uniform int _nDimensions;
-uniform float _renderScaling;
+// uniform float _renderScaling;
 
 uniform ivec2 _outportSize;
 
@@ -36,6 +41,13 @@ int getValue(int bin, int dimension) {
     // return binning.values[bin * _nDimensions + dimension];
 }
 
+ivec2 getMinMax(int dimension) {
+    return ivec2(
+        minMax.values[dimension * 2],
+        minMax.values[dimension * 2 + 1]
+    );
+}
+
 void main() {
     const vec2 texCoords = gl_FragCoord.xy * (1.f / vec2(_outportSize));
     // const vec2 texCoords = gl_FragCoord.xy * outportParameters.reciprocalDimensions;
@@ -45,19 +57,17 @@ void main() {
 
     const int value = getValue(bin, dim);
 
-    FragData0 = vec4(
-        getBinNormalized(bin),
-        getDimensionNormalized(dim),
-        0.0,
-        1.0
-    );
+    // FragData0 = vec4(
+    //     getBinNormalized(bin),
+    //     getDimensionNormalized(dim),
+    //     0.0,
+    //     1.0
+    // );
 
+    const ivec2 minMaxValue = getMinMax(dim);
+    const float normalizedValue = (float(value) - float(minMaxValue.x)) / (float(minMaxValue.y) - float(minMaxValue.x));
 
-    FragData0 = vec4(
-        vec3(value / _renderScaling),
-        1.0
-    );
-
+    FragData0 = vec4(normalizedValue);
 
     // FragData0 = vec4(1.0, 0.0, 0.0, 1.0);
 

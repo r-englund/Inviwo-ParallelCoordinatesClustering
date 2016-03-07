@@ -1,0 +1,38 @@
+layout (local_size_variable) in;
+
+layout (std430, binding = 0) readonly buffer Values {
+    int data[];
+} values;
+
+layout (std430, binding = 1) buffer MinMaxValues {
+    // min/max .. min/max .. min/max .....
+    int values[];
+} minMaxValues;
+
+uniform int _nBins;
+uniform int _nDimensions;
+uniform int INT_MAX;
+
+int getValue(int bin, int dim) {
+    return values.data[dim * _nBins + bin];
+}
+
+void processMinMax(int bin, int dim, int value) {
+
+    int currentMin = minMaxValues.values[dim * 2];
+    int currentMax = minMaxValues.values[dim * 2 + 1];
+
+    if (value < currentMin)
+        minMaxValues.values[dim * 2] = value;
+    if (value > currentMax)
+        minMaxValues.values[dim * 2 + 1] = value;
+}
+
+void main() {
+    int dim = int(gl_GlobalInvocationID.x);
+
+    for (int i = 0; i < _nBins; ++i) {
+        int value = getValue(i, dim);
+        processMinMax(i, dim, value);
+    }
+}

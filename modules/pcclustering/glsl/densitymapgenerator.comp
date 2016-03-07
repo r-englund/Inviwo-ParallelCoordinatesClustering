@@ -55,5 +55,4 @@ void main() {
     const int bin = getBinIndex(normalizedValue);
 
     incrementBin(bin, dim);
-    // outputValues.values[gid] = int(gid);
 }

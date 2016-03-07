@@ -36,28 +36,30 @@ DensityMapGenerator::DensityMapGenerator()
     , _inport("in.data")
     , _outport("out.data")
     , _nBins("_nBins", "# Bins", 32, 1, 2048)
-    , _shader({{ShaderType::Compute, "densitymapgenerator.comp" }}, Shader::Build::No)
+    , _densityMapGeneratorShader({{ShaderType::Compute, "densitymapgenerator.comp" }}, Shader::Build::No)
+    , _densityMapCounterShader({{ShaderType::Compute, "densitymapcounter.comp" }}, Shader::Build::No)
 {
-    glGenVertexArrays(1, &_vao);
-
     addPort(_inport);
     addPort(_outport);
 
     addProperty(_nBins);
 
-    _shader.getShaderObject(ShaderType::Compute)->addShaderExtension(
+    _densityMapGeneratorShader.getShaderObject(ShaderType::Compute)->addShaderExtension(
         "GL_ARB_compute_variable_group_size",
         true
     );
+    _densityMapGeneratorShader.build();
+    _densityMapGeneratorShader.onReload([this]() {invalidate(InvalidationLevel::InvalidOutput); });
 
-    _shader.build();
-
-    _shader.onReload([this]() {invalidate(InvalidationLevel::InvalidOutput); });
+    _densityMapCounterShader.getShaderObject(ShaderType::Compute)->addShaderExtension(
+        "GL_ARB_compute_variable_group_size",
+        true
+        );
+    _densityMapCounterShader.build();
+    _densityMapCounterShader.onReload([this]() {invalidate(InvalidationLevel::InvalidOutput); });
 }
 
-DensityMapGenerator::~DensityMapGenerator() {
-    glDeleteVertexArrays(1, &_vao);
-}
+DensityMapGenerator::~DensityMapGenerator() {}
 
 void DensityMapGenerator::process() {
     if (!_inport.hasData())
@@ -67,6 +69,8 @@ void DensityMapGenerator::process() {
 
     BinningData* outData = new BinningData;
     glGenBuffers(1, &outData->ssboBins);
+    glGenBuffers(1, &outData->ssboMinMax);
+
     glBindBuffer(GL_SHADER_STORAGE_BUFFER, outData->ssboBins);
     glBufferData(
         GL_SHADER_STORAGE_BUFFER,
@@ -74,26 +78,51 @@ void DensityMapGenerator::process() {
         nullptr,
         GL_DYNAMIC_DRAW
     );
+    
+    glBindBuffer(GL_SHADER_STORAGE_BUFFER, outData->ssboMinMax);
+    glBufferData(
+        GL_SHADER_STORAGE_BUFFER,
+        data->nDimensions * 2 * sizeof(int),
+        nullptr,
+        GL_DYNAMIC_DRAW
+    );
+
     outData->nBins = _nBins;
     outData->nDimensions = data->nDimensions;
 
-    _shader.activate();
-    _shader.setUniform("_nBins", _nBins);
-    _shader.setUniform("_nDimensions", data->nDimensions);
+    _densityMapGeneratorShader.activate();
+    _densityMapGeneratorShader.setUniform("_nBins", _nBins);
+    _densityMapGeneratorShader.setUniform("_nDimensions", data->nDimensions);
 
     glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 0, data->ssboData);
     glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 1, data->ssboMinMax);
     glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 2, outData->ssboBins);
+    //glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 3, outData->ssboMinMax);
 
     glMemoryBarrier(GL_ALL_BARRIER_BITS);
-    //glDispatchCompute(data->nValues / 32, 1, 1);
     glDispatchComputeGroupSizeARB(
         data->nValues / _nBins, 1, 1,
         _nBins, 1, 1
     );
     glMemoryBarrier(GL_ALL_BARRIER_BITS);
+    _densityMapGeneratorShader.deactivate();
 
-    _shader.deactivate();
+
+    _densityMapCounterShader.activate();
+    _densityMapCounterShader.setUniform("_nBins", _nBins);
+    _densityMapCounterShader.setUniform("_nDimensions", data->nDimensions);
+    _densityMapCounterShader.setUniform("INT_MAX", std::numeric_limits<int>::max());
+    glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 0, outData->ssboBins);
+    glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 1, outData->ssboMinMax);
+
+    glMemoryBarrier(GL_ALL_BARRIER_BITS);
+    glDispatchComputeGroupSizeARB(
+        data->nDimensions, 1, 1,
+        1, 1, 1
+        );
+    glMemoryBarrier(GL_ALL_BARRIER_BITS);
+
+    _densityMapCounterShader.deactivate();
 
     _outport.setData(outData);
     LGL_ERROR;

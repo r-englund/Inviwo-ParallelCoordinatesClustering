@@ -32,8 +32,8 @@ private:
 
     IntProperty _nBins;
 
-    Shader _shader;
-    GLuint _vao;
+    Shader _densityMapGeneratorShader;
+    Shader _densityMapCounterShader;
 };
 
 }  // namespace

@@ -27,9 +27,7 @@ DensityMapFiltering::DensityMapFiltering()
     , _pcpInport("in.pcp")
     , _binOutport("out.bins")
     , _filteringMethod("_filteringMethod", "Filtering Method")
-    , _percentageComposite("_percentageComposite", "Percentage-based Filtering")
     , _percentage("_percentage", "Percentage")
-    , _topologyComposite("_topologyComposite", "Topology-based Filtering")
     , _nClusters("_nClusters", "Number of Clusters", 1, 0, 64)
     , _percentageFiltering({{ShaderType::Compute, "densitymapfiltering_percentage.comp" }}, Shader::Build::No)
     , _topologyFiltering({{ShaderType::Compute, "densitymapfiltering_topology.comp", }}, Shader::Build::No)
@@ -40,13 +38,12 @@ DensityMapFiltering::DensityMapFiltering()
     addPort(_binOutport);
 
     _filteringMethod.addOption("percentage", "Percentage", FilteringMethodOptionPercentage);
+    _filteringMethod.addOption("topology", "Topology", FilteringMethodOptionTopological);
     addProperty(_filteringMethod);
 
-    _percentageComposite.addProperty(_percentage);
-    addProperty(_percentageComposite);
+    addProperty(_percentage);
 
-    _topologyComposite.addProperty(_nClusters);
-    addProperty(_topologyComposite);
+    addProperty(_nClusters);
 
 
     _percentageFiltering.getShaderObject(ShaderType::Compute)->addShaderExtension(
@@ -76,6 +73,21 @@ void DensityMapFiltering::process() {
     outData->nBins = inData->nBins;
     outData->nDimensions = inData->nDimensions;
     glGenBuffers(1, &outData->ssboBins);
+    glGenBuffers(1, &outData->ssboMinMax);
+    
+    std::vector<int> minMaxData(outData->nDimensions * 2);
+    for (int i = 0; i < outData->nDimensions; ++i) {
+        minMaxData[2 * i] = 0;
+        minMaxData[2 * i + 1] = 1;
+    }
+    glBindBuffer(GL_SHADER_STORAGE_BUFFER, outData->ssboMinMax);
+    glBufferData(
+        GL_SHADER_STORAGE_BUFFER,
+        outData->nDimensions * 2 * sizeof(int),
+        minMaxData.data(),
+        GL_STATIC_DRAW
+    );
+    glBindBuffer(GL_SHADER_STORAGE_BUFFER, 0);
 
     LGL_ERROR;
     filterBins(inData.get(), outData);

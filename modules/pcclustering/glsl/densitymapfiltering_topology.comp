@@ -40,7 +40,7 @@ void main() {
     //  Mark the maximum and all values downhill until it goes uphill
     int dim = int(gl_GlobalInvocationID.x);
 
-    for (int c; c < _nClusters; ++c) {
+    for (int c = 0; c < _nClusters; ++c) {
         // Find the current non-occupied maximum
         int max = -INT_MAX;
         int maxBin = -1;

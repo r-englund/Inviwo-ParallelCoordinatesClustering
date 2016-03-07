@@ -40,12 +40,9 @@ private:
     OptionPropertyInt _filteringMethod;
 
     // Percentage
-    CompositeProperty _percentageComposite;
     FloatProperty _percentage;
 
     // Topology
-    CompositeProperty _topologyComposite;
-    
     IntProperty _nClusters;
 
     Shader _percentageFiltering;
