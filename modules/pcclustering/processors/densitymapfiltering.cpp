@@ -88,10 +88,10 @@ void DensityMapFiltering::process() {
         GL_STATIC_DRAW
     );
     glBindBuffer(GL_SHADER_STORAGE_BUFFER, 0);
+    LGL_ERROR;
 
-    LGL_ERROR;
     filterBins(inData.get(), outData);
-    LGL_ERROR;
+
     _binOutport.setData(outData);
 }
 
@@ -100,6 +100,7 @@ void DensityMapFiltering::filterBins(const BinningData* inData, BinningData* out
         filterBinsPercentage(inData, outData);
     else
         filterBinsTopology(inData, outData);
+    LGL_ERROR;
 }
 
 void DensityMapFiltering::filterBinsPercentage(

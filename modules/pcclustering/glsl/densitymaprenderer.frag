@@ -67,7 +67,7 @@ void main() {
     const ivec2 minMaxValue = getMinMax(dim);
     const float normalizedValue = (float(value) - float(minMaxValue.x)) / (float(minMaxValue.y) - float(minMaxValue.x));
 
-    FragData0 = vec4(normalizedValue);
+    FragData0 = vec4(vec3(normalizedValue), 0.2);
 
     // FragData0 = vec4(1.0, 0.0, 0.0, 1.0);
 
