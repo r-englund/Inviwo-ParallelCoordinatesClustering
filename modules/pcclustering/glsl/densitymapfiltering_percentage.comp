@@ -40,7 +40,7 @@ void main() {
     int v = getValue(int(gl_WorkGroupID.x), int(gl_LocalInvocationID.x));
     float normalized = (float(v) - float(min)) / (float(max) - float(min));
 
-    if (normalized >= _percentage)
+    if (normalized > _percentage)
         setValue(int(gl_WorkGroupID.x), int(gl_LocalInvocationID.x), 1);
     else
         setValue(int(gl_WorkGroupID.x), int(gl_LocalInvocationID.x), 0);

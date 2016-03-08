@@ -137,6 +137,20 @@ void DensityMapFiltering::filterBinsPercentage(
     LGL_ERROR;
 
     _percentageFiltering.deactivate();
+
+
+    //glBindBuffer(GL_SHADER_STORAGE_BUFFER, outData->ssboBins);
+    //int* ptr = reinterpret_cast<int*>(glMapBuffer(GL_SHADER_STORAGE_BUFFER, GL_READ_ONLY));
+
+    //for (int i = 0; i < outData->nDimensions * outData->nBins; ++i) {
+    //    if (ptr[i] != 0) {
+    //        LogInfo(i);
+    //    }
+    //}
+
+
+
+
 }
 
 void DensityMapFiltering::filterBinsTopology(
