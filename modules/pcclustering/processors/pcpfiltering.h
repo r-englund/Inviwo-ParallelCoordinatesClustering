@@ -28,12 +28,15 @@ public:
     void process() override;
 
 private:
-    void filterData(const ParallelCoordinatesPlotData* inData, const BinningData* data, ParallelCoordinatesPlotData* outData);
+    void filterData(const ParallelCoordinatesPlotData* inData, 
+        const BinningData* data, ParallelCoordinatesPlotData* outData,
+        ParallelCoordinatesPlotData* outDataNegative);
 
     BinningDataInport _binInport;
     PCPDataInport _pcpInport;
     
     PCPDataOutport _pcpOutport;
+    PCPDataOutport _pcpOutportNegative;
 
     OptionPropertyInt _filteringMethod;
 

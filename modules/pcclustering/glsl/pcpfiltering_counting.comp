@@ -1,6 +1,7 @@
 layout (local_size_variable) in;
 
-layout (binding = 0, offset = 0) uniform atomic_uint accumulation;
+layout (binding = 0, offset = 0) uniform atomic_uint positiveAccumulation;
+layout (binding = 0, offset = 4) uniform atomic_uint negativeAccumulation;
 
 layout (std430, binding = 1) readonly buffer MinMaxValues {
     // min/max .. min/max .. min/max .....
@@ -51,5 +52,7 @@ void main() {
     }
 
     if (isValidDataPoint)
-        atomicCounterIncrement(accumulation);
+        atomicCounterIncrement(positiveAccumulation);
+    else
+        atomicCounterIncrement(negativeAccumulation);
 }

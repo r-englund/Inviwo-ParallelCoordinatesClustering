@@ -38,4 +38,7 @@ using BinningDataInport = inviwo::DataInport<BinningData>;
 using BinningDataOutport = inviwo::DataOutport<BinningData>;
 
 
+ParallelCoordinatesPlotData* copyData(const ParallelCoordinatesPlotData* input);
+
+
 #endif  // IVW_PCPDATA_H

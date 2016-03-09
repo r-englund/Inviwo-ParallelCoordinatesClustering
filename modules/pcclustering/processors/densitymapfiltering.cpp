@@ -117,14 +117,14 @@ void DensityMapFiltering::filterBinsPercentage(
     );
     glBindBuffer(GL_SHADER_STORAGE_BUFFER, 0);
 
+
     _percentageFiltering.setUniform("_nBins", outData->nBins);
     _percentageFiltering.setUniform("_nDimensions", outData->nDimensions);
     _percentageFiltering.setUniform("_percentage", _percentage);
 
-    _percentageFiltering.setUniform("INT_MAX", std::numeric_limits<int>::max());
-
     glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 0, inData->ssboBins);
-    glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 1, outData->ssboBins);
+    glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 1, inData->ssboMinMax);
+    glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 2, outData->ssboBins);
     
 
     LGL_ERROR;
@@ -137,20 +137,6 @@ void DensityMapFiltering::filterBinsPercentage(
     LGL_ERROR;
 
     _percentageFiltering.deactivate();
-
-
-    //glBindBuffer(GL_SHADER_STORAGE_BUFFER, outData->ssboBins);
-    //int* ptr = reinterpret_cast<int*>(glMapBuffer(GL_SHADER_STORAGE_BUFFER, GL_READ_ONLY));
-
-    //for (int i = 0; i < outData->nDimensions * outData->nBins; ++i) {
-    //    if (ptr[i] != 0) {
-    //        LogInfo(i);
-    //    }
-    //}
-
-
-
-
 }
 
 void DensityMapFiltering::filterBinsTopology(

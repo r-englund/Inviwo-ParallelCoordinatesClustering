@@ -36,6 +36,7 @@ PCPFiltering::PCPFiltering()
     , _binInport("in.bins")
     , _pcpInport("in.pcp")
     , _pcpOutport("out.pcp")
+    , _pcpOutportNegative("out.pcp.negative")
     , _filteringMethod("_filteringMethod", "Filtering Method")
     , _countingShader({{ShaderType::Compute, "pcpfiltering_counting.comp" }}, Shader::Build::No)
     , _filteringShader({ { ShaderType::Compute, "pcpfiltering_filtering.comp" } }, Shader::Build::No)
@@ -44,6 +45,7 @@ PCPFiltering::PCPFiltering()
     addPort(_pcpInport);
 
     addPort(_pcpOutport);
+    addPort(_pcpOutportNegative);
 
     _countingShader.getShaderObject(ShaderType::Compute)->addShaderExtension(
         "GL_ARB_compute_variable_group_size",
@@ -63,9 +65,7 @@ PCPFiltering::PCPFiltering()
     _filteringShader.onReload([this]() {invalidate(InvalidationLevel::InvalidOutput); });
 }
 
-PCPFiltering::~PCPFiltering() {
-}
-
+PCPFiltering::~PCPFiltering() {}
 
 void PCPFiltering::process() {
     if (!_binInport.hasData())
@@ -77,44 +77,23 @@ void PCPFiltering::process() {
     std::shared_ptr<const BinningData> binInData = _binInport.getData();
     std::shared_ptr<const ParallelCoordinatesPlotData> pcpInData = _pcpInport.getData();
 
-    ParallelCoordinatesPlotData* pcpOutData = new ParallelCoordinatesPlotData;
-    pcpOutData->nDimensions = pcpInData->nDimensions;
-    //pcpOutData->ssboMinMax = pcpInData->ssboMinMax;
+    ParallelCoordinatesPlotData* pcpOutData = copyData(pcpInData.get());
+    ParallelCoordinatesPlotData* pcpOutDataNegative = copyData(pcpInData.get());
+
+    filterData(pcpInData.get(), binInData.get(), pcpOutData, pcpOutDataNegative);
     LGL_ERROR;
-    glGenBuffers(1, &pcpOutData->ssboData);
-    glGenBuffers(1, &pcpOutData->ssboMinMax);
-
-    glBindBuffer(GL_COPY_WRITE_BUFFER, pcpOutData->ssboMinMax);
-    glBufferData(
-        GL_COPY_WRITE_BUFFER,
-        pcpInData->nDimensions * 2 * sizeof(float),
-        nullptr,
-        GL_DYNAMIC_DRAW
-    );
-
-    glBindBuffer(GL_COPY_READ_BUFFER, pcpInData->ssboMinMax);
-    glCopyBufferSubData(
-        GL_COPY_READ_BUFFER,
-        GL_COPY_WRITE_BUFFER,
-        0,
-        0,
-        pcpInData->nDimensions * 2 * sizeof(float)
-        );
-    glBindBuffer(GL_COPY_READ_BUFFER, 0);
-    glBindBuffer(GL_COPY_WRITE_BUFFER, 0);
-    LGL_ERROR;
-
-    filterData(pcpInData.get(), binInData.get(), pcpOutData);
-    LGL_ERROR;
-
 
     _pcpOutport.setData(pcpOutData);
+    _pcpOutportNegative.setData(pcpOutDataNegative);
     LGL_ERROR;
 
 }
 
 void PCPFiltering::filterData(const ParallelCoordinatesPlotData* inData,
-                               const BinningData* binData, ParallelCoordinatesPlotData* outData)
+                              const BinningData* binData,
+                              ParallelCoordinatesPlotData* outData,
+                              ParallelCoordinatesPlotData* outDataNegative
+    )
 {
     // First count the number of data values that will be written
     _countingShader.activate();
@@ -122,10 +101,10 @@ void PCPFiltering::filterData(const ParallelCoordinatesPlotData* inData,
     _countingShader.setUniform("_nBins", binData->nBins);
 
     // Storage for number of data values (not one value per dimension)
-    GLuint nValuesCounter = 0;
+    GLuint nValuesCounter;
     glGenBuffers(1, &nValuesCounter);
     glBindBuffer(GL_ATOMIC_COUNTER_BUFFER, nValuesCounter);
-    glBufferData(GL_ATOMIC_COUNTER_BUFFER, sizeof(GLuint), nullptr, GL_DYNAMIC_DRAW);
+    glBufferData(GL_ATOMIC_COUNTER_BUFFER, sizeof(GLuint) * 2, nullptr, GL_DYNAMIC_DRAW);
     glBindBuffer(GL_ATOMIC_COUNTER_BUFFER, 0);
     
     glBindBufferBase(GL_ATOMIC_COUNTER_BUFFER, 0, nValuesCounter);
@@ -144,7 +123,8 @@ void PCPFiltering::filterData(const ParallelCoordinatesPlotData* inData,
 
     glBindBuffer(GL_ATOMIC_COUNTER_BUFFER, nValuesCounter);
     int* ptr = (int*)glMapBuffer(GL_ATOMIC_COUNTER_BUFFER, GL_READ_WRITE);
-    int nDataValues = ptr[0];
+    int nDataValuesPositive = ptr[0];
+    int nDataValuesNegative = ptr[1];
     glUnmapBuffer(GL_ATOMIC_COUNTER_BUFFER);
     glBindBuffer(GL_ATOMIC_COUNTER_BUFFER, 0);
     LGL_ERROR;
@@ -154,7 +134,8 @@ void PCPFiltering::filterData(const ParallelCoordinatesPlotData* inData,
 
     //LogInfo(nDataValues);
 
-    outData->nValues = nDataValues * outData->nDimensions;
+    outData->nValues = nDataValuesPositive * outData->nDimensions;
+    outDataNegative->nValues = nDataValuesNegative * outData->nDimensions;
     _countingShader.deactivate();
 
 
@@ -171,9 +152,28 @@ void PCPFiltering::filterData(const ParallelCoordinatesPlotData* inData,
         GL_DYNAMIC_DRAW
     );
     LGL_ERROR;
+
+    glBindBuffer(GL_SHADER_STORAGE_BUFFER, outDataNegative->ssboData);
+    glBufferData(
+        GL_SHADER_STORAGE_BUFFER,
+        outDataNegative->nValues * sizeof(float),
+        nullptr,
+        GL_DYNAMIC_DRAW
+        );
+    LGL_ERROR;
     glBindBuffer(GL_SHADER_STORAGE_BUFFER, 0);
     LGL_ERROR;
 
+
+    GLuint memoryBarrier;
+    glGenBuffers(1, &memoryBarrier);
+    glBindBuffer(GL_ATOMIC_COUNTER_BUFFER, memoryBarrier);
+    glBufferData(GL_ATOMIC_COUNTER_BUFFER, sizeof(GLuint) * 2, nullptr, GL_DYNAMIC_DRAW);
+    glBindBuffer(GL_ATOMIC_COUNTER_BUFFER, 0);
+
+
+    glBindBufferBase(GL_ATOMIC_COUNTER_BUFFER, 0, memoryBarrier);
+    LGL_ERROR;
     glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 1, inData->ssboMinMax);
     LGL_ERROR;
     glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 2, inData->ssboData);
@@ -182,7 +182,9 @@ void PCPFiltering::filterData(const ParallelCoordinatesPlotData* inData,
     LGL_ERROR;
     glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 4, outData->ssboData);
     LGL_ERROR;
-    
+    glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 5, outDataNegative->ssboData);
+    LGL_ERROR;
+
     glMemoryBarrier(GL_ALL_BARRIER_BITS);
     glDispatchComputeGroupSizeARB(
         inData->nValues / inData->nDimensions, 1, 1,
@@ -190,6 +192,8 @@ void PCPFiltering::filterData(const ParallelCoordinatesPlotData* inData,
         );
     glMemoryBarrier(GL_ALL_BARRIER_BITS);
     LGL_ERROR;
+
+    glDeleteBuffers(1, &memoryBarrier);
 
     _filteringShader.deactivate();
     LGL_ERROR;

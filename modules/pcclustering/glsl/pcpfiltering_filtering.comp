@@ -4,7 +4,8 @@ layout (local_size_variable) in;
 //     int value;
 // } accumulation;
 
-// layout (binding = 0, offset = 0) uniform atomic_uint memoryBarrier;
+layout (binding = 0, offset = 0) uniform atomic_uint memoryBarrier;
+layout (binding = 0, offset = 4) uniform atomic_uint memoryBarrierNegative;
 
 layout (std430, binding = 1) readonly buffer MinMaxValues {
     // min/max .. min/max .. min/max .....
@@ -22,6 +23,10 @@ layout (std430, binding = 3) readonly buffer Bins {
 layout (std430, binding = 4) writeonly buffer OutValues {
     float data[];
 } outValues;
+
+layout (std430, binding = 5) writeonly buffer OutValuesNegative {
+    float data[];
+} outValuesNegative;
 
 uniform int _nBins;
 uniform int _nDimensions;
@@ -59,13 +64,17 @@ void main() {
     }
 
     if (isValidDataPoint) {
-        // Storage values
-        // int storageLocation = int(atomicCounterIncrement(memoryBarrier)) * _nDimensions;
-        int storageLocation = int(gl_GlobalInvocationID) * _nDimensions;
-
+        int storageLocation = int(atomicCounterIncrement(memoryBarrier)) * _nDimensions;
         for (int dimension = 0; dimension < _nDimensions; ++dimension) {
             float value = getValue(int(gl_GlobalInvocationID), dimension);
             outValues.data[storageLocation + dimension] = value;
+        }
+    }
+    else {
+        int storageLocation = int(atomicCounterIncrement(memoryBarrierNegative)) * _nDimensions;
+        for (int dimension = 0; dimension < _nDimensions; ++dimension) {
+            float value = getValue(int(gl_GlobalInvocationID), dimension);
+            outValuesNegative.data[storageLocation + dimension] = value;
         }
     }
 }

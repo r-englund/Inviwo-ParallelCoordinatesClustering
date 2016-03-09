@@ -4,14 +4,17 @@ layout (std430, binding = 0) readonly buffer Input {
     int values[];
 } inputBin;
 
-layout (std430, binding = 1) buffer Output {
+layout (std430, binding = 1) buffer MinMaxBuffer {
+    int values[];
+} minMaxBuffer;
+
+layout (std430, binding = 2) buffer Output {
     int values[];
 } outputBin;
 
 uniform int _nBins;
 uniform int _nDimensions;
 uniform float _percentage;
-uniform int INT_MAX;
 
 int getValue(int bin, int dim) {
     return inputBin.values[dim * _nBins + bin];
@@ -27,15 +30,17 @@ void main() {
 
 
     // First, get the min/max for all bins in the current dimension
-    int min = INT_MAX;
-    int max = -INT_MAX;
-    for (int i = 0; i < _nDimensions; ++i) {
-        int value = getValue(int(gl_WorkGroupID.x), i);
-        if (value < min)
-            min = value;
-        if (value > max)
-            max = value;
-    }
+    // int min = INT_MAX;
+    // int max = -INT_MAX;
+    // for (int i = 0; i < _nDimensions; ++i) {
+    //     int value = getValue(int(gl_WorkGroupID.x), i);
+    //     if (value < min)
+    //         min = value;
+    //     if (value > max)
+    //         max = value;
+    // }
+    int min = minMaxBuffer.values[int(gl_LocalInvocationID.x) * 2];
+    int max = minMaxBuffer.values[int(gl_LocalInvocationID.x) * 2 + 1];
 
     int v = getValue(int(gl_WorkGroupID.x), int(gl_LocalInvocationID.x));
     float normalized = (float(v) - float(min)) / (float(max) - float(min));
