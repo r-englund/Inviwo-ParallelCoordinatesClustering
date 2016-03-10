@@ -1,6 +1,10 @@
 layout(location = 0) in float in_position;
 
-layout (std430, binding = 2) buffer MinMaxValues {
+layout (std430, binding = 0) readonly buffer Values {
+    float data[];
+} values;
+
+layout (std430, binding = 1) readonly buffer MinMaxValues {
     // min/max .. min/max .. min/max .....
     float values[];
 } minMaxValues;
@@ -55,15 +59,20 @@ float valueLocation(float value, vec2 minMax) {
 }
 
 void main() {
-    int dimension = gl_VertexID % _nDimensions;
+    int dimension = gl_VertexID;
+
+    float inp = values.data[gl_InstanceID * _nDimensions + gl_VertexID];
     
-    float location = dimensionLocation(dimension);
+    // float location = dimensionLocation(dimension);
+    float location = in_position;
     
     vec2 minMax = minMaxValue(dimension);
-    float value = valueLocation(in_position, minMax);
+    float value = valueLocation(inp, minMax);
     
 
     vec2 pos = vec2(location, value);
+
+    // pos = in_position;
 
     gl_Position = vec4(pos, 0.0, 1.0);
 

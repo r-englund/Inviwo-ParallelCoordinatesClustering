@@ -37,6 +37,7 @@ private:
 
     Shader _shader;
     GLuint _vao;
+    GLuint _vbo;
 };
 
 }  // namespace

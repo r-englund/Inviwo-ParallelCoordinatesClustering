@@ -40,7 +40,9 @@ PCPRenderer::PCPRenderer()
     , _shader("pcprenderer.vert", "pcprenderer.frag")
 {
     glGenVertexArrays(1, &_vao);
-
+    glGenBuffers(1, &_vbo);
+    glBindBuffer(GL_ARRAY_BUFFER, _vbo);
+    
     addPort(_inport);
     addPort(_outport);
 
@@ -52,6 +54,21 @@ PCPRenderer::PCPRenderer()
 
 PCPRenderer::~PCPRenderer() {
     glDeleteVertexArrays(1, &_vao);
+}
+
+float dimensionLocation(int dimension, float border, int nDimensions) {
+    //  -1  -1+border    1-border     1
+    //  |        |           |        |
+    //
+    // dimension(0)   -> (-1+border)
+    // dimension(max) -> (1-border)
+    //
+    const float minValue = -1 + border;
+    const float maxValue = 1 - border;
+
+    const float dim = float(dimension) / (float(nDimensions) - 1.f);
+
+    return minValue * (1.0 - dim) + maxValue * dim;
 }
 
 void PCPRenderer::process() {
@@ -73,26 +90,47 @@ void PCPRenderer::process() {
     _shader.setUniform("_horizontalBorder", _horizontalBorder);
     _shader.setUniform("_verticalBorder", _verticalBorder);
 
+
+    glFinish();
     glBindVertexArray(_vao);
 
 
-    glBindBuffer(GL_ARRAY_BUFFER, data->ssboData);
+    //glBindBuffer(GL_SHADER_STORAGE_BUFFER, data->ssboData);
+    glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 0, data->ssboData);
+    glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 1, data->ssboMinMax);
+
+    glBindBuffer(GL_ARRAY_BUFFER, _vbo);
+
+    std::vector<float> vertexData(data->nDimensions);
+    for (int i = 0; i < data->nDimensions; ++i) {
+        vertexData[i] = dimensionLocation(i, _horizontalBorder, data->nDimensions);
+    }
+    
+    glBufferData(GL_ARRAY_BUFFER,
+        vertexData.size() * sizeof(float),
+        vertexData.data(),
+        GL_STATIC_DRAW
+    );
+
+
     glEnableVertexAttribArray(0);
-    glVertexAttribPointer(0, 1, GL_FLOAT, GL_FALSE, sizeof(float), 0);
+    glVertexAttribPointer(0, 1, GL_FLOAT, GL_FALSE, 0, 0);
 
-    glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 2, data->ssboMinMax);
+    glDrawArraysInstanced(GL_LINE_STRIP, 0, 5, data->nValues / data->nDimensions);
 
-    for (int i = 0; i < data->nValues / data->nDimensions; ++i)
-        glDrawArrays(GL_LINE_STRIP, i * data->nDimensions, data->nDimensions);
+    //for (int i = 0; i < data->nValues / data->nDimensions; ++i)
+        //glDrawArrays(GL_LINE_STRIP, i * data->nDimensions, data->nDimensions);
+    //glMultiDrawArrays(GL_LINE_STRIP, firstValues.data(), countValues.data(), data->nValues / data->nDimensions);
 
     glBindBuffer(GL_ARRAY_BUFFER, 0);
     glBindVertexArray(0);
+    glFinish();
 
     _shader.deactivate();
 
     utilgl::deactivateCurrentTarget();
 
-    glScissor(0, 0, 0, 0);
+    //glScissor(0, 0, 0, 0);
     LGL_ERROR;
 }
 
