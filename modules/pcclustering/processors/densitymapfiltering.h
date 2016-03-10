@@ -47,6 +47,8 @@ private:
 
     Shader _percentageFiltering;
     Shader _topologyFiltering;
+
+    std::shared_ptr<BinningData> _binningData;
 };
 
 }  // namespace

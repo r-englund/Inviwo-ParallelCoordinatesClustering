@@ -63,6 +63,9 @@ PCPFiltering::PCPFiltering()
 
     _countingShader.onReload([this]() {invalidate(InvalidationLevel::InvalidOutput); });
     _filteringShader.onReload([this]() {invalidate(InvalidationLevel::InvalidOutput); });
+
+    _positiveData = std::make_shared<ParallelCoordinatesPlotData>();
+    _negativeData = std::make_shared<ParallelCoordinatesPlotData>();
 }
 
 PCPFiltering::~PCPFiltering() {}
@@ -77,14 +80,17 @@ void PCPFiltering::process() {
     std::shared_ptr<const BinningData> binInData = _binInport.getData();
     std::shared_ptr<const ParallelCoordinatesPlotData> pcpInData = _pcpInport.getData();
 
-    ParallelCoordinatesPlotData* pcpOutData = copyData(pcpInData.get());
-    ParallelCoordinatesPlotData* pcpOutDataNegative = copyData(pcpInData.get());
+    copyData(pcpInData.get(), _positiveData.get());
+    copyData(pcpInData.get(), _negativeData.get());
 
-    filterData(pcpInData.get(), binInData.get(), pcpOutData, pcpOutDataNegative);
+    //ParallelCoordinatesPlotData* pcpOutData = copyData(pcpInData.get());
+    //ParallelCoordinatesPlotData* pcpOutDataNegative = copyData(pcpInData.get());
+
+    filterData(pcpInData.get(), binInData.get(), _positiveData.get(), _negativeData.get());
     LGL_ERROR;
 
-    _pcpOutport.setData(pcpOutData);
-    _pcpOutportNegative.setData(pcpOutDataNegative);
+    _pcpOutport.setData(_positiveData);
+    _pcpOutportNegative.setData(_negativeData);
     LGL_ERROR;
 
 }

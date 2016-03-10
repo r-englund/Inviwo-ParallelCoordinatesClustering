@@ -42,6 +42,9 @@ private:
 
     Shader _countingShader;
     Shader _filteringShader;
+
+    std::shared_ptr<ParallelCoordinatesPlotData> _positiveData;
+    std::shared_ptr<ParallelCoordinatesPlotData> _negativeData;
     //GLuint _accumulationBuffer;
     //GLuint _vao;
 };

@@ -10,6 +10,9 @@
 //using ParallelCoordinatesPlotData = std::vector<float>;
 
 struct ParallelCoordinatesPlotRawData {
+    ParallelCoordinatesPlotRawData();
+    ~ParallelCoordinatesPlotRawData();
+
     std::vector<float> data;
     std::vector<std::pair<float, float>> minMax;
 };
@@ -18,6 +21,9 @@ using PCPRawDataInport = inviwo::DataInport<ParallelCoordinatesPlotRawData>;
 using PCPRawDataOutport = inviwo::DataOutport<ParallelCoordinatesPlotRawData>;
 
 struct ParallelCoordinatesPlotData {
+    ParallelCoordinatesPlotData();
+    ~ParallelCoordinatesPlotData();
+
     GLuint ssboData;
     GLuint ssboMinMax;
     int nDimensions;
@@ -28,6 +34,9 @@ using PCPDataInport = inviwo::DataInport<ParallelCoordinatesPlotData>;
 using PCPDataOutport = inviwo::DataOutport<ParallelCoordinatesPlotData>;
 
 struct BinningData {
+    BinningData();
+    ~BinningData();
+
     GLuint ssboBins;
     GLuint ssboMinMax;
     int nBins;
@@ -38,7 +47,8 @@ using BinningDataInport = inviwo::DataInport<BinningData>;
 using BinningDataOutport = inviwo::DataOutport<BinningData>;
 
 
-ParallelCoordinatesPlotData* copyData(const ParallelCoordinatesPlotData* input);
+//ParallelCoordinatesPlotData* copyData(const ParallelCoordinatesPlotData* input);
+void copyData(const ParallelCoordinatesPlotData* input, ParallelCoordinatesPlotData* output);
 
 
 #endif  // IVW_PCPDATA_H

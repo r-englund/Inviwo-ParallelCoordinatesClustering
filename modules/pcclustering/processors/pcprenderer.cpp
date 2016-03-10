@@ -69,6 +69,7 @@ void PCPRenderer::process() {
     _shader.activate();
 
     _shader.setUniform("_nDimensions", data->nDimensions);
+    _shader.setUniform("_nData", data->nValues / data->nDimensions);
     _shader.setUniform("_horizontalBorder", _horizontalBorder);
     _shader.setUniform("_verticalBorder", _verticalBorder);
 

@@ -57,6 +57,10 @@ DensityMapGenerator::DensityMapGenerator()
         );
     _densityMapCounterShader.build();
     _densityMapCounterShader.onReload([this]() {invalidate(InvalidationLevel::InvalidOutput); });
+
+    _binningData = std::make_shared<BinningData>();
+    glGenBuffers(1, &_binningData->ssboBins);
+    glGenBuffers(1, &_binningData->ssboMinMax);
 }
 
 DensityMapGenerator::~DensityMapGenerator() {}
@@ -67,11 +71,11 @@ void DensityMapGenerator::process() {
 
     std::shared_ptr<const ParallelCoordinatesPlotData> data = _inport.getData();
 
-    BinningData* outData = new BinningData;
-    glGenBuffers(1, &outData->ssboBins);
-    glGenBuffers(1, &outData->ssboMinMax);
+    //BinningData* outData = new BinningData;
+    //glGenBuffers(1, &outData->ssboBins);
+    //glGenBuffers(1, &outData->ssboMinMax);
 
-    glBindBuffer(GL_SHADER_STORAGE_BUFFER, outData->ssboBins);
+    glBindBuffer(GL_SHADER_STORAGE_BUFFER, _binningData->ssboBins);
     glBufferData(
         GL_SHADER_STORAGE_BUFFER,
         _nBins * data->nDimensions * sizeof(int),
@@ -79,7 +83,7 @@ void DensityMapGenerator::process() {
         GL_DYNAMIC_DRAW
     );
     
-    glBindBuffer(GL_SHADER_STORAGE_BUFFER, outData->ssboMinMax);
+    glBindBuffer(GL_SHADER_STORAGE_BUFFER, _binningData->ssboMinMax);
     glBufferData(
         GL_SHADER_STORAGE_BUFFER,
         data->nDimensions * 2 * sizeof(int),
@@ -87,8 +91,8 @@ void DensityMapGenerator::process() {
         GL_DYNAMIC_DRAW
     );
 
-    outData->nBins = _nBins;
-    outData->nDimensions = data->nDimensions;
+    _binningData->nBins = _nBins;
+    _binningData->nDimensions = data->nDimensions;
 
     _densityMapGeneratorShader.activate();
     _densityMapGeneratorShader.setUniform("_nBins", _nBins);
@@ -96,7 +100,7 @@ void DensityMapGenerator::process() {
 
     glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 0, data->ssboData);
     glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 1, data->ssboMinMax);
-    glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 2, outData->ssboBins);
+    glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 2, _binningData->ssboBins);
     //glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 3, outData->ssboMinMax);
 
     glMemoryBarrier(GL_ALL_BARRIER_BITS);
@@ -112,8 +116,8 @@ void DensityMapGenerator::process() {
     _densityMapCounterShader.setUniform("_nBins", _nBins);
     _densityMapCounterShader.setUniform("_nDimensions", data->nDimensions);
     _densityMapCounterShader.setUniform("INT_MAX", std::numeric_limits<int>::max());
-    glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 0, outData->ssboBins);
-    glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 1, outData->ssboMinMax);
+    glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 0, _binningData->ssboBins);
+    glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 1, _binningData->ssboMinMax);
 
     glMemoryBarrier(GL_ALL_BARRIER_BITS);
     glDispatchComputeGroupSizeARB(
@@ -124,7 +128,7 @@ void DensityMapGenerator::process() {
 
     _densityMapCounterShader.deactivate();
 
-    _outport.setData(outData);
+    _outport.setData(_binningData);
     LGL_ERROR;
 }
 

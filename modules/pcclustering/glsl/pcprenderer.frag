@@ -1,10 +1,6 @@
-// out vec4 fragColor;
-
-// uniform vec3 _color;
+uniform int _nData;
 
 void main() {
-    // FragData0 = vec4(1.0, 0.0, 0.0, 1.0);
-    FragData0 = vec4(1.0, 1.0, 1.0, 0.1);
-    // FragData0 = vec4(0.0, 1.0, 0.0, 1.0);
-
+    float alpha = 250.0 / float(_nData);
+    FragData0 = vec4(1.0, 1.0, 1.0, alpha);
 }

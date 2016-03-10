@@ -34,6 +34,8 @@ private:
 
     Shader _densityMapGeneratorShader;
     Shader _densityMapCounterShader;
+
+    std::shared_ptr<BinningData> _binningData;
 };
 
 }  // namespace

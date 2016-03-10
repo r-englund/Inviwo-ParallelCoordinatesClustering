@@ -59,6 +59,10 @@ DensityMapFiltering::DensityMapFiltering()
     );
     _topologyFiltering.build();
     _topologyFiltering.onReload([this]() {invalidate(InvalidationLevel::InvalidOutput); });
+
+    _binningData = std::make_shared<BinningData>();
+    glGenBuffers(1, &_binningData->ssboBins);
+    glGenBuffers(1, &_binningData->ssboMinMax);
 }
 
 DensityMapFiltering::~DensityMapFiltering() {}
@@ -69,30 +73,27 @@ void DensityMapFiltering::process() {
 
     std::shared_ptr<const BinningData> inData = _binInport.getData();
 
-    BinningData* outData = new BinningData;
-    outData->nBins = inData->nBins;
-    outData->nDimensions = inData->nDimensions;
-    glGenBuffers(1, &outData->ssboBins);
-    glGenBuffers(1, &outData->ssboMinMax);
+    _binningData->nBins = inData->nBins;
+    _binningData->nDimensions = inData->nDimensions;
     
-    std::vector<int> minMaxData(outData->nDimensions * 2);
-    for (int i = 0; i < outData->nDimensions; ++i) {
+    std::vector<int> minMaxData(_binningData->nDimensions * 2);
+    for (int i = 0; i < _binningData->nDimensions; ++i) {
         minMaxData[2 * i] = 0;
         minMaxData[2 * i + 1] = 1;
     }
-    glBindBuffer(GL_SHADER_STORAGE_BUFFER, outData->ssboMinMax);
+    glBindBuffer(GL_SHADER_STORAGE_BUFFER, _binningData->ssboMinMax);
     glBufferData(
         GL_SHADER_STORAGE_BUFFER,
-        outData->nDimensions * 2 * sizeof(int),
+        _binningData->nDimensions * 2 * sizeof(int),
         minMaxData.data(),
         GL_STATIC_DRAW
     );
     glBindBuffer(GL_SHADER_STORAGE_BUFFER, 0);
     LGL_ERROR;
 
-    filterBins(inData.get(), outData);
+    filterBins(inData.get(), _binningData.get());
 
-    _binOutport.setData(outData);
+    _binOutport.setData(_binningData);
 }
 
 void DensityMapFiltering::filterBins(const BinningData* inData, BinningData* outData) {
