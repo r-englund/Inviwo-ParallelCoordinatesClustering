@@ -9,6 +9,7 @@ set(HEADER_FILES
     ${CMAKE_CURRENT_SOURCE_DIR}/processors/densitymapfiltering.h
     ${CMAKE_CURRENT_SOURCE_DIR}/processors/densitymapgenerator.h
     ${CMAKE_CURRENT_SOURCE_DIR}/processors/densitymaprenderer.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/processors/pcpfileconverter.h
     ${CMAKE_CURRENT_SOURCE_DIR}/processors/pcpfiltering.h
     ${CMAKE_CURRENT_SOURCE_DIR}/processors/pcpreader.h
     ${CMAKE_CURRENT_SOURCE_DIR}/processors/pcprenderer.h
@@ -23,6 +24,7 @@ set(SOURCE_FILES
     ${CMAKE_CURRENT_SOURCE_DIR}/processors/densitymapfiltering.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/processors/densitymapgenerator.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/processors/densitymaprenderer.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/processors/pcpfileconverter.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/processors/pcpfiltering.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/processors/pcpreader.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/processors/pcprenderer.cpp

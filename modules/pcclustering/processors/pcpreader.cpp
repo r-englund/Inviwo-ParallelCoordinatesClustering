@@ -47,41 +47,29 @@ PCPReader::PCPReader()
 
 void PCPReader::load() {
     std::string fileName = _file;
-    std::ifstream file(fileName);
+    std::ifstream file(fileName, std::ifstream::binary);
 
     ParallelCoordinatesPlotRawData* data = new ParallelCoordinatesPlotRawData;
+    LogInfo("Dataset information");
 
-    int dimensions;
-    {
-        std::string line;
-        std::getline(file, line);
-        std::stringstream s(line);
-        s >> dimensions;
-    }
+    int8_t dimensions;
+    file.read(reinterpret_cast<char*>(&dimensions), sizeof(int8_t));
+    LogInfo("Dimensions: " << int(dimensions));
 
+    std::vector<float> minMaxValues(dimensions * 2);
+    file.read(reinterpret_cast<char*>(minMaxValues.data()), dimensions * 2 * sizeof(float));
 
-    for (int i = 0; i < dimensions; ++i)
-        data->minMax.emplace_back(std::numeric_limits<float>::max(), -std::numeric_limits<float>::max());
-
-    int i = 0;
-    std::string line;
-    while (std::getline(file, line)) {
-        std::stringstream s(line);
-        for (int j = 0; j < dimensions; ++j) {
-            float value;
-            s >> value;
-            data->data.push_back(value);
-
-            data->minMax[j].first = std::min(data->minMax[j].first, value);
-            data->minMax[j].second = std::max(data->minMax[j].second, value);
-        }
-        ++i;
-    }
-
-    LogInfo("Dataset information: " << fileName);
+    LogInfo("Min/Max Values:");
     for (int i = 0; i < dimensions; ++i) {
-        LogInfo("Min/Max (dimension " << i << "): " << data->minMax[i].first << " / " << data->minMax[i].second);
+        data->minMax.push_back(std::make_pair(minMaxValues[i * 2], minMaxValues[i * 2 + 1]));
+        LogInfo(i << ": " << data->minMax[i].first << " / " << data->minMax[i].second);
     }
+
+    int64_t nValues;
+    file.read(reinterpret_cast<char*>(&nValues), sizeof(int64_t));
+    LogInfo("Number of total values: " << nValues);
+    data->data.resize(nValues);
+    file.read(reinterpret_cast<char*>(data->data.data()), nValues * sizeof(float));
 
     _outport.setData(data);
 }
