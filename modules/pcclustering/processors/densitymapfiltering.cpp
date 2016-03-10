@@ -41,6 +41,8 @@ DensityMapFiltering::DensityMapFiltering()
     _filteringMethod.addOption("topology", "Topology", FilteringMethodOptionTopological);
     addProperty(_filteringMethod);
 
+    _filteringMethod.onChange([this]() { recreateBuffers(); });
+
     addProperty(_percentage);
 
     addProperty(_nClusters);
@@ -66,6 +68,14 @@ DensityMapFiltering::DensityMapFiltering()
 }
 
 DensityMapFiltering::~DensityMapFiltering() {}
+
+void DensityMapFiltering::recreateBuffers() {
+    glDeleteBuffers(1, &_binningData->ssboBins);
+    glDeleteBuffers(1, &_binningData->ssboMinMax);
+
+    glGenBuffers(1, &_binningData->ssboBins);
+    glGenBuffers(1, &_binningData->ssboMinMax);
+}
 
 void DensityMapFiltering::process() {
     if (!_binInport.hasData())

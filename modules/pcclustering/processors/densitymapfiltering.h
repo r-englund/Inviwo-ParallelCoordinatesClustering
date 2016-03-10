@@ -32,6 +32,8 @@ private:
     void filterBinsPercentage(const BinningData* inData, BinningData* outData);
     void filterBinsTopology(const BinningData* inData, BinningData* outData);
 
+    void recreateBuffers();
+
     BinningDataInport _binInport;
     PCPDataInport _pcpInport;
     

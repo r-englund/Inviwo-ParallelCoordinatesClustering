@@ -81,12 +81,17 @@ void PCPFiltering::process() {
     std::shared_ptr<const ParallelCoordinatesPlotData> pcpInData = _pcpInport.getData();
 
     copyData(pcpInData.get(), _positiveData.get());
-    copyData(pcpInData.get(), _negativeData.get());
+    if (_pcpOutportNegative.isConnected())
+        copyData(pcpInData.get(), _negativeData.get());
 
     //ParallelCoordinatesPlotData* pcpOutData = copyData(pcpInData.get());
     //ParallelCoordinatesPlotData* pcpOutDataNegative = copyData(pcpInData.get());
 
-    filterData(pcpInData.get(), binInData.get(), _positiveData.get(), _negativeData.get());
+    ParallelCoordinatesPlotData* negativeData = nullptr;
+    if (_pcpOutportNegative.isConnected())
+        negativeData = _negativeData.get();
+
+    filterData(pcpInData.get(), binInData.get(), _positiveData.get(), negativeData);
     LGL_ERROR;
 
     _pcpOutport.setData(_positiveData);
@@ -138,10 +143,10 @@ void PCPFiltering::filterData(const ParallelCoordinatesPlotData* inData,
     glDeleteBuffers(1, &nValuesCounter);
     LGL_ERROR;
 
-    //LogInfo(nDataValues);
 
     outData->nValues = nDataValuesPositive * outData->nDimensions;
-    outDataNegative->nValues = nDataValuesNegative * outData->nDimensions;
+    if (outDataNegative)
+        outDataNegative->nValues = nDataValuesNegative * outData->nDimensions;
     _countingShader.deactivate();
 
 
@@ -159,16 +164,18 @@ void PCPFiltering::filterData(const ParallelCoordinatesPlotData* inData,
     );
     LGL_ERROR;
 
-    glBindBuffer(GL_SHADER_STORAGE_BUFFER, outDataNegative->ssboData);
-    glBufferData(
-        GL_SHADER_STORAGE_BUFFER,
-        outDataNegative->nValues * sizeof(float),
-        nullptr,
-        GL_DYNAMIC_DRAW
-        );
-    LGL_ERROR;
-    glBindBuffer(GL_SHADER_STORAGE_BUFFER, 0);
-    LGL_ERROR;
+    if (outDataNegative) {
+        glBindBuffer(GL_SHADER_STORAGE_BUFFER, outDataNegative->ssboData);
+        glBufferData(
+            GL_SHADER_STORAGE_BUFFER,
+            outDataNegative->nValues * sizeof(float),
+            nullptr,
+            GL_DYNAMIC_DRAW
+            );
+        LGL_ERROR;
+        glBindBuffer(GL_SHADER_STORAGE_BUFFER, 0);
+        LGL_ERROR;
+    }
 
 
     GLuint memoryBarrier;
@@ -188,8 +195,10 @@ void PCPFiltering::filterData(const ParallelCoordinatesPlotData* inData,
     LGL_ERROR;
     glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 4, outData->ssboData);
     LGL_ERROR;
-    glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 5, outDataNegative->ssboData);
-    LGL_ERROR;
+    if (outDataNegative) {
+        glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 5, outDataNegative->ssboData);
+        LGL_ERROR;
+    }
 
     glMemoryBarrier(GL_ALL_BARRIER_BITS);
     glDispatchComputeGroupSizeARB(
