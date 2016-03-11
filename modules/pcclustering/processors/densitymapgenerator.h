@@ -27,6 +27,8 @@ public:
     void process() override;
 
 private:
+    void invalidateBuffers();
+
     PCPDataInport _inport;
     BinningDataOutport _outport;
 
@@ -36,6 +38,7 @@ private:
     Shader _densityMapCounterShader;
 
     std::shared_ptr<BinningData> _binningData;
+
 };
 
 }  // namespace

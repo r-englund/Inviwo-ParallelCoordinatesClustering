@@ -48,6 +48,12 @@ PCPReader::PCPReader()
 void PCPReader::load() {
     std::string fileName = _file;
     std::ifstream file(fileName, std::ifstream::binary);
+    
+    if (!filesystem::fileExists(fileName)) {
+        LogError("Error opening file '" << fileName << "'");
+        return;
+    }
+
 
     ParallelCoordinatesPlotRawData* data = new ParallelCoordinatesPlotRawData;
     LogInfo("Dataset information");
@@ -70,6 +76,16 @@ void PCPReader::load() {
     LogInfo("Number of total values: " << nValues);
     data->data.resize(nValues);
     file.read(reinterpret_cast<char*>(data->data.data()), nValues * sizeof(float));
+
+    for (int i = 0; i < nValues; ++i) {
+        const int dim = i % dimensions;
+        const float minValue = data->minMax[dim].first;
+        const float maxValue = data->minMax[dim].second;
+
+        float& v = data->data[i];
+        v = (v - minValue) / (maxValue - minValue);
+        v = (v - 0.5f) * 2.f;
+    }
 
     _outport.setData(data);
 }

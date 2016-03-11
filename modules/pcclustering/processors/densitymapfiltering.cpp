@@ -35,6 +35,9 @@ DensityMapFiltering::DensityMapFiltering()
     addPort(_binInport);
     addPort(_pcpInport);
 
+    _binInport.onChange([this](){recreateBuffers(); });
+    _pcpInport.onChange([this]() {recreateBuffers(); });
+
     addPort(_binOutport);
 
     _filteringMethod.addOption("percentage", "Percentage", FilteringMethodOptionPercentage);
@@ -44,8 +47,10 @@ DensityMapFiltering::DensityMapFiltering()
     _filteringMethod.onChange([this]() { recreateBuffers(); });
 
     addProperty(_percentage);
+    _percentage.onChange([this](){recreateBuffers();  });
 
     addProperty(_nClusters);
+    _nClusters.onChange([this]() {recreateBuffers();  });
 
 
     _percentageFiltering.getShaderObject(ShaderType::Compute)->addShaderExtension(
@@ -53,39 +58,52 @@ DensityMapFiltering::DensityMapFiltering()
         true
     );
     _percentageFiltering.build();
-    _percentageFiltering.onReload([this]() {invalidate(InvalidationLevel::InvalidOutput); });
+    _percentageFiltering.onReload([this]() {
+        recreateBuffers(); 
+        invalidate(InvalidationLevel::InvalidOutput); 
+    });
 
     _topologyFiltering.getShaderObject(ShaderType::Compute)->addShaderExtension(
         "GL_ARB_compute_variable_group_size",
         true
     );
     _topologyFiltering.build();
-    _topologyFiltering.onReload([this]() {invalidate(InvalidationLevel::InvalidOutput); });
+    _topologyFiltering.onReload([this]() {
+        recreateBuffers(); 
+        invalidate(InvalidationLevel::InvalidOutput);
+    });
 
     _binningData = std::make_shared<BinningData>();
-    glGenBuffers(1, &_binningData->ssboBins);
-    glGenBuffers(1, &_binningData->ssboMinMax);
+    _binningData->ssboBins = 0;
+    _binningData->ssboMinMax = 0;
+    //glGenBuffers(1, &_binningData->ssboBins);
 }
 
 DensityMapFiltering::~DensityMapFiltering() {}
 
 void DensityMapFiltering::recreateBuffers() {
+    if (!_binInport.hasData())
+        return;
+    std::shared_ptr<const BinningData> inData = _binInport.getData();
+
+    _binningData->nBins = inData->nBins;
+    _binningData->nDimensions = inData->nDimensions;
+
     glDeleteBuffers(1, &_binningData->ssboBins);
     glDeleteBuffers(1, &_binningData->ssboMinMax);
 
     glGenBuffers(1, &_binningData->ssboBins);
     glGenBuffers(1, &_binningData->ssboMinMax);
-}
 
-void DensityMapFiltering::process() {
-    if (!_binInport.hasData())
-        return;
+    glBindBuffer(GL_SHADER_STORAGE_BUFFER, _binningData->ssboBins);
+    glBufferData(
+        GL_SHADER_STORAGE_BUFFER,
+        _binningData->nBins * _binningData->nDimensions * sizeof(int),
+        nullptr,
+        GL_DYNAMIC_DRAW
+        );
+    glBindBuffer(GL_SHADER_STORAGE_BUFFER, 0);
 
-    std::shared_ptr<const BinningData> inData = _binInport.getData();
-
-    _binningData->nBins = inData->nBins;
-    _binningData->nDimensions = inData->nDimensions;
-    
     std::vector<int> minMaxData(_binningData->nDimensions * 2);
     for (int i = 0; i < _binningData->nDimensions; ++i) {
         minMaxData[2 * i] = 0;
@@ -97,37 +115,28 @@ void DensityMapFiltering::process() {
         _binningData->nDimensions * 2 * sizeof(int),
         minMaxData.data(),
         GL_STATIC_DRAW
-    );
+        );
     glBindBuffer(GL_SHADER_STORAGE_BUFFER, 0);
-    LGL_ERROR;
-
-    filterBins(inData.get(), _binningData.get());
-
-    _binOutport.setData(_binningData);
 }
 
-void DensityMapFiltering::filterBins(const BinningData* inData, BinningData* outData) {
+void DensityMapFiltering::process() {
+    if (!_binInport.hasData())
+        return;
+
+    std::shared_ptr<const BinningData> inData = _binInport.getData();
+
     if (_filteringMethod.get() == FilteringMethodOptionPercentage)
-        filterBinsPercentage(inData, outData);
+        filterBinsPercentage(inData.get(), _binningData.get());
     else
-        filterBinsTopology(inData, outData);
-    LGL_ERROR;
+        filterBinsTopology(inData.get(), _binningData.get());
+
+    _binOutport.setData(_binningData);
 }
 
 void DensityMapFiltering::filterBinsPercentage(
     const BinningData* inData, BinningData* outData)
 {
     _percentageFiltering.activate();
-
-    glBindBuffer(GL_SHADER_STORAGE_BUFFER, outData->ssboBins);
-    glBufferData(
-        GL_SHADER_STORAGE_BUFFER,
-        inData->nBins * inData->nDimensions * sizeof(int),
-        nullptr,
-        GL_DYNAMIC_DRAW
-    );
-    glBindBuffer(GL_SHADER_STORAGE_BUFFER, 0);
-
 
     _percentageFiltering.setUniform("_nBins", outData->nBins);
     _percentageFiltering.setUniform("_nDimensions", outData->nDimensions);
@@ -137,15 +146,12 @@ void DensityMapFiltering::filterBinsPercentage(
     glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 1, inData->ssboMinMax);
     glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 2, outData->ssboBins);
     
-
-    LGL_ERROR;
     glMemoryBarrier(GL_ALL_BARRIER_BITS);
     glDispatchComputeGroupSizeARB(
         outData->nBins, 1, 1,
         outData->nDimensions, 1, 1
         );
     glMemoryBarrier(GL_ALL_BARRIER_BITS);
-    LGL_ERROR;
 
     _percentageFiltering.deactivate();
 }
@@ -155,36 +161,20 @@ void DensityMapFiltering::filterBinsTopology(
 {
     _topologyFiltering.activate();
 
-    LGL_ERROR;
-    glBindBuffer(GL_SHADER_STORAGE_BUFFER, outData->ssboBins);
-    LGL_ERROR;
-    glBufferData(
-        GL_SHADER_STORAGE_BUFFER,
-        inData->nBins * inData->nDimensions * sizeof(int),
-        nullptr,
-        GL_DYNAMIC_DRAW
-    );
-    LGL_ERROR;
-    glBindBuffer(GL_SHADER_STORAGE_BUFFER, 0);
-    LGL_ERROR;
-
     _topologyFiltering.setUniform("_nBins", outData->nBins);
     _topologyFiltering.setUniform("_nDimensions", outData->nDimensions);
     _topologyFiltering.setUniform("_nClusters", _nClusters);
     _topologyFiltering.setUniform("INT_MAX", std::numeric_limits<int>::max());
-    LGL_ERROR;
 
     glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 0, inData->ssboBins);
     glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 1, outData->ssboBins);
 
-    LGL_ERROR;
     glMemoryBarrier(GL_ALL_BARRIER_BITS);
     glDispatchComputeGroupSizeARB(
         outData->nDimensions, 1, 1,
         1, 1, 1
         );
     glMemoryBarrier(GL_ALL_BARRIER_BITS);
-    LGL_ERROR;
 
     _topologyFiltering.deactivate();
 }

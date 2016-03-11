@@ -28,7 +28,6 @@ public:
     void process() override;
 
 private:
-    void filterBins(const BinningData* inData, BinningData* outData);
     void filterBinsPercentage(const BinningData* inData, BinningData* outData);
     void filterBinsTopology(const BinningData* inData, BinningData* outData);
 

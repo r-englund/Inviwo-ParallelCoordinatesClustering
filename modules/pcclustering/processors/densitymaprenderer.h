@@ -34,8 +34,6 @@ private:
     FloatProperty _renderScaling;
 
     Shader _shader;
-    GLuint _vao;
-    GLuint _countBuffer;
 };
 
 }  // namespace

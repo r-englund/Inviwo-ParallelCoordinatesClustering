@@ -1,80 +1,50 @@
 layout (local_size_variable) in;
 
-// layout (std430, binding = 0) buffer Accumulation {
-//     int value;
-// } accumulation;
+layout (binding = 0, offset = 0) uniform atomic_uint memoryAccess;
 
-layout (binding = 0, offset = 0) uniform atomic_uint memoryBarrier;
-layout (binding = 0, offset = 4) uniform atomic_uint memoryBarrierNegative;
-
-layout (std430, binding = 1) readonly buffer MinMaxValues {
-    // min/max .. min/max .. min/max .....
-    float values[];
-} minMaxValues;
-
-layout (std430, binding = 2) readonly buffer Values {
+layout (std430, binding = 1) readonly buffer Values {
     float data[];
 } values;
 
-layout (std430, binding = 3) readonly buffer Bins {
+layout (std430, binding = 2) readonly buffer Bins {
     int data[];
 } bins;
 
-layout (std430, binding = 4) writeonly buffer OutValues {
+layout (std430, binding = 3) writeonly buffer OutValues {
     float data[];
 } outValues;
-
-layout (std430, binding = 5) writeonly buffer OutValuesNegative {
-    float data[];
-} outValuesNegative;
 
 uniform int _nBins;
 uniform int _nDimensions;
 
-float normalizeValue(float value, int dimension) {
-    const vec2 minMax = vec2(
-        minMaxValues.values[dimension * 2],
-        minMaxValues.values[dimension * 2 + 1]
-    );
-
-    return (value - minMax.x) / (minMax.y - minMax.x);
+int getBinIndex(float value, const int nBins) {
+    const float rangeScaleFactor = (nBins - 1.0) / 2.0;
+    return int((value + 1.0) * rangeScaleFactor);
 }
 
-int getBinIndex(float value) {
-    return int(floor(value * _nBins));
+bool isBinOccupied(int index, int dimension, const int nBins) {
+    return (bins.data[dimension * nBins + index] == 1);
 }
 
-bool isBinOccupied(int index, int dimension) {
-    return (bins.data[dimension * _nBins + index] == 1);
-}
-
-float getValue(int id, int dim) {
-    return values.data[id * _nDimensions + dim];
+float getValue(int id, int dim, const int nDimensions) {
+    return values.data[id * nDimensions + dim];
 }
 
 void main() {
     // gl_GlobalInvocationID.x \in [0, _nValues / _nDimensions]
     bool isValidDataPoint = true;
     for (int dimension = 0; dimension < _nDimensions; ++dimension) {
-        float value = getValue(int(gl_GlobalInvocationID), dimension);
-        float normalizedValue = normalizeValue(value, dimension);
-        int binIndex = getBinIndex(normalizedValue);
-        bool isValid = isBinOccupied(binIndex, dimension);
+        float value = getValue(int(gl_GlobalInvocationID), dimension, _nDimensions);
+        int binIndex = getBinIndex(value, _nBins);
+        bool isValid = isBinOccupied(binIndex, dimension, _nBins);
         isValidDataPoint = isValidDataPoint && isValid;
     }
 
     if (isValidDataPoint) {
-        int storageLocation = int(atomicCounterIncrement(memoryBarrier)) * _nDimensions;
+        int storageLocation = int(atomicCounterIncrement(memoryAccess)) * _nDimensions;
         for (int dimension = 0; dimension < _nDimensions; ++dimension) {
-            float value = getValue(int(gl_GlobalInvocationID), dimension);
+            float value = getValue(int(gl_GlobalInvocationID), dimension, _nDimensions);
             outValues.data[storageLocation + dimension] = value;
-        }
-    }
-    else {
-        int storageLocation = int(atomicCounterIncrement(memoryBarrierNegative)) * _nDimensions;
-        for (int dimension = 0; dimension < _nDimensions; ++dimension) {
-            float value = getValue(int(gl_GlobalInvocationID), dimension);
-            outValuesNegative.data[storageLocation + dimension] = value;
         }
     }
 }

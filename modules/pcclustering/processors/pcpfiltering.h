@@ -29,24 +29,23 @@ public:
 
 private:
     void filterData(const ParallelCoordinatesPlotData* inData, 
-        const BinningData* data, ParallelCoordinatesPlotData* outData,
-        ParallelCoordinatesPlotData* outDataNegative);
+        const BinningData* data, ParallelCoordinatesPlotData* outData);
 
     BinningDataInport _binInport;
     PCPDataInport _pcpInport;
     
     PCPDataOutport _pcpOutport;
-    PCPDataOutport _pcpOutportNegative;
+    //PCPDataOutport _pcpOutportNegative;
 
     OptionPropertyInt _filteringMethod;
 
     Shader _countingShader;
     Shader _filteringShader;
 
-    std::shared_ptr<ParallelCoordinatesPlotData> _positiveData;
-    std::shared_ptr<ParallelCoordinatesPlotData> _negativeData;
-    //GLuint _accumulationBuffer;
-    //GLuint _vao;
+    std::shared_ptr<ParallelCoordinatesPlotData> _pcpData;
+
+    GLuint _nValuesCounter;
+    GLuint _memoryAccess;
 };
 
 }  // namespace

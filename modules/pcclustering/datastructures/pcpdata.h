@@ -25,7 +25,6 @@ struct ParallelCoordinatesPlotData {
     ~ParallelCoordinatesPlotData();
 
     GLuint ssboData;
-    GLuint ssboMinMax;
     int nDimensions;
     int nValues;
 };
@@ -48,7 +47,7 @@ using BinningDataOutport = inviwo::DataOutport<BinningData>;
 
 
 //ParallelCoordinatesPlotData* copyData(const ParallelCoordinatesPlotData* input);
-void copyData(const ParallelCoordinatesPlotData* input, ParallelCoordinatesPlotData* output);
+//void copyData(const ParallelCoordinatesPlotData* input, ParallelCoordinatesPlotData* output);
 
 
 #endif  // IVW_PCPDATA_H

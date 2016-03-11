@@ -27,6 +27,8 @@ public:
     void process() override;
 
 private:
+    void invalidateBuffer();
+
     PCPDataInport _inport;
 
     ImageOutport _outport;
@@ -36,8 +38,8 @@ private:
 
 
     Shader _shader;
-    GLuint _vao;
     GLuint _vbo;
+    GLuint _vao;
 };
 
 }  // namespace
