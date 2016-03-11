@@ -37,6 +37,7 @@ struct BinningData {
     ~BinningData();
 
     GLuint ssboBins;
+    GLuint ssboMinMax;
     int nBins;
     int nDimensions;
 };

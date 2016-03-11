@@ -38,9 +38,6 @@ DensityMapRenderer::DensityMapRenderer()
     , _renderScaling("_renderScaling", "Scaling Factor", 1.f, 1.f, 5000.f)
     , _shader("densitymaprenderer.frag")
 {
-    glGenVertexArrays(1, &_vao);
-    glGenBuffers(1, &_countBuffer);
-
     addPort(_inport);
     addPort(_outport);
 
@@ -49,10 +46,7 @@ DensityMapRenderer::DensityMapRenderer()
     _shader.onReload([this]() {invalidate(InvalidationLevel::InvalidOutput); });
 }
 
-DensityMapRenderer::~DensityMapRenderer() {
-    glDeleteVertexArrays(1, &_vao);
-    glDeleteBuffers(1, &_countBuffer);
-}
+DensityMapRenderer::~DensityMapRenderer() {}
 
 void DensityMapRenderer::process() {
     if (!_inport.hasData())
@@ -75,22 +69,9 @@ void DensityMapRenderer::process() {
         glm::ivec2(_outport.getDimensions().x, _outport.getDimensions().y)
     );
     
-    //glBindBufferBase(GL_ATOMIC_COUNTER_BUFFER, 7, _countBuffer);
-    //glBufferData(GL_ATOMIC_COUNTER_BUFFER, sizeof(GLuint), nullptr, GL_DYNAMIC_DRAW);
-
-    //GLuint zero = 0;
-    //glBufferSubData(GL_ATOMIC_COUNTER_BUFFER, 0, sizeof(GLuint), &zero);
-
-
-    glBindVertexArray(_vao);
     glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 0, data->ssboBins);
-    //glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 1, data->ssboMinMax);
-
 
     utilgl::singleDrawImagePlaneRect();
-
-
-    glBindVertexArray(0);
 
     _shader.deactivate();
     utilgl::deactivateCurrentTarget();
