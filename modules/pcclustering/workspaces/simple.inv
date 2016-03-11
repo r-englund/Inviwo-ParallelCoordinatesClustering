@@ -91,7 +91,7 @@
                     <selection content="0" />
                 </MetaDataItem>
                 <MetaDataItem type="org.inviwo.ProcessorWidgetMetaData" key="org.inviwo.ProcessorWidgetMetaData">
-                    <position x="2016" y="2" />
+                    <position x="2327" y="202" />
                     <dimensions x="1184" y="778" />
                     <visibility content="1" />
                 </MetaDataItem>
@@ -121,7 +121,7 @@
                     </options>
                 </Property>
                 <Property type="org.inviwo.FloatProperty" identifier="_percentage">
-                    <value content="0.13330001" />
+                    <value content="0.12" />
                 </Property>
                 <Property type="org.inviwo.IntProperty" identifier="_nClusters">
                     <value content="0" />
@@ -137,10 +137,10 @@
         </Processor>
         <Processor type="pers.bock.DensityMapGenerator" identifier="Density Map Generator">
             <InPorts>
-                <InPort type="Inport" identifier="in.data" id="ref10" />
+                <InPort type="Inport" identifier="in.data" id="ref8" />
             </InPorts>
             <OutPorts>
-                <OutPort type="Outport" identifier="out.data" id="ref11" />
+                <OutPort type="Outport" identifier="out.data" id="ref9" />
             </OutPorts>
             <Properties>
                 <Property type="org.inviwo.IntProperty" identifier="_nBins" />
@@ -155,10 +155,10 @@
         </Processor>
         <Processor type="pers.bock.DensityMapRenderer" identifier="Density Map Renderer">
             <InPorts>
-                <InPort type="Inport" identifier="data" id="ref8" />
+                <InPort type="Inport" identifier="data" id="ref10" />
             </InPorts>
             <OutPorts>
-                <OutPort type="org.inviwo.ImageOutport" identifier="outport" id="ref9" />
+                <OutPort type="org.inviwo.ImageOutport" identifier="outport" id="ref11" />
             </OutPorts>
             <Properties>
                 <Property type="org.inviwo.FloatProperty" identifier="_renderScaling" />
@@ -366,7 +366,7 @@
         </Connection>
         <Connection>
             <OutPort type="Outport" identifier="outdata" reference="ref1" />
-            <InPort type="Inport" identifier="in.data" reference="ref10" />
+            <InPort type="Inport" identifier="in.data" reference="ref8" />
         </Connection>
         <Connection>
             <OutPort type="org.inviwo.ImageOutport" identifier="image" reference="ref21" />
@@ -377,15 +377,15 @@
             <InPort type="org.inviwo.ImageInport" identifier="inport" reference="ref2" />
         </Connection>
         <Connection>
-            <OutPort type="Outport" identifier="out.data" reference="ref11" />
-            <InPort type="Inport" identifier="data" reference="ref8" />
+            <OutPort type="Outport" identifier="out.data" reference="ref9" />
+            <InPort type="Inport" identifier="data" reference="ref10" />
         </Connection>
         <Connection>
-            <OutPort type="org.inviwo.ImageOutport" identifier="outport" reference="ref9" />
+            <OutPort type="org.inviwo.ImageOutport" identifier="outport" reference="ref11" />
             <InPort type="org.inviwo.ImageMultiInport" identifier="multiinport" reference="ref12" />
         </Connection>
         <Connection>
-            <OutPort type="Outport" identifier="out.data" reference="ref11" />
+            <OutPort type="Outport" identifier="out.data" reference="ref9" />
             <InPort type="Inport" identifier="in.bins" reference="ref5" />
         </Connection>
         <Connection>

@@ -43,6 +43,9 @@ private:
     Shader _filteringShader;
 
     std::shared_ptr<ParallelCoordinatesPlotData> _pcpData;
+
+    GLuint _nValuesCounter;
+    GLuint _memoryAccess;
 };
 
 }  // namespace

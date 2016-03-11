@@ -49,9 +49,22 @@ PCPFiltering::PCPFiltering()
 
     _pcpData = std::make_shared<ParallelCoordinatesPlotData>();
     glGenBuffers(1, &_pcpData->ssboData);
+
+    glGenBuffers(1, &_nValuesCounter);
+    glBindBuffer(GL_ATOMIC_COUNTER_BUFFER, _nValuesCounter);
+    glBufferData(GL_ATOMIC_COUNTER_BUFFER, sizeof(GLuint), nullptr, GL_DYNAMIC_DRAW);
+    glBindBuffer(GL_ATOMIC_COUNTER_BUFFER, 0);
+
+    glGenBuffers(1, &_memoryAccess);
+    glBindBuffer(GL_ATOMIC_COUNTER_BUFFER, _memoryAccess);
+    glBufferData(GL_ATOMIC_COUNTER_BUFFER, sizeof(GLuint), nullptr, GL_DYNAMIC_DRAW);
+    glBindBuffer(GL_ATOMIC_COUNTER_BUFFER, 0);
 }
 
-PCPFiltering::~PCPFiltering() {}
+PCPFiltering::~PCPFiltering() {
+    glDeleteBuffers(1, &_nValuesCounter);
+    glDeleteBuffers(1, &_memoryAccess);
+}
 
 void PCPFiltering::process() {
     if (!_binInport.hasData())
@@ -81,13 +94,18 @@ void PCPFiltering::filterData(const ParallelCoordinatesPlotData* inData,
     _countingShader.setUniform("_nBins", binData->nBins);
 
     // Storage for number of data values (not one value per dimension)
-    GLuint nValuesCounter;
-    glGenBuffers(1, &nValuesCounter);
-    glBindBuffer(GL_ATOMIC_COUNTER_BUFFER, nValuesCounter);
-    glBufferData(GL_ATOMIC_COUNTER_BUFFER, sizeof(GLuint), nullptr, GL_DYNAMIC_DRAW);
+    glBindBuffer(GL_ATOMIC_COUNTER_BUFFER, _nValuesCounter);
+    GLuint* ptr = (GLuint*)glMapBufferRange(
+        GL_ATOMIC_COUNTER_BUFFER,
+        0,
+        sizeof(GLuint),
+        GL_MAP_WRITE_BIT | GL_MAP_INVALIDATE_BUFFER_BIT | GL_MAP_UNSYNCHRONIZED_BIT
+    );
+    ptr[0] = 0;
+    glUnmapBuffer(GL_ATOMIC_COUNTER_BUFFER);
     glBindBuffer(GL_ATOMIC_COUNTER_BUFFER, 0);
-    
-    glBindBufferBase(GL_ATOMIC_COUNTER_BUFFER, 0, nValuesCounter);
+
+    glBindBufferBase(GL_ATOMIC_COUNTER_BUFFER, 0, _nValuesCounter);
     glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 1, inData->ssboData);
     glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 2, binData->ssboBins);
 
@@ -98,13 +116,12 @@ void PCPFiltering::filterData(const ParallelCoordinatesPlotData* inData,
         );
     glMemoryBarrier(GL_ALL_BARRIER_BITS);
 
-    glBindBuffer(GL_ATOMIC_COUNTER_BUFFER, nValuesCounter);
-    int* ptr = (int*)glMapBuffer(GL_ATOMIC_COUNTER_BUFFER, GL_READ_WRITE);
-    int nDataValuesPositive = ptr[0];
+    glBindBuffer(GL_ATOMIC_COUNTER_BUFFER, _nValuesCounter);
+    int* p = (int*)glMapBuffer(GL_ATOMIC_COUNTER_BUFFER, GL_READ_ONLY);
+    int nDataValuesPositive = p[0];
     glUnmapBuffer(GL_ATOMIC_COUNTER_BUFFER);
     glBindBuffer(GL_ATOMIC_COUNTER_BUFFER, 0);
 
-    glDeleteBuffers(1, &nValuesCounter);
     _countingShader.deactivate();
 
     LogInfo("Number of accepted values: " << nDataValuesPositive);
@@ -127,14 +144,19 @@ void PCPFiltering::filterData(const ParallelCoordinatesPlotData* inData,
         GL_DYNAMIC_DRAW
     );
     glBindBuffer(GL_SHADER_STORAGE_BUFFER, 0);
-
-    GLuint memoryAccess = 0;
-    glGenBuffers(1, &memoryAccess);
-    glBindBuffer(GL_ATOMIC_COUNTER_BUFFER, memoryAccess);
-    glBufferData(GL_ATOMIC_COUNTER_BUFFER, sizeof(GLuint), nullptr, GL_DYNAMIC_DRAW);
+    
+    glBindBuffer(GL_ATOMIC_COUNTER_BUFFER, _memoryAccess);
+    ptr = (GLuint*)glMapBufferRange(
+        GL_ATOMIC_COUNTER_BUFFER,
+        0,
+        sizeof(GLuint),
+        GL_MAP_WRITE_BIT | GL_MAP_INVALIDATE_BUFFER_BIT | GL_MAP_UNSYNCHRONIZED_BIT
+    );
+    ptr[0] = 0;
+    glUnmapBuffer(GL_ATOMIC_COUNTER_BUFFER);
     glBindBuffer(GL_ATOMIC_COUNTER_BUFFER, 0);
 
-    glBindBufferBase(GL_ATOMIC_COUNTER_BUFFER, 0, memoryAccess);
+    glBindBufferBase(GL_ATOMIC_COUNTER_BUFFER, 0, _memoryAccess);
     glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 1, inData->ssboData);
     glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 2, binData->ssboBins);
     glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 3, outData->ssboData);
@@ -145,6 +167,14 @@ void PCPFiltering::filterData(const ParallelCoordinatesPlotData* inData,
         1, 1, 1
         );
     glMemoryBarrier(GL_ALL_BARRIER_BITS);
+
+    glBindBuffer(GL_ATOMIC_COUNTER_BUFFER, _memoryAccess);
+    p = (int*)glMapBuffer(GL_ATOMIC_COUNTER_BUFFER, GL_READ_ONLY);
+    int asd = p[0];
+    glUnmapBuffer(GL_ATOMIC_COUNTER_BUFFER);
+    glBindBuffer(GL_ATOMIC_COUNTER_BUFFER, 0);
+
+    LogInfo("Number of stored values: " << asd);
 
     _filteringShader.deactivate();
 }
