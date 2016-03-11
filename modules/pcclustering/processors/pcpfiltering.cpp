@@ -82,18 +82,13 @@ void PCPFiltering::process() {
     std::shared_ptr<const BinningData> binInData = _binInport.getData();
     std::shared_ptr<const ParallelCoordinatesPlotData> pcpInData = _pcpInport.getData();
 
-    
-
-    //copyData(pcpInData.get(), _positiveData.get());
-    //if (_pcpOutportNegative.isConnected())
-    //    copyData(pcpInData.get(), _negativeData.get());
-
-    //ParallelCoordinatesPlotData* pcpOutData = copyData(pcpInData.get());
-    //ParallelCoordinatesPlotData* pcpOutDataNegative = copyData(pcpInData.get());
+    _positiveData->nDimensions = pcpInData->nDimensions;
 
     ParallelCoordinatesPlotData* negativeData = nullptr;
-    if (_pcpOutportNegative.isConnected())
+    if (_pcpOutportNegative.isConnected()) {
         negativeData = _negativeData.get();
+        _negativeData->nDimensions = pcpInData->nDimensions;
+    }
 
     filterData(pcpInData.get(), binInData.get(), _positiveData.get(), negativeData);
     LGL_ERROR;
