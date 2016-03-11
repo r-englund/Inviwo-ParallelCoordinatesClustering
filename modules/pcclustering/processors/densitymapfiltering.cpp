@@ -64,17 +64,17 @@ DensityMapFiltering::DensityMapFiltering()
 
     _binningData = std::make_shared<BinningData>();
     glGenBuffers(1, &_binningData->ssboBins);
-    glGenBuffers(1, &_binningData->ssboMinMax);
+    //glGenBuffers(1, &_binningData->ssboMinMax);
 }
 
 DensityMapFiltering::~DensityMapFiltering() {}
 
 void DensityMapFiltering::recreateBuffers() {
     glDeleteBuffers(1, &_binningData->ssboBins);
-    glDeleteBuffers(1, &_binningData->ssboMinMax);
+    //glDeleteBuffers(1, &_binningData->ssboMinMax);
 
     glGenBuffers(1, &_binningData->ssboBins);
-    glGenBuffers(1, &_binningData->ssboMinMax);
+    //glGenBuffers(1, &_binningData->ssboMinMax);
 }
 
 void DensityMapFiltering::process() {
@@ -86,20 +86,20 @@ void DensityMapFiltering::process() {
     _binningData->nBins = inData->nBins;
     _binningData->nDimensions = inData->nDimensions;
     
-    std::vector<int> minMaxData(_binningData->nDimensions * 2);
-    for (int i = 0; i < _binningData->nDimensions; ++i) {
-        minMaxData[2 * i] = 0;
-        minMaxData[2 * i + 1] = 1;
-    }
-    glBindBuffer(GL_SHADER_STORAGE_BUFFER, _binningData->ssboMinMax);
-    glBufferData(
-        GL_SHADER_STORAGE_BUFFER,
-        _binningData->nDimensions * 2 * sizeof(int),
-        minMaxData.data(),
-        GL_STATIC_DRAW
-    );
-    glBindBuffer(GL_SHADER_STORAGE_BUFFER, 0);
-    LGL_ERROR;
+    //std::vector<int> minMaxData(_binningData->nDimensions * 2);
+    //for (int i = 0; i < _binningData->nDimensions; ++i) {
+    //    minMaxData[2 * i] = 0;
+    //    minMaxData[2 * i + 1] = 1;
+    //}
+    //glBindBuffer(GL_SHADER_STORAGE_BUFFER, _binningData->ssboMinMax);
+    //glBufferData(
+    //    GL_SHADER_STORAGE_BUFFER,
+    //    _binningData->nDimensions * 2 * sizeof(int),
+    //    minMaxData.data(),
+    //    GL_STATIC_DRAW
+    //);
+    //glBindBuffer(GL_SHADER_STORAGE_BUFFER, 0);
+    //LGL_ERROR;
 
     filterBins(inData.get(), _binningData.get());
 
@@ -134,7 +134,7 @@ void DensityMapFiltering::filterBinsPercentage(
     _percentageFiltering.setUniform("_percentage", _percentage);
 
     glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 0, inData->ssboBins);
-    glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 1, inData->ssboMinMax);
+    //glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 1, inData->ssboMinMax);
     glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 2, outData->ssboBins);
     
 

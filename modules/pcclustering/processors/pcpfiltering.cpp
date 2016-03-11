@@ -65,7 +65,9 @@ PCPFiltering::PCPFiltering()
     _filteringShader.onReload([this]() {invalidate(InvalidationLevel::InvalidOutput); });
 
     _positiveData = std::make_shared<ParallelCoordinatesPlotData>();
+    glGenBuffers(1, &_positiveData->ssboData);
     _negativeData = std::make_shared<ParallelCoordinatesPlotData>();
+    glGenBuffers(1, &_negativeData->ssboData);
 }
 
 PCPFiltering::~PCPFiltering() {}
@@ -80,9 +82,11 @@ void PCPFiltering::process() {
     std::shared_ptr<const BinningData> binInData = _binInport.getData();
     std::shared_ptr<const ParallelCoordinatesPlotData> pcpInData = _pcpInport.getData();
 
-    copyData(pcpInData.get(), _positiveData.get());
-    if (_pcpOutportNegative.isConnected())
-        copyData(pcpInData.get(), _negativeData.get());
+    
+
+    //copyData(pcpInData.get(), _positiveData.get());
+    //if (_pcpOutportNegative.isConnected())
+    //    copyData(pcpInData.get(), _negativeData.get());
 
     //ParallelCoordinatesPlotData* pcpOutData = copyData(pcpInData.get());
     //ParallelCoordinatesPlotData* pcpOutDataNegative = copyData(pcpInData.get());
@@ -119,7 +123,7 @@ void PCPFiltering::filterData(const ParallelCoordinatesPlotData* inData,
     glBindBuffer(GL_ATOMIC_COUNTER_BUFFER, 0);
     
     glBindBufferBase(GL_ATOMIC_COUNTER_BUFFER, 0, nValuesCounter);
-    glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 1, inData->ssboMinMax);
+    //glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 1, inData->ssboMinMax);
     glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 2, inData->ssboData);
     glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 3, binData->ssboBins);
 
@@ -187,7 +191,7 @@ void PCPFiltering::filterData(const ParallelCoordinatesPlotData* inData,
 
     glBindBufferBase(GL_ATOMIC_COUNTER_BUFFER, 0, memoryBarrier);
     LGL_ERROR;
-    glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 1, inData->ssboMinMax);
+    //glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 1, inData->ssboMinMax);
     LGL_ERROR;
     glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 2, inData->ssboData);
     LGL_ERROR;

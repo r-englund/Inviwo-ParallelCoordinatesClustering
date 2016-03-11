@@ -71,6 +71,18 @@ void PCPReader::load() {
     data->data.resize(nValues);
     file.read(reinterpret_cast<char*>(data->data.data()), nValues * sizeof(float));
 
+    for (int i = 0; i < nValues / dimensions; ++i) {
+        for (int j = 0; j < dimensions; ++j) {
+            data->data[i * dimensions + j] =
+                (data->data[i * dimensions + j] - data->minMax[j].first) / (data->minMax[j].second - data->minMax[j].first);
+            data->data[i * dimensions + j] -= 0.5f;
+            data->data[i * dimensions + j] *= 2.f;
+
+        }
+        ++i;
+    }
+
+
     _outport.setData(data);
 }
 

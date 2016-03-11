@@ -46,7 +46,6 @@ void PCPUpload::process() {
     ParallelCoordinatesPlotData* outData = new ParallelCoordinatesPlotData;
 
     glGenBuffers(1, &(outData->ssboData));
-    glGenBuffers(1, &(outData->ssboMinMax));
     outData->nValues = static_cast<int>(inData->data.size());
     outData->nDimensions = static_cast<int>(inData->minMax.size());
 
@@ -57,20 +56,6 @@ void PCPUpload::process() {
         inData->data.data(),
         GL_STATIC_DRAW
     );
-
-    glBindBuffer(GL_SHADER_STORAGE_BUFFER, outData->ssboMinMax);
-    std::vector<float> data;
-    for (int i = 0; i < inData->minMax.size(); ++i) {
-        data.push_back(inData->minMax[i].first);
-        data.push_back(inData->minMax[i].second);
-    }
-    glBufferData(
-        GL_SHADER_STORAGE_BUFFER,
-        data.size() * sizeof(float),
-        data.data(),
-        GL_STATIC_DRAW
-    );
-    glBindBuffer(GL_SHADER_STORAGE_BUFFER, 0);
 
     _outport.setData(outData);
     LGL_ERROR;
