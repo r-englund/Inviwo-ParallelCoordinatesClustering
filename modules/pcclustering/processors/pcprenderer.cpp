@@ -52,6 +52,7 @@ PCPRenderer::PCPRenderer()
     addPort(_outport);
 
     addProperty(_horizontalBorder);
+    _horizontalBorder.onChange([this]() {invalidateBuffer(); });
     addProperty(_verticalBorder);
 
     _inport.onChange([this]() { invalidateBuffer(); });
@@ -80,6 +81,9 @@ float dimensionLocation(int dimension, float border, int nDimensions) {
 }
 
 void PCPRenderer::invalidateBuffer() {
+    if (!_inport.hasData())
+        return;
+
     std::shared_ptr<const ParallelCoordinatesPlotData> data = _inport.getData();
 
     glBindBuffer(GL_ARRAY_BUFFER, _vbo);
@@ -124,7 +128,6 @@ void PCPRenderer::process() {
 
     _shader.deactivate();
     utilgl::deactivateCurrentTarget();
-    LGL_ERROR;
 }
 
 }  // namespace

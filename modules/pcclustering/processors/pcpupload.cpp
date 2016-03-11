@@ -58,7 +58,6 @@ void PCPUpload::process() {
     );
 
     _outport.setData(outData);
-    LGL_ERROR;
 }
 
 }  // namespace

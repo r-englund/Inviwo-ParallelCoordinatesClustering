@@ -117,7 +117,6 @@ void DensityMapFiltering::recreateBuffers() {
         GL_STATIC_DRAW
         );
     glBindBuffer(GL_SHADER_STORAGE_BUFFER, 0);
-    LGL_ERROR;
 }
 
 void DensityMapFiltering::process() {
