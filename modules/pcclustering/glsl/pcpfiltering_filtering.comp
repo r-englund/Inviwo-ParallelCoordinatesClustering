@@ -15,10 +15,12 @@ layout (std430, binding = 3) writeonly buffer OutValues {
 } outValues;
 
 layout (std430, binding = 4) readonly buffer BinIdentifiers {
+    int nClusters;
     int data[];
 } binIdentifiers;
 
 layout (std430, binding = 5) writeonly buffer LineIdentifiers {
+    int nClusters;
     int data[];
 } lineIdentifiers;
 

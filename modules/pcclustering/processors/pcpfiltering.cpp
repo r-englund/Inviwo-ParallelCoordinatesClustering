@@ -105,7 +105,9 @@ void PCPFiltering::process() {
 
     if (_coloringDimension >= 0 && _coloringDimension < _pcpData->nDimensions) {
         _pcpData->nValues = dataValues * _pcpData->nDimensions;
-        _coloringData->nValues = pcpInData->nValues;
+        
+        _coloringData->nValues = dataValues;
+        
         _coloredBinData->nBins = binInData->nBins;
         _coloredBinData->selectedDimension = _coloringDimension;
 
