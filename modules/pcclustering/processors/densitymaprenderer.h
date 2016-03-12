@@ -9,6 +9,7 @@
 #include <inviwo/core/properties/buttonproperty.h>
 
 #include <modules/pcclustering/datastructures/pcpdata.h>
+#include <inviwo/core/properties/transferfunctionproperty.h>
 
 #include <inviwo/core/ports/imageport.h>
 
@@ -28,10 +29,11 @@ public:
 
 private:
     BinningDataInport _inport;
+    ColoredBinDataInport _colorInport;
 
     ImageOutport _outport;
 
-    FloatProperty _renderScaling;
+    TransferFunctionProperty _transFunc;
 
     Shader _shader;
 };

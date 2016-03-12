@@ -51,6 +51,7 @@ struct ColoredBinData {
     GLuint ssboIndices;
     int nBins;
     bool hasData;
+    int selectedDimension;
 };
 
 using ColoredBinDataInport = inviwo::DataInport<ColoredBinData>;

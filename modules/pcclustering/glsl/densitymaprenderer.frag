@@ -8,11 +8,16 @@ layout (std430, binding = 1) readonly buffer MinMax {
     int values[];
 } minMax;
 
-
+layout (std430, binding = 2) readonly buffer Identifiers {
+    int data[];
+} identifiers;
 
 uniform int _nBins;
 uniform int _nDimensions;
-// uniform float _renderScaling;
+
+uniform bool _hasColoringData;
+uniform int _selectedDimension;
+uniform sampler2D _transFunc;
 
 uniform ivec2 _outportSize;
 
@@ -50,24 +55,25 @@ ivec2 getMinMax(int dimension) {
 
 void main() {
     const vec2 texCoords = gl_FragCoord.xy * (1.f / vec2(_outportSize));
-    // const vec2 texCoords = gl_FragCoord.xy * outportParameters.reciprocalDimensions;
     
     const int bin = getBin(texCoords, _nBins);
     const int dim = getDimension(texCoords, _nDimensions);
 
     const int value = getValue(bin, dim);
 
-    // FragData0 = vec4(
-    //     getBinNormalized(bin),
-    //     getDimensionNormalized(dim),
-    //     0.0,
-    //     1.0
-    // );
-
     const ivec2 minMaxValue = getMinMax(dim);
     const float normalizedValue = (float(value) - float(minMaxValue.x)) / (float(minMaxValue.y) - float(minMaxValue.x));
 
-    FragData0 = vec4(vec3(normalizedValue), 0.2);
+    vec4 c = vec4(vec3(normalizedValue), 0.2);
+
+    if (_hasColoringData && (dim == _selectedDimension)) {
+        int identifier = identifiers.data[bin];
+        vec4 color = texture(_transFunc, vec2(float(identifier) / 10.0, 0.5));
+        FragData0 = color * c;
+    }
+    else {
+        FragData0 = c;
+    }
 
     // FragData0 = vec4(1.0, 0.0, 0.0, 1.0);
 

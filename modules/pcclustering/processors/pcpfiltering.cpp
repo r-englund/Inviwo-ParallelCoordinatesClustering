@@ -97,13 +97,15 @@ void PCPFiltering::process() {
     std::shared_ptr<const ParallelCoordinatesPlotData> pcpInData = _pcpInport.getData();
 
     _pcpData->nDimensions = pcpInData->nDimensions;
-    _coloringData->nValues = pcpInData->nValues;
 
     int dataValues = countElements(pcpInData.get(), binInData.get());
 
     if (_coloringDimension >= 0 && _coloringDimension < _pcpData->nDimensions) {
         _pcpData->nValues = dataValues * _pcpData->nDimensions;
+        _coloringData->nValues = pcpInData->nValues;
         _coloredBinData->nBins = binInData->nBins;
+        _coloredBinData->selectedDimension = _coloringDimension;
+
         clusterDetection(binInData.get());
         _coloringData->hasData = true;
         _coloredBinData->hasData = true;
