@@ -34,6 +34,7 @@ const ProcessorInfo PCPRenderer::getProcessorInfo() const {
 PCPRenderer::PCPRenderer()
     : Processor()
     , _inport("data")
+    , _coloringData("color")
     , _outport("image")
     , _horizontalBorder("_horizontalBorder", "Horizontal Border")
     , _verticalBorder("_verticalBorder", "Vertical Border")
@@ -49,6 +50,9 @@ PCPRenderer::PCPRenderer()
     glBindVertexArray(0);
     
     addPort(_inport);
+    addPort(_coloringData);
+    _coloringData.setOptional(true);
+
     addPort(_outport);
 
     addProperty(_horizontalBorder);
@@ -77,7 +81,7 @@ float dimensionLocation(int dimension, float border, int nDimensions) {
 
     const float dim = float(dimension) / (float(nDimensions) - 1.f);
 
-    return minValue * (1.0 - dim) + maxValue * dim;
+    return minValue * (1.f - dim) + maxValue * dim;
 }
 
 void PCPRenderer::invalidateBuffer() {
@@ -119,6 +123,12 @@ void PCPRenderer::process() {
     _shader.setUniform("_verticalBorder", _verticalBorder);
 
     glBindVertexArray(_vao);
+
+    bool hasColoringData = _coloringData.hasData() && _coloringData.getData()->hasData;
+    _shader.setUniform("_hasColoringData", hasColoringData);
+    if (hasColoringData) {
+        glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 1, _coloringData.getData()->ssboColor);
+    }
 
     glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 0, data->ssboData);
 

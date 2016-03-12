@@ -45,9 +45,29 @@ struct BinningData {
 using BinningDataInport = inviwo::DataInport<BinningData>;
 using BinningDataOutport = inviwo::DataOutport<BinningData>;
 
+struct ColoredBinData {
+    ColoredBinData();
+    ~ColoredBinData();
+    GLuint ssboIndices;
+    int nBins;
+    bool hasData;
+};
 
-//ParallelCoordinatesPlotData* copyData(const ParallelCoordinatesPlotData* input);
-//void copyData(const ParallelCoordinatesPlotData* input, ParallelCoordinatesPlotData* output);
+using ColoredBinDataInport = inviwo::DataInport<ColoredBinData>;
+using ColoredBinDataOutport = inviwo::DataOutport<ColoredBinData>;
+
+
+struct ColoringData {
+    ColoringData();
+    ~ColoringData();
+
+    GLuint ssboColor;
+    int nValues;
+    bool hasData;
+};
+
+using ColoringDataInport = inviwo::DataInport<ColoringData>;
+using ColoringDataOutport = inviwo::DataOutport<ColoringData>;
 
 
 #endif  // IVW_PCPDATA_H

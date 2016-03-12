@@ -30,6 +30,7 @@ private:
     void invalidateBuffer();
 
     PCPDataInport _inport;
+    ColoringDataInport _coloringData;
 
     ImageOutport _outport;
 

@@ -31,6 +31,7 @@
 
 #include <modules/opengl/shader/shadermanager.h>
 
+#include <modules/pcclustering/processors/clusterrenderer.h>
 #include <modules/pcclustering/processors/densitymapfiltering.h>
 #include <modules/pcclustering/processors/densitymapgenerator.h>
 #include <modules/pcclustering/processors/densitymaprenderer.h>
@@ -45,11 +46,9 @@ namespace inviwo {
 PCClusteringModule::PCClusteringModule(InviwoApplication* app)
     : InviwoModule(app, "PCClustering")
 {
-    //ShaderManager::getPtr()->addShaderSearchPath(getPath(ModulePath::GLSL));
-    //ShaderManager::getPtr()->addShaderSearchPath(getPath(ModulePath::GLSL) + "/abuffer");
-
     ShaderManager::getPtr()->addShaderSearchPath(getPath(ModulePath::GLSL));
 
+    registerProcessor<ClusterRenderer>();
     registerProcessor<DensityMapFiltering>();
     registerProcessor<DensityMapGenerator>();
     registerProcessor<DensityMapRenderer>();

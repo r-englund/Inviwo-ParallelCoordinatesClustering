@@ -6,6 +6,7 @@ ivw_module(PCClustering)
 # Add header files
 set(HEADER_FILES   
     ${CMAKE_CURRENT_SOURCE_DIR}/datastructures/pcpdata.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/processors/clusterrenderer.h
     ${CMAKE_CURRENT_SOURCE_DIR}/processors/densitymapfiltering.h
     ${CMAKE_CURRENT_SOURCE_DIR}/processors/densitymapgenerator.h
     ${CMAKE_CURRENT_SOURCE_DIR}/processors/densitymaprenderer.h
@@ -21,6 +22,7 @@ ivw_group("Header Files" ${HEADER_FILES})
 # Add source files
 set(SOURCE_FILES
     ${CMAKE_CURRENT_SOURCE_DIR}/datastructures/pcpdata.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/processors/clusterrenderer.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/processors/densitymapfiltering.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/processors/densitymapgenerator.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/processors/densitymaprenderer.cpp
@@ -35,18 +37,17 @@ ivw_group("Source Files" ${SOURCE_FILES})
 #--------------------------------------------------------------------
 # Add shaders
 set(SHADER_FILES
-    ${CMAKE_CURRENT_SOURCE_DIR}/glsl/pcphelper.glsl
+    ${CMAKE_CURRENT_SOURCE_DIR}/glsl/clusterdetection.comp
+    ${CMAKE_CURRENT_SOURCE_DIR}/glsl/clusterrenderer.frag
+    ${CMAKE_CURRENT_SOURCE_DIR}/glsl/densitymapcounter.comp
+    ${CMAKE_CURRENT_SOURCE_DIR}/glsl/densitymapfiltering_percentage.comp
+    ${CMAKE_CURRENT_SOURCE_DIR}/glsl/densitymapfiltering_topology.comp
     ${CMAKE_CURRENT_SOURCE_DIR}/glsl/densitymapgenerator.comp
     ${CMAKE_CURRENT_SOURCE_DIR}/glsl/densitymaprenderer.frag
+    ${CMAKE_CURRENT_SOURCE_DIR}/glsl/pcpfiltering_counting.comp
+    ${CMAKE_CURRENT_SOURCE_DIR}/glsl/pcpfiltering_filtering.comp
     ${CMAKE_CURRENT_SOURCE_DIR}/glsl/pcprenderer.vert
     ${CMAKE_CURRENT_SOURCE_DIR}/glsl/pcprenderer.frag
-    #${CMAKE_CURRENT_SOURCE_DIR}/glsl/abuffergeometrygl.frag
-    #ABUFFER
-    #${CMAKE_CURRENT_SOURCE_DIR}/glsl/abuffer/abufferlinkedlist.hglsl
-    #${CMAKE_CURRENT_SOURCE_DIR}/glsl/abuffer/abuffersort.hglsl
-    #${CMAKE_CURRENT_SOURCE_DIR}/glsl/abuffer/abuffer.hglsl
-	#${CMAKE_CURRENT_SOURCE_DIR}/glsl/abuffer/abufferresolve.hglsl
-	#${CMAKE_CURRENT_SOURCE_DIR}/glsl/abuffer/abufferreset.hglsl	
 )
 ivw_group("Shader Files" ${SHADER_FILES})
 

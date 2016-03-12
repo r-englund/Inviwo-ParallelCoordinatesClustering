@@ -14,8 +14,19 @@ layout (std430, binding = 3) writeonly buffer OutValues {
     float data[];
 } outValues;
 
+layout (std430, binding = 4) readonly buffer BinIdentifiers {
+    int data[];
+} binIdentifiers;
+
+layout (std430, binding = 5) writeonly buffer LineIdentifiers {
+    int data[];
+} lineIdentifiers;
+
 uniform int _nBins;
 uniform int _nDimensions;
+
+uniform bool _hasColoringInformation;
+uniform int _selectedDimension;
 
 int getBinIndex(float value, const int nBins) {
     const float rangeScaleFactor = (nBins - 1.0) / 2.0;
@@ -41,10 +52,18 @@ void main() {
     }
 
     if (isValidDataPoint) {
-        int storageLocation = int(atomicCounterIncrement(memoryAccess)) * _nDimensions;
+        int storageLocation = int(atomicCounterIncrement(memoryAccess));
         for (int dimension = 0; dimension < _nDimensions; ++dimension) {
             float value = getValue(int(gl_GlobalInvocationID), dimension, _nDimensions);
-            outValues.data[storageLocation + dimension] = value;
+            outValues.data[storageLocation * _nDimensions + dimension] = value;
+        }
+
+        if (_hasColoringInformation) {
+            float value = getValue(int(gl_GlobalInvocationID), _selectedDimension, _nDimensions);
+            int binIndex = getBinIndex(value, _nBins);
+            int id = binIdentifiers.data[binIndex];
+
+            lineIdentifiers.data[storageLocation] = id;
         }
     }
 }

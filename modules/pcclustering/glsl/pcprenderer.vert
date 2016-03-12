@@ -4,8 +4,15 @@ layout (std430, binding = 0) readonly buffer Values {
     float data[];
 } values;
 
+layout (std430, binding = 1) readonly buffer Identifiers {
+    int data[];
+} identifiers;
+
 uniform int _nDimensions;
 uniform float _verticalBorder;
+uniform bool _hasColoringData;
+
+out flat int identifier;
 
 void main() {
     // gl_VertexID = dimension
@@ -15,4 +22,7 @@ void main() {
     const float yPosition = value * (1.0 - _verticalBorder); 
     
     gl_Position = vec4(xPosition, yPosition, 0.0, 1.0);
+
+    if (_hasColoringData)
+        identifier = identifiers.data[gl_InstanceID];
 }

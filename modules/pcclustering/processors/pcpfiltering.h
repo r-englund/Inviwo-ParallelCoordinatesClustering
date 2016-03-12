@@ -28,24 +28,34 @@ public:
     void process() override;
 
 private:
+    int countElements(const ParallelCoordinatesPlotData* inData,
+        const BinningData* data);
+
+    void clusterDetection(const BinningData* data);
+
     void filterData(const ParallelCoordinatesPlotData* inData, 
-        const BinningData* data, ParallelCoordinatesPlotData* outData);
+        const BinningData* data, ParallelCoordinatesPlotData* outData, int nElements);
 
     BinningDataInport _binInport;
     PCPDataInport _pcpInport;
     
     PCPDataOutport _pcpOutport;
-    //PCPDataOutport _pcpOutportNegative;
+    ColoringDataOutport _coloringOutport;
+    ColoredBinDataOutport _coloredBinOutport;
 
-    OptionPropertyInt _filteringMethod;
+    IntProperty _coloringDimension;
 
     Shader _countingShader;
+    Shader _clusterDetectionShader;
     Shader _filteringShader;
 
     std::shared_ptr<ParallelCoordinatesPlotData> _pcpData;
+    std::shared_ptr<ColoringData> _coloringData;
+    std::shared_ptr<ColoredBinData> _coloredBinData;
 
     GLuint _nValuesCounter;
     GLuint _memoryAccess;
+    //GLuint _coloringBuffer;
 };
 
 }  // namespace
