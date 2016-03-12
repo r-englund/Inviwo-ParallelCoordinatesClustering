@@ -36,9 +36,16 @@ ClusterRenderer::ClusterRenderer()
     , _inport("data")
     , _outport("outport")
     , _shader("clusterrenderer.frag")
+    , _transFunc("transferFunction", "Transfer Function")
 {
     addPort(_inport);
     addPort(_outport);
+
+    addProperty(_transFunc);
+
+    _transFunc.get().clearPoints();
+    _transFunc.get().addPoint(vec2(0, 1), vec4(0, 0, 0, 1));
+    _transFunc.get().addPoint(vec2(1, 1), vec4(1, 1, 1, 1));
 
     _shader.onReload([this]() {invalidate(InvalidationLevel::InvalidOutput); });
 }
@@ -60,6 +67,11 @@ void ClusterRenderer::process() {
         "_outportSize",
         glm::ivec2(_outport.getDimensions().x, _outport.getDimensions().y)
         );
+
+    TextureUnit tfUnit;
+    utilgl::bindTexture(_transFunc, tfUnit);
+    _shader.setUniform("_transFunc", tfUnit.getUnitNumber());
+
 
     glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 0, data->ssboIndices);
 

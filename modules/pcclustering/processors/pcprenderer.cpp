@@ -38,6 +38,7 @@ PCPRenderer::PCPRenderer()
     , _outport("image")
     , _horizontalBorder("_horizontalBorder", "Horizontal Border")
     , _verticalBorder("_verticalBorder", "Vertical Border")
+    , _transFunc("transferFunction", "Transfer Function")
     , _shader("pcprenderer.vert", "pcprenderer.frag")
 {
     glGenVertexArrays(1, &_vao);
@@ -58,6 +59,12 @@ PCPRenderer::PCPRenderer()
     addProperty(_horizontalBorder);
     _horizontalBorder.onChange([this]() {invalidateBuffer(); });
     addProperty(_verticalBorder);
+
+    addProperty(_transFunc);
+
+    _transFunc.get().clearPoints();
+    _transFunc.get().addPoint(vec2(0, 1), vec4(0, 0, 0, 1));
+    _transFunc.get().addPoint(vec2(1, 1), vec4(1, 1, 1, 1));
 
     _inport.onChange([this]() { invalidateBuffer(); });
 
@@ -121,6 +128,10 @@ void PCPRenderer::process() {
     _shader.setUniform("_nData", data->nValues / data->nDimensions);
     _shader.setUniform("_horizontalBorder", _horizontalBorder);
     _shader.setUniform("_verticalBorder", _verticalBorder);
+
+    TextureUnit tfUnit;
+    utilgl::bindTexture(_transFunc, tfUnit);
+    _shader.setUniform("_transFunc", tfUnit.getUnitNumber());
 
     glBindVertexArray(_vao);
 

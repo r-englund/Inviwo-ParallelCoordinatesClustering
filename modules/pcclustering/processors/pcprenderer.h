@@ -13,6 +13,7 @@
 #include <inviwo/core/ports/imageport.h>
 
 #include <modules/opengl/shader/shader.h>
+#include <inviwo/core/properties/transferfunctionproperty.h>
 
 
 namespace inviwo {
@@ -37,6 +38,7 @@ private:
     FloatProperty _horizontalBorder;
     FloatProperty _verticalBorder;
 
+    TransferFunctionProperty _transFunc;
 
     Shader _shader;
     GLuint _vbo;

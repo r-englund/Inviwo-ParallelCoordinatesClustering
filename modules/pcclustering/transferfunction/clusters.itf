@@ -1,0 +1,41 @@
+<?xml version="1.0" ?>
+<InviwoTreeData version="1.0">
+    <!-- Don't edit the following code -->
+    <maskMin content="0" />
+    <maskMax content="1" />
+    <dataPoints>
+        <point>
+            <pos x="0" y="1" />
+            <rgba x="0" y="0" z="0" w="1" />
+        </point>
+        <point>
+            <pos x="0.12096774" y="1" />
+            <rgba x="0" y="0.68332952" z="1" w="1" />
+        </point>
+        <point>
+            <pos x="0.25403225" y="1" />
+            <rgba x="1" y="0.76667428" z="0" w="1" />
+        </point>
+        <point>
+            <pos x="0.39919356" y="1" />
+            <rgba x="1" y="0" z="0.06666667" w="1" />
+        </point>
+        <point>
+            <pos x="0.52016127" y="1" />
+            <rgba x="0.29999238" y="0" z="1" w="1" />
+        </point>
+        <point>
+            <pos x="0.6653226" y="1" />
+            <rgba x="0.66666669" y="1" z="0" w="1" />
+        </point>
+        <point>
+            <pos x="0.81048387" y="1" />
+            <rgba x="1" y="0" z="0.33333334" w="1" />
+        </point>
+        <point>
+            <pos x="1" y="1" />
+            <rgba x="1" y="1" z="1" w="1" />
+        </point>
+    </dataPoints>
+    <interpolationType_ content="0" />
+</InviwoTreeData>
