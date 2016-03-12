@@ -31,8 +31,10 @@ uniform bool _hasColoringInformation;
 uniform int _selectedDimension;
 
 int getBinIndex(float value, const int nBins) {
-    const float rangeScaleFactor = (nBins - 1.0) / 2.0;
-    return int((value + 1.0) * rangeScaleFactor);
+    // const float rangeScaleFactor = (nBins - 1.0) / 2.0;
+    // return int((value + 1.0) * rangeScaleFactor);
+
+    return int(floor(((value + 1.0) / 2.0) * nBins));
 }
 
 bool isBinOccupied(int index, int dimension, const int nBins) {

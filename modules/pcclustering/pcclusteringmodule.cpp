@@ -31,6 +31,7 @@
 
 #include <modules/opengl/shader/shadermanager.h>
 
+#include <modules/pcclustering/processors/clusterexport.h>
 #include <modules/pcclustering/processors/clusterrenderer.h>
 #include <modules/pcclustering/processors/densitymapfiltering.h>
 #include <modules/pcclustering/processors/densitymapgenerator.h>
@@ -48,6 +49,7 @@ PCClusteringModule::PCClusteringModule(InviwoApplication* app)
 {
     ShaderManager::getPtr()->addShaderSearchPath(getPath(ModulePath::GLSL));
 
+    registerProcessor<ClusterExport>();
     registerProcessor<ClusterRenderer>();
     registerProcessor<DensityMapFiltering>();
     registerProcessor<DensityMapGenerator>();

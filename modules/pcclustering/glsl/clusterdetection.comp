@@ -32,7 +32,6 @@ void main() {
             }
             else {
                 identifiers.nClusters += 1;
-                
                 identifiers.data[i] = identifiers.nClusters;
                 isInConnectedComponent = true;
             }
