@@ -9,6 +9,7 @@ layout (std430, binding = 1) readonly buffer MinMax {
 } minMax;
 
 layout (std430, binding = 2) readonly buffer Identifiers {
+    int nClusters;
     int data[];
 } identifiers;
 
@@ -68,7 +69,7 @@ void main() {
 
     if (_hasColoringData && (dim == _selectedDimension)) {
         int identifier = identifiers.data[bin];
-        vec4 color = texture(_transFunc, vec2(float(identifier) / 10.0, 0.5));
+        vec4 color = texture(_transFunc, vec2(float(identifier) / float(identifiers.nClusters), 0.5));
         FragData0 = color * c;
     }
     else {

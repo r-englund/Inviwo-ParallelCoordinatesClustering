@@ -5,6 +5,7 @@ layout (std430, binding = 0) readonly buffer Values {
 } values;
 
 layout (std430, binding = 1) readonly buffer Identifiers {
+    int nClusters;
     int data[];
 } identifiers;
 
@@ -13,6 +14,7 @@ uniform float _verticalBorder;
 uniform bool _hasColoringData;
 
 out flat int identifier;
+out flat int nClusters;
 
 void main() {
     // gl_VertexID = dimension
@@ -23,6 +25,8 @@ void main() {
     
     gl_Position = vec4(xPosition, yPosition, 0.0, 1.0);
 
-    if (_hasColoringData)
+    if (_hasColoringData) {
         identifier = identifiers.data[gl_InstanceID];
+        nClusters = identifiers.nClusters;
+    }
 }

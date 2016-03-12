@@ -55,7 +55,7 @@ private:
 
     GLuint _nValuesCounter;
     GLuint _memoryAccess;
-    //GLuint _coloringBuffer;
+    //GLuint _nClustersBuffer;
 };
 
 }  // namespace

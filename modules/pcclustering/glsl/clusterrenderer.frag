@@ -1,6 +1,7 @@
 #include "utils/structs.glsl"
 
 layout (std430, binding = 0) readonly buffer Indices {
+    int nClusters;
     int data[];
 } indices;
 
@@ -21,7 +22,7 @@ void main() {
     const int bin = getBin(texCoords, _nBins);
     const int value = indices.data[bin];
 
-    FragData0 = texture(_transFunc, vec2(float(value) / 10.0, 0.5));
+    FragData0 = texture(_transFunc, vec2(float(value) / float(indices.nClusters), 0.5));
 
     // FragData0 = vec4(float(value) / 3.0, 0.0, 0.0, 1.0);
     // const int value = getValue(bin, dim);

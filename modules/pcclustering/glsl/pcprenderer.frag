@@ -1,4 +1,5 @@
 in flat int identifier;
+in flat int nClusters;
 
 uniform int _nData;
 uniform bool _hasColoringData;
@@ -10,7 +11,7 @@ void main() {
     alpha = clamp(alpha, 0.05, 0.1);
 
     if (_hasColoringData) {
-        vec4 color = vec4(texture(_transFunc, vec2(float(identifier) / 10.0, 0.5)).rgb, alpha);
+        vec4 color = vec4(texture(_transFunc, vec2(float(identifier) / float(nClusters), 0.5)).rgb, alpha);
         FragData0 = color;
     }
     else

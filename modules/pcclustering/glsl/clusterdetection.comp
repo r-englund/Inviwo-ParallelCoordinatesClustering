@@ -4,7 +4,8 @@ layout (std430, binding = 0) readonly buffer Bins {
     int data[];
 } bins;
 
-layout (std430, binding = 1) writeonly buffer Identifiers {
+layout (std430, binding = 1) buffer Identifiers {
+    int nClusters;
     int data[];
 } identifiers;
 
@@ -20,18 +21,19 @@ void main() {
     // We are going from the top to the bottom
     // Whenever we encounter a non-occupied bin, we reset the
     // current connected components
-    int currentID = 0;
+    identifiers.nClusters = 0;
     bool isInConnectedComponent = false;
     for (int i = 0; i < _nBins; ++i) {
         bool isOccupied = isBinOccupied(i, _selectedDimension, _nBins);
 
         if (isOccupied) {
             if (isInConnectedComponent) {
-                identifiers.data[i] = currentID;
+                identifiers.data[i] = identifiers.nClusters;
             }
             else {
-                currentID += 1;
-                identifiers.data[i] = currentID;
+                identifiers.nClusters += 1;
+                
+                identifiers.data[i] = identifiers.nClusters;
                 isInConnectedComponent = true;
             }
         }
