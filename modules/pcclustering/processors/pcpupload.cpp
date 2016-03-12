@@ -36,6 +36,8 @@ PCPUpload::PCPUpload()
 {
     addPort(_inport);
     addPort(_outport);
+
+    _data = std::make_shared<ParallelCoordinatesPlotData>();
 }
 
 void PCPUpload::process() {
@@ -43,21 +45,19 @@ void PCPUpload::process() {
     if (inData->data.empty())
         return;
 
-    ParallelCoordinatesPlotData* outData = new ParallelCoordinatesPlotData;
+    glGenBuffers(1, &(_data->ssboData));
+    _data->nValues = static_cast<int>(inData->data.size());
+    _data->nDimensions = static_cast<int>(inData->minMax.size());
 
-    glGenBuffers(1, &(outData->ssboData));
-    outData->nValues = static_cast<int>(inData->data.size());
-    outData->nDimensions = static_cast<int>(inData->minMax.size());
-
-    glBindBuffer(GL_SHADER_STORAGE_BUFFER, outData->ssboData);
+    glBindBuffer(GL_SHADER_STORAGE_BUFFER, _data->ssboData);
     glBufferData(
         GL_SHADER_STORAGE_BUFFER,
-        outData->nValues * sizeof(float),
+        _data->nValues * sizeof(float),
         inData->data.data(),
         GL_STATIC_DRAW
     );
 
-    _outport.setData(outData);
+    _outport.setData(_data);
 }
 
 }  // namespace

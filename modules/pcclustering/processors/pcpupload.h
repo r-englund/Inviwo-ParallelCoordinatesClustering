@@ -25,6 +25,8 @@ public:
 private:
     PCPRawDataInport _inport;
     PCPDataOutport _outport;
+
+    std::shared_ptr<ParallelCoordinatesPlotData> _data;
 };
 
 }  // namespace

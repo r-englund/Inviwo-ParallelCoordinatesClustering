@@ -74,6 +74,7 @@ void PCPReader::load() {
     int64_t nValues;
     file.read(reinterpret_cast<char*>(&nValues), sizeof(int64_t));
     LogInfo("Number of total values: " << nValues);
+    LogInfo("Number of data values: " << nValues / dimensions);
     data->data.resize(nValues);
     file.read(reinterpret_cast<char*>(data->data.data()), nValues * sizeof(float));
 
