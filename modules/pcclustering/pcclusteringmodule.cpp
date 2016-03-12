@@ -41,6 +41,7 @@
 #include <modules/pcclustering/processors/pcpreader.h>
 #include <modules/pcclustering/processors/pcprenderer.h>
 #include <modules/pcclustering/processors/pcpupload.h>
+#include <modules/pcclustering/processors/scatterplotrenderer.h>
 
 namespace inviwo {
 
@@ -59,6 +60,7 @@ PCClusteringModule::PCClusteringModule(InviwoApplication* app)
     registerProcessor<PCPReader>();
     registerProcessor<PCPRenderer>();
     registerProcessor<PCPUpload>();
+    registerProcessor<ScatterPlotRenderer>();
 }
 
 }  // namespace

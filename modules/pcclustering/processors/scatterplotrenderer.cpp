@@ -1,4 +1,4 @@
-#include <modules/pcclustering/processors/pcprenderer.h>
+#include <modules/pcclustering/processors/scatterplotrenderer.h>
 
 #include <modules/opengl/texture/textureutils.h>
 
@@ -19,33 +19,37 @@
 
 namespace inviwo {
 
-const ProcessorInfo PCPRenderer::processorInfo_{
-    "pers.bock.PCPRenderer",  // Class identifier
-    "PCP Renderer",            // Display name
+const ProcessorInfo ScatterPlotRenderer::processorInfo_{
+    "pers.bock.ScatterPlotRenderer",  // Class identifier
+    "ScatterPlot Renderer",            // Display name
     "Renderer",               // Category
     CodeState::Experimental,          // Code state
     Tags::CPU,                  // Tags
 };
 
-const ProcessorInfo PCPRenderer::getProcessorInfo() const {
+const ProcessorInfo ScatterPlotRenderer::getProcessorInfo() const {
     return processorInfo_;
 }
 
-PCPRenderer::PCPRenderer()
+ScatterPlotRenderer::ScatterPlotRenderer()
     : Processor()
     , _inport("data")
     , _coloringData("color")
     , _outport("image")
-    , _horizontalBorder("_horizontalBorder", "Horizontal Border")
-    , _verticalBorder("_verticalBorder", "Vertical Border")
+    , _xAxisSelection("_xAxisSelection", "X Axis")
+    , _yAxisSelection("_yAxisSelection", "Y Axis")
+    , _glyphSize("_glyphSize", "Glyph Size")
     , _transFunc("transferFunction", "Transfer Function")
-    , _shader("pcprenderer.vert", "pcprenderer.frag")
+    , _shader("scatterplotrenderer.vert", "scatterplotrenderer.frag")
 {
     glGenVertexArrays(1, &_vao);
     glGenBuffers(1, &_vbo);
 
     glBindVertexArray(_vao);
     glBindBuffer(GL_ARRAY_BUFFER, _vbo);
+    float data[2] = { 0.f, 0.f };
+    glBufferData(GL_ARRAY_BUFFER, 2 * sizeof(float), data, GL_STATIC_DRAW);
+
     glEnableVertexAttribArray(0);
     glVertexAttribPointer(0, 1, GL_FLOAT, GL_FALSE, 0, 0);
     glBindVertexArray(0);
@@ -53,65 +57,40 @@ PCPRenderer::PCPRenderer()
     addPort(_inport);
     addPort(_coloringData);
     _coloringData.setOptional(true);
+    _inport.onChange([this]() { updateOptionProperties();  });
 
     addPort(_outport);
 
-    addProperty(_horizontalBorder);
-    _horizontalBorder.onChange([this]() {invalidateBuffer(); });
-    addProperty(_verticalBorder);
-
+    addProperty(_xAxisSelection);
+    addProperty(_yAxisSelection);
+    addProperty(_glyphSize);
     addProperty(_transFunc);
 
     _transFunc.get().clearPoints();
     _transFunc.get().addPoint(vec2(0, 1), vec4(0, 0, 0, 1));
     _transFunc.get().addPoint(vec2(1, 1), vec4(1, 1, 1, 1));
 
-    _inport.onChange([this]() { invalidateBuffer(); });
-
     _shader.onReload([this]() { invalidate(InvalidationLevel::InvalidOutput); });
 }
 
-PCPRenderer::~PCPRenderer() {
+ScatterPlotRenderer::~ScatterPlotRenderer() {
     glDeleteVertexArrays(1, &_vao);
     glDeleteBuffers(1, &_vbo);
 }
 
-float dimensionLocation(int dimension, float border, int nDimensions) {
-    //  -1  -1+border    1-border     1
-    //  |        |           |        |
-    //
-    // dimension(0)   -> (-1+border)
-    // dimension(max) -> (1-border)
-    //
-    const float minValue = -1 + border;
-    const float maxValue = 1 - border;
-
-    const float dim = float(dimension) / (float(nDimensions) - 1.f);
-
-    return minValue * (1.f - dim) + maxValue * dim;
-}
-
-void PCPRenderer::invalidateBuffer() {
+void ScatterPlotRenderer::updateOptionProperties() {
     if (!_inport.hasData())
         return;
 
-    std::shared_ptr<const ParallelCoordinatesPlotData> data = _inport.getData();
-
-    glBindBuffer(GL_ARRAY_BUFFER, _vbo);
-    std::vector<float> vertexData(data->nDimensions);
-    for (int i = 0; i < data->nDimensions; ++i)
-        vertexData[i] = dimensionLocation(i, _horizontalBorder, data->nDimensions);
-
-    glBufferData(GL_ARRAY_BUFFER,
-        vertexData.size() * sizeof(float),
-        vertexData.data(),
-        GL_DYNAMIC_DRAW
-    );
-    glBindBuffer(GL_ARRAY_BUFFER, 0);
-
+    _xAxisSelection.clearOptions();
+    _yAxisSelection.clearOptions();
+    for (int i = 0; i < _inport.getData()->nDimensions; ++i) {
+        _xAxisSelection.addOption(std::to_string(i), std::to_string(i), i);
+        _yAxisSelection.addOption(std::to_string(i), std::to_string(i), i);
+    }
 }
 
-void PCPRenderer::process() {
+void ScatterPlotRenderer::process() {
     if (!_inport.hasData())
         return;
     std::shared_ptr<const ParallelCoordinatesPlotData> data = _inport.getData();
@@ -126,8 +105,8 @@ void PCPRenderer::process() {
 
     _shader.setUniform("_nDimensions", data->nDimensions);
     _shader.setUniform("_nData", data->nValues / data->nDimensions);
-    _shader.setUniform("_horizontalBorder", _horizontalBorder);
-    _shader.setUniform("_verticalBorder", _verticalBorder);
+    _shader.setUniform("_xAxisSelection", _xAxisSelection.get());
+    _shader.setUniform("_yAxisSelection", _yAxisSelection.get());
 
     TextureUnit tfUnit;
     utilgl::bindTexture(_transFunc, tfUnit);
@@ -143,7 +122,9 @@ void PCPRenderer::process() {
 
     glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 0, data->ssboData);
 
-    glDrawArraysInstanced(GL_LINE_STRIP, 0, data->nDimensions, data->nValues / data->nDimensions);
+    glPointSize(_glyphSize * 64.f);
+
+    glDrawArraysInstanced(GL_POINTS, 0, 1, data->nValues);
 
     glBindVertexArray(0);
 
