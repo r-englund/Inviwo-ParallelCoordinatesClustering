@@ -122,10 +122,12 @@ void ScatterPlotRenderer::process() {
 
     glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 0, data->ssboData);
 
+    glEnable(GL_POINT_SMOOTH);
     glPointSize(_glyphSize * 64.f);
 
     glDrawArraysInstanced(GL_POINTS, 0, 1, data->nValues);
 
+    glDisable(GL_POINT_SMOOTH);
     glBindVertexArray(0);
 
     _shader.deactivate();

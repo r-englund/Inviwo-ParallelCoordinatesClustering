@@ -121,6 +121,9 @@ void PCPRenderer::process() {
 
     utilgl::GlBoolState depthTest(GL_DEPTH_TEST, false);
     utilgl::BlendModeEquationState blendEquation(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA, GL_FUNC_ADD);
+    utilgl::GlBoolState lineSmooth(GL_LINE_SMOOTH, true);
+    glHint(GL_LINE_SMOOTH_HINT, GL_NICEST);
+
 
     _shader.activate();
 
