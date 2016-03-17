@@ -41,9 +41,14 @@ PCPFiltering::PCPFiltering()
     addProperty(_coloringDimension);
     addProperty(_dimensionMaskString);
     _dimensionMaskString.onChange([this]() {
-        std::bitset<32> mask(_dimensionMaskString.get());
+        std::string s = _dimensionMaskString.get();
+        if (s.empty())
+            _dimensionMask = 0;
+        else {
+            std::bitset<32> mask(s);
 
-        _dimensionMask = static_cast<uint32_t>(mask.to_ulong());
+            _dimensionMask = static_cast<uint32_t>(mask.to_ulong());
+        }
     });
 
     _countingShader.getShaderObject(ShaderType::Compute)->addShaderExtension(
@@ -287,11 +292,13 @@ void PCPFiltering::filterData(const ParallelCoordinatesPlotData* inData,
         );
     glMemoryBarrier(GL_ALL_BARRIER_BITS);
 
-    glBindBuffer(GL_SHADER_STORAGE_BUFFER, _coloringData->ssboColor);
-    int* p = (int*)glMapBuffer(GL_SHADER_STORAGE_BUFFER, GL_READ_ONLY);
-    p[0] = _coloredBinData->nClusters;
-    glUnmapBuffer(GL_SHADER_STORAGE_BUFFER);
-    glBindBuffer(GL_SHADER_STORAGE_BUFFER, 0);
+    if (_coloringData->hasData) {
+        glBindBuffer(GL_SHADER_STORAGE_BUFFER, _coloringData->ssboColor);
+        int* p = (int*)glMapBuffer(GL_SHADER_STORAGE_BUFFER, GL_WRITE_ONLY);
+        p[0] = _coloredBinData->nClusters;
+        glUnmapBuffer(GL_SHADER_STORAGE_BUFFER);
+        glBindBuffer(GL_SHADER_STORAGE_BUFFER, 0);
+    }
 
     _filteringShader.deactivate();
 }
