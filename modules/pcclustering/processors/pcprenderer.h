@@ -7,6 +7,7 @@
 #include <inviwo/core/common/inviwo.h>
 #include <inviwo/core/properties/fileproperty.h>
 #include <inviwo/core/properties/buttonproperty.h>
+#include <inviwo/core/properties/stringproperty.h>
 
 #include <modules/pcclustering/datastructures/pcpdata.h>
 
@@ -37,12 +38,17 @@ private:
 
     FloatProperty _horizontalBorder;
     FloatProperty _verticalBorder;
+    StringProperty _dimensionOrderingString;
+
+    std::vector<int> _dimensionOrdering;
 
     TransferFunctionProperty _transFunc;
 
     Shader _shader;
-    GLuint _vbo;
     GLuint _vao;
+    GLuint _vbo;
+
+    GLuint _dimensionOrderingBuffer;
 };
 
 }  // namespace

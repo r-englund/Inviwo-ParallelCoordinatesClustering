@@ -38,6 +38,7 @@ PCPRenderer::PCPRenderer()
     , _outport("image")
     , _horizontalBorder("_horizontalBorder", "Horizontal Border")
     , _verticalBorder("_verticalBorder", "Vertical Border")
+    , _dimensionOrderingString("_dimensionOrderingString", "Dimension Ordering")
     , _transFunc("transferFunction", "Transfer Function")
     , _shader("pcprenderer.vert", "pcprenderer.frag")
 {
@@ -49,7 +50,9 @@ PCPRenderer::PCPRenderer()
     glEnableVertexAttribArray(0);
     glVertexAttribPointer(0, 1, GL_FLOAT, GL_FALSE, 0, 0);
     glBindVertexArray(0);
-    
+
+    glGenBuffers(1, &_dimensionOrderingBuffer);
+
     addPort(_inport);
     addPort(_coloringData);
     _coloringData.setOptional(true);
@@ -59,6 +62,17 @@ PCPRenderer::PCPRenderer()
     addProperty(_horizontalBorder);
     _horizontalBorder.onChange([this]() {invalidateBuffer(); });
     addProperty(_verticalBorder);
+
+    addProperty(_dimensionOrderingString);
+    _dimensionOrderingString.onChange([this]() {
+        _dimensionOrdering.clear();
+        _dimensionOrdering.reserve(_dimensionOrderingString.get().size());
+        for (char c : _dimensionOrderingString.get()) {
+            int ia = c - '0';
+            _dimensionOrdering.push_back(ia);
+        }
+        invalidateBuffer();
+    });
 
     addProperty(_transFunc);
 
@@ -74,6 +88,7 @@ PCPRenderer::PCPRenderer()
 PCPRenderer::~PCPRenderer() {
     glDeleteVertexArrays(1, &_vao);
     glDeleteBuffers(1, &_vbo);
+    glDeleteBuffers(1, &_dimensionOrderingBuffer);
 }
 
 float dimensionLocation(int dimension, float border, int nDimensions) {
@@ -97,10 +112,25 @@ void PCPRenderer::invalidateBuffer() {
 
     std::shared_ptr<const ParallelCoordinatesPlotData> data = _inport.getData();
 
+
+    if (_dimensionOrdering.empty()) {
+        _dimensionOrdering.resize(data->nDimensions);
+        std::iota(_dimensionOrdering.begin(), _dimensionOrdering.end(), 0);
+    }
+    if (_dimensionOrdering.size() != data->nDimensions) {
+        LogError("Wrong dimensions. Dimension ordering: " << _dimensionOrdering.size() <<
+            "  nDimensions: " << data->nDimensions
+        );
+        return;
+    }
+
     glBindBuffer(GL_ARRAY_BUFFER, _vbo);
     std::vector<float> vertexData(data->nDimensions);
     for (int i = 0; i < data->nDimensions; ++i)
         vertexData[i] = dimensionLocation(i, _horizontalBorder, data->nDimensions);
+
+        //int dim = _dimensionOrdering[i];
+
 
     glBufferData(GL_ARRAY_BUFFER,
         vertexData.size() * sizeof(float),
@@ -108,6 +138,16 @@ void PCPRenderer::invalidateBuffer() {
         GL_DYNAMIC_DRAW
     );
     glBindBuffer(GL_ARRAY_BUFFER, 0);
+
+    glBindBuffer(GL_SHADER_STORAGE_BUFFER, _dimensionOrderingBuffer);
+    glBufferData(
+        GL_SHADER_STORAGE_BUFFER,
+        _dimensionOrdering.size() * sizeof(int),
+        _dimensionOrdering.data(),
+        GL_STATIC_DRAW
+    );
+
+    glBindBuffer(GL_SHADER_STORAGE_BUFFER, 0);
 
 }
 
@@ -145,6 +185,7 @@ void PCPRenderer::process() {
     }
 
     glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 0, data->ssboData);
+    glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 2, _dimensionOrderingBuffer);
 
     glDrawArraysInstanced(GL_LINE_STRIP, 0, data->nDimensions, data->nValues / data->nDimensions);
 
