@@ -22,6 +22,7 @@ DensityMapRenderer::DensityMapRenderer()
     , _inport("data")
     , _colorInport("color")
     , _outport("outport")
+    , _dimensionOrderingString("_dimensionOrderingString", "Dimension Ordering")
     , _transFunc("transferFunction", "Transfer Function")
     , _shader("densitymaprenderer.frag")
 {
@@ -30,6 +31,16 @@ DensityMapRenderer::DensityMapRenderer()
     _colorInport.setOptional(true);
     
     addPort(_outport);
+
+    addProperty(_dimensionOrderingString);
+    _dimensionOrderingString.onChange([this]() {
+        _dimensionOrdering.clear();
+        _dimensionOrdering.reserve(_dimensionOrderingString.get().size());
+        for (char c : _dimensionOrderingString.get()) {
+            int ia = c - '0';
+            _dimensionOrdering.push_back(ia);
+        }
+    });
 
     addProperty(_transFunc);
 
@@ -50,6 +61,19 @@ void DensityMapRenderer::process() {
 
     std::shared_ptr<const BinningData> data = _inport.getData();
 
+
+    GLuint dimensionOrdering;
+    glGenBuffers(1, &dimensionOrdering);
+    glBindBuffer(GL_SHADER_STORAGE_BUFFER, dimensionOrdering);
+    glBufferData(
+        GL_SHADER_STORAGE_BUFFER,
+        _dimensionOrdering.size() * sizeof(int),
+        _dimensionOrdering.data(),
+        GL_STATIC_DRAW
+    );
+    glBindBuffer(GL_SHADER_STORAGE_BUFFER, 0);
+
+
     utilgl::activateAndClearTarget(_outport);
 
     _shader.activate();
@@ -64,6 +88,7 @@ void DensityMapRenderer::process() {
 
     glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 0, data->ssboBins);
     glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 1, data->ssboMinMax);
+    glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 3, dimensionOrdering);
 
     TextureUnit tfUnit;
     if (hasColoringData) {
@@ -79,6 +104,8 @@ void DensityMapRenderer::process() {
 
     _shader.deactivate();
     utilgl::deactivateCurrentTarget();
+
+    glDeleteBuffers(1, &dimensionOrdering);
 }
 
 }  // namespace

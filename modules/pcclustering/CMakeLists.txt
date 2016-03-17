@@ -15,6 +15,7 @@ set(HEADER_FILES
     ${CMAKE_CURRENT_SOURCE_DIR}/processors/densitymaprenderer.h
     ${CMAKE_CURRENT_SOURCE_DIR}/processors/pcpfileconverter.h
     ${CMAKE_CURRENT_SOURCE_DIR}/processors/pcpfiltering.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/processors/pcpgui.h
     ${CMAKE_CURRENT_SOURCE_DIR}/processors/pcpreader.h
     ${CMAKE_CURRENT_SOURCE_DIR}/processors/pcprenderer.h
     ${CMAKE_CURRENT_SOURCE_DIR}/processors/pcpupload.h
@@ -34,6 +35,7 @@ set(SOURCE_FILES
     ${CMAKE_CURRENT_SOURCE_DIR}/processors/densitymaprenderer.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/processors/pcpfileconverter.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/processors/pcpfiltering.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/processors/pcpgui.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/processors/pcpreader.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/processors/pcprenderer.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/processors/pcpupload.cpp

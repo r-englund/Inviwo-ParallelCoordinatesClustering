@@ -38,6 +38,7 @@
 #include <modules/pcclustering/processors/densitymaprenderer.h>
 #include <modules/pcclustering/processors/pcpfileconverter.h>
 #include <modules/pcclustering/processors/pcpfiltering.h>
+#include <modules/pcclustering/processors/pcpgui.h>
 #include <modules/pcclustering/processors/pcpreader.h>
 #include <modules/pcclustering/processors/pcprenderer.h>
 #include <modules/pcclustering/processors/pcpupload.h>
@@ -57,6 +58,7 @@ PCClusteringModule::PCClusteringModule(InviwoApplication* app)
     registerProcessor<DensityMapRenderer>();
     registerProcessor<PCPFileConverter>();
     registerProcessor<PCPFiltering>();
+    registerProcessor<PCPGui>();
     registerProcessor<PCPReader>();
     registerProcessor<PCPRenderer>();
     registerProcessor<PCPUpload>();

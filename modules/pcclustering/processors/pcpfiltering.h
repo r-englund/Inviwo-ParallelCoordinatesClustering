@@ -8,6 +8,7 @@
 #include <inviwo/core/properties/fileproperty.h>
 #include <inviwo/core/properties/buttonproperty.h>
 #include <inviwo/core/properties/optionproperty.h>
+#include <inviwo/core/properties/stringproperty.h>
 
 #include <modules/pcclustering/datastructures/pcpdata.h>
 
@@ -44,6 +45,8 @@ private:
     ColoredBinDataOutport _coloredBinOutport;
 
     IntProperty _coloringDimension;
+    StringProperty _dimensionMaskString;
+    uint32_t _dimensionMask;
 
     Shader _countingShader;
     Shader _clusterDetectionShader;

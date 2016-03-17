@@ -9,6 +9,10 @@ layout (std430, binding = 1) readonly buffer Identifiers {
     int data[];
 } identifiers;
 
+layout (std430, binding = 2) readonly buffer DimensionOrdering {
+    int data[];
+} dimensionOrdering;
+
 uniform int _nDimensions;
 uniform float _verticalBorder;
 uniform bool _hasColoringData;
@@ -19,7 +23,11 @@ out flat int nClusters;
 void main() {
     // gl_VertexID = dimension
     // gl_InstanceID = data item
-    const float value = values.data[gl_InstanceID * _nDimensions + gl_VertexID];
+
+    // Rearrange order of the axes
+    const int dim = dimensionOrdering.data[gl_VertexID];
+
+    const float value = values.data[gl_InstanceID * _nDimensions + dim];
     const float xPosition = in_position;
     const float yPosition = value * (1.0 - _verticalBorder); 
     
