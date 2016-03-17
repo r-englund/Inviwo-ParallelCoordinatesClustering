@@ -7,6 +7,7 @@
 #include <inviwo/core/common/inviwo.h>
 #include <inviwo/core/properties/fileproperty.h>
 #include <inviwo/core/properties/buttonproperty.h>
+#include <inviwo/core/properties/stringproperty.h>
 
 #include <modules/pcclustering/datastructures/pcpdata.h>
 #include <inviwo/core/properties/transferfunctionproperty.h>
@@ -30,6 +31,9 @@ public:
 private:
     BinningDataInport _inport;
     ColoredBinDataInport _colorInport;
+
+    StringProperty _dimensionOrderingString;
+    std::vector<int> _dimensionOrdering;
 
     ImageOutport _outport;
 

@@ -13,6 +13,10 @@ layout (std430, binding = 2) readonly buffer Identifiers {
     int data[];
 } identifiers;
 
+layout (std430, binding = 3) readonly buffer DimensionMapping {
+    int data[];
+} dimensionMapping;
+
 uniform int _nBins;
 uniform int _nDimensions;
 
@@ -35,7 +39,10 @@ float getBinNormalized(int bin) {
 int getDimension(vec2 coords, int nDimensions) {
     const float v = coords.x;
     const int b = int(floor(v * nDimensions));
-    return b;
+
+    const int c = dimensionMapping.data[b];
+
+    return c;
 }
 
 float getDimensionNormalized(int dim) {
