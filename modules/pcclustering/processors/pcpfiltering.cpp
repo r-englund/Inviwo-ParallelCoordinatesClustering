@@ -175,12 +175,6 @@ void PCPFiltering::clusterDetection(const BinningData* binData) {
     // Generate a buffer that stores for a single dimension the IDs in each bin by
     // doing a connected component analysis
 
-    //GLuint fff;
-    //glGenBuffers(1, &fff);
-    //glBindBuffer(GL_ATOMIC_COUNTER_BUFFER, fff);
-    //glBufferData(GL_ATOMIC_COUNTER_BUFFER, sizeof(GLuint), nullptr, GL_DYNAMIC_DRAW);
-    //glBindBuffer(GL_ATOMIC_COUNTER_BUFFER, 0);
-
     glBindBuffer(GL_SHADER_STORAGE_BUFFER, _coloredBinData->ssboIndices);
     glBufferData(
         GL_SHADER_STORAGE_BUFFER,
@@ -190,17 +184,6 @@ void PCPFiltering::clusterDetection(const BinningData* binData) {
     );
     glBindBuffer(GL_SHADER_STORAGE_BUFFER, 0);
 
-    //glBindBuffer(GL_ATOMIC_COUNTER_BUFFER, _nClustersBuffer);
-    //GLuint* ptr = (GLuint*)glMapBufferRange(
-    //    GL_ATOMIC_COUNTER_BUFFER,
-    //    0,
-    //    sizeof(GLuint),
-    //    GL_MAP_WRITE_BIT | GL_MAP_INVALIDATE_BUFFER_BIT | GL_MAP_UNSYNCHRONIZED_BIT
-    //    );
-    //ptr[0] = 0;
-    //glUnmapBuffer(GL_ATOMIC_COUNTER_BUFFER);
-    //glBindBuffer(GL_ATOMIC_COUNTER_BUFFER, 0);
-
     _clusterDetectionShader.activate();
 
     _clusterDetectionShader.setUniform("_nBins", binData->nBins);
@@ -209,7 +192,6 @@ void PCPFiltering::clusterDetection(const BinningData* binData) {
     
     glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 0, binData->ssboBins);
     glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 1, _coloredBinData->ssboIndices);
-    //glBindBufferBase(GL_ATOMIC_COUNTER_BUFFER, 2, _nClustersBuffer);
 
     glMemoryBarrier(GL_ALL_BARRIER_BITS);
     glDispatchComputeGroupSizeARB(
@@ -295,8 +277,6 @@ void PCPFiltering::filterData(const ParallelCoordinatesPlotData* inData,
     p[0] = _coloredBinData->nClusters;
     glUnmapBuffer(GL_SHADER_STORAGE_BUFFER);
     glBindBuffer(GL_SHADER_STORAGE_BUFFER, 0);
-
-    //LogInfo("Number of stored values: " << asd);
 
     _filteringShader.deactivate();
 }
