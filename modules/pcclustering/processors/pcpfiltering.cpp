@@ -2,6 +2,8 @@
 
 #include <modules/opengl/texture/textureutils.h>
 
+#include <bitset>
+
 namespace inviwo {
 
 const ProcessorInfo PCPFiltering::processorInfo_{
@@ -24,6 +26,7 @@ PCPFiltering::PCPFiltering()
     , _coloringOutport("out.color")
     , _coloredBinOutport("out.coloredBin")
     , _coloringDimension("_coloringDimension", "Coloring Dimension", -1, -1, 15)
+    , _dimensionMaskString("_dimensionMask", "Dimension Mask")
     , _countingShader({{ShaderType::Compute, "pcpfiltering_counting.comp" }}, Shader::Build::No)
     , _clusterDetectionShader({{ShaderType::Compute, "clusterdetection.comp" }}, Shader::Build::No)
     , _filteringShader({ { ShaderType::Compute, "pcpfiltering_filtering.comp" } }, Shader::Build::No)
@@ -36,6 +39,12 @@ PCPFiltering::PCPFiltering()
     addPort(_coloredBinOutport);
 
     addProperty(_coloringDimension);
+    addProperty(_dimensionMaskString);
+    _dimensionMaskString.onChange([this]() {
+        std::bitset<32> mask(_dimensionMaskString.get());
+
+        _dimensionMask = static_cast<uint32_t>(mask.to_ulong());
+    });
 
     _countingShader.getShaderObject(ShaderType::Compute)->addShaderExtension(
         "GL_ARB_compute_variable_group_size",
@@ -112,7 +121,9 @@ void PCPFiltering::process() {
         _coloredBinData->selectedDimension = _coloringDimension;
 
         clusterDetection(binInData.get());
-        _coloringData->hasData = true;
+
+        std::bitset<32> mask(_dimensionMask);
+        _coloringData->hasData = mask.test(_coloringDimension);
         _coloredBinData->hasData = true;
     }
     else {
@@ -134,6 +145,8 @@ int PCPFiltering::countElements(const ParallelCoordinatesPlotData* inData,
     _countingShader.activate();
     _countingShader.setUniform("_nDimensions", inData->nDimensions);
     _countingShader.setUniform("_nBins", binData->nBins);
+    uint32_t dm = _dimensionMask;
+    _countingShader.setUniform("_dimensionMask", dm);
 
     // Storage for number of data values (not one value per dimension)
     glBindBuffer(GL_ATOMIC_COUNTER_BUFFER, _nValuesCounter);
@@ -220,6 +233,8 @@ void PCPFiltering::filterData(const ParallelCoordinatesPlotData* inData,
     _filteringShader.activate();
     _filteringShader.setUniform("_nDimensions", inData->nDimensions);
     _filteringShader.setUniform("_nBins", binData->nBins);
+    uint32_t dm = _dimensionMask;
+    _filteringShader.setUniform("_dimensionMask", dm);
 
     _filteringShader.setUniform("_hasColoringInformation", _coloringData->hasData);
 

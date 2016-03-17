@@ -29,6 +29,7 @@ uniform int _nDimensions;
 
 uniform bool _hasColoringInformation;
 uniform int _selectedDimension;
+uniform uint _dimensionMask;
 
 int getBinIndex(float value, const int nBins) {
     // const float rangeScaleFactor = (nBins - 1.0) / 2.0;
@@ -49,6 +50,10 @@ void main() {
     // gl_GlobalInvocationID.x \in [0, _nValues / _nDimensions]
     bool isValidDataPoint = true;
     for (int dimension = 0; dimension < _nDimensions; ++dimension) {
+        uint useDimension = bitfieldExtract(_dimensionMask, dimension, 1);
+        if (useDimension == 0)
+            continue;
+
         float value = getValue(int(gl_GlobalInvocationID), dimension, _nDimensions);
         int binIndex = getBinIndex(value, _nBins);
         bool isValid = isBinOccupied(binIndex, dimension, _nBins);
