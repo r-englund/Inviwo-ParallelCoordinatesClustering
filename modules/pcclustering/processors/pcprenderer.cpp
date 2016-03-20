@@ -1,5 +1,7 @@
 #include <modules/pcclustering/processors/pcprenderer.h>
 
+#include <modules/pcclustering/misc/support.h>
+
 #include <modules/opengl/texture/textureutils.h>
 
 //#include "volumesource.h"
@@ -154,16 +156,27 @@ void PCPRenderer::invalidateBuffer() {
 void PCPRenderer::process() {
     if (!_inport.hasData())
         return;
-    std::shared_ptr<const ParallelCoordinatesPlotData> data = _inport.getData();
-
     utilgl::ClearColor colorState(glm::vec4(0.0));
     utilgl::activateAndClearTarget(_outport);
+
+    renderParallelCoordinates();
+    renderTextOverlay(
+        _textRenderer,
+        _outport.getData()->getDimensions(),
+        _dimensionOrdering,
+        { 1, 1, 1, 1, 1, 1, 1 }
+    );
+
+    utilgl::deactivateCurrentTarget();
+}
+
+void PCPRenderer::renderParallelCoordinates() {
+    std::shared_ptr<const ParallelCoordinatesPlotData> data = _inport.getData();
 
     utilgl::GlBoolState depthTest(GL_DEPTH_TEST, false);
     utilgl::BlendModeEquationState blendEquation(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA, GL_FUNC_ADD);
     utilgl::GlBoolState lineSmooth(GL_LINE_SMOOTH, true);
     glHint(GL_LINE_SMOOTH_HINT, GL_NICEST);
-
 
     _shader.activate();
 
@@ -192,7 +205,6 @@ void PCPRenderer::process() {
     glBindVertexArray(0);
 
     _shader.deactivate();
-    utilgl::deactivateCurrentTarget();
 }
 
 }  // namespace

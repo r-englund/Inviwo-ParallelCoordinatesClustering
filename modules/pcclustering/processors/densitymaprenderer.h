@@ -16,6 +16,8 @@
 
 #include <modules/opengl/shader/shader.h>
 
+#include <modules/fontrendering/fontrenderingmoduledefine.h>
+#include <modules/fontrendering/textrenderer.h>
 
 namespace inviwo {
 
@@ -29,6 +31,10 @@ public:
     void process() override;
 
 private:
+    void generateBuffers();
+
+    void renderDensityMap();
+    
     BinningDataInport _inport;
     ColoredBinDataInport _colorInport;
 
@@ -38,8 +44,13 @@ private:
     ImageOutport _outport;
 
     TransferFunctionProperty _transFunc;
+    FloatProperty _textBorder;
 
     Shader _shader;
+
+    TextRenderer _textRenderer;
+
+    GLuint _dimensionOrderingBuffer;
 };
 
 }  // namespace

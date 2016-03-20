@@ -17,14 +17,16 @@ layout (std430, binding = 3) readonly buffer DimensionMapping {
     int data[];
 } dimensionMapping;
 
+in vec3 texCoord_;
+
 uniform int _nBins;
 uniform int _nDimensions;
+
+uniform float _offset;
 
 uniform bool _hasColoringData;
 uniform int _selectedDimension;
 uniform sampler2D _transFunc;
-
-uniform ivec2 _outportSize;
 
 int getBin(vec2 coords, int nBins) {
     const float v = coords.y;
@@ -62,8 +64,13 @@ ivec2 getMinMax(int dimension) {
 }
 
 void main() {
-    const vec2 texCoords = gl_FragCoord.xy * (1.f / vec2(_outportSize));
+    vec2 texCoords = texCoord_.xy;
+
+    if (texCoords.y <= _offset)
+        discard;
     
+    texCoords.y = (texCoords.y - _offset) / (1.0 - _offset);
+
     const int bin = getBin(texCoords, _nBins);
     const int dim = getDimension(texCoords, _nDimensions);
 
@@ -82,15 +89,4 @@ void main() {
     else {
         FragData0 = c;
     }
-
-    // FragData0 = vec4(1.0, 0.0, 0.0, 1.0);
-
-
-    // FragData0 = vec4(texCoords * 2, 0.0, 1.0);
-    // FragData0 = vec4(outportParameters.dimensions, 0.0, 1.0);
-
-    // FragData0 = vec4(vec3(value / 100000000.0), 1.0);
-    // FragData0 = vec4(vec3(float(bin)), 1.0);
-    // FragData0 = vec4(1.0, 0.0, 0.0, 1.0);
-    // FragData0 = vec4(1.0);
 }

@@ -29,7 +29,9 @@ void main() {
 
     const float value = values.data[gl_InstanceID * _nDimensions + dim];
     const float xPosition = in_position;
-    const float yPosition = value * (1.0 - _verticalBorder); 
+    const float yPosition = (value + _verticalBorder) / (1.0 + _verticalBorder);
+    // const float yPosition = 
+    // const float yPosition = (value + _verticalBorder) * (1.0 - _verticalBorder); 
     
     gl_Position = vec4(xPosition, yPosition, 0.0, 1.0);
 

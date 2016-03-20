@@ -16,6 +16,8 @@
 #include <modules/opengl/shader/shader.h>
 #include <inviwo/core/properties/transferfunctionproperty.h>
 
+#include <modules/fontrendering/fontrenderingmoduledefine.h>
+#include <modules/fontrendering/textrenderer.h>
 
 namespace inviwo {
 
@@ -30,6 +32,7 @@ public:
 
 private:
     void invalidateBuffer();
+    void renderParallelCoordinates();
 
     PCPDataInport _inport;
     ColoringDataInport _coloringData;
@@ -44,6 +47,8 @@ private:
 
     TransferFunctionProperty _transFunc;
 
+    TextRenderer _textRenderer;
+    
     Shader _shader;
     GLuint _vao;
     GLuint _vbo;

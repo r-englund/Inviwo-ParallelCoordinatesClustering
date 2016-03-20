@@ -8,6 +8,7 @@ set(HEADER_FILES
     ${CMAKE_CURRENT_SOURCE_DIR}/datastructures/pcpdata.h
     ${CMAKE_CURRENT_SOURCE_DIR}/misc/cpr.h
     ${CMAKE_CURRENT_SOURCE_DIR}/misc/parallelcoordinates_axis_permutation.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/misc/support.h
     ${CMAKE_CURRENT_SOURCE_DIR}/processors/clusterexport.h
     ${CMAKE_CURRENT_SOURCE_DIR}/processors/clusterrenderer.h
     ${CMAKE_CURRENT_SOURCE_DIR}/processors/densitymapfiltering.h
@@ -28,6 +29,7 @@ ivw_group("Header Files" ${HEADER_FILES})
 set(SOURCE_FILES
     ${CMAKE_CURRENT_SOURCE_DIR}/datastructures/pcpdata.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/misc/parallelcoordinates_axis_permutation.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/misc/support.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/processors/clusterexport.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/processors/clusterrenderer.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/processors/densitymapfiltering.cpp
