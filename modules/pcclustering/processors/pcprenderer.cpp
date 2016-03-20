@@ -4,20 +4,7 @@
 
 #include <modules/opengl/texture/textureutils.h>
 
-//#include "volumesource.h"
-//#include <inviwo/core/resources/resourcemanager.h>
-//#include <inviwo/core/resources/templateresource.h>
-//#include <inviwo/core/common/inviwoapplication.h>
-//#include <inviwo/core/util/filesystem.h>
-//#include <inviwo/core/util/raiiutils.h>
-//#include <inviwo/core/io/datareaderfactory.h>
-//#include <inviwo/core/io/rawvolumereader.h>
-//#include <inviwo/core/network/processornetwork.h>
-//#include <inviwo/core/datastructures/volume/volumeram.h>
-//#include <inviwo/core/common/inviwoapplication.h>
-//#include <inviwo/core/io/datareaderexception.h>
-//
-//#include <math.h>
+#include <bitset>
 
 namespace inviwo {
 
@@ -41,6 +28,7 @@ PCPRenderer::PCPRenderer()
     , _horizontalBorder("_horizontalBorder", "Horizontal Border")
     , _verticalBorder("_verticalBorder", "Vertical Border")
     , _dimensionOrderingString("_dimensionOrderingString", "Dimension Ordering")
+    , _dimensionMaskString("_dimensionMask", "Dimension Mask")
     , _transFunc("transferFunction", "Transfer Function")
     , _shader("pcprenderer.vert", "pcprenderer.frag")
 {
@@ -74,6 +62,15 @@ PCPRenderer::PCPRenderer()
             _dimensionOrdering.push_back(ia);
         }
         invalidateBuffer();
+    });
+    addProperty(_dimensionMaskString);
+    _dimensionMaskString.onChange([this]() {
+        std::string s = _dimensionMaskString.get();
+        if (s.empty())
+            _dimensionMask = 0;
+        else {
+            _dimensionMask = std::bitset<32>(s);
+        }
     });
 
     addProperty(_transFunc);
@@ -164,7 +161,7 @@ void PCPRenderer::process() {
         _textRenderer,
         _outport.getData()->getDimensions(),
         _dimensionOrdering,
-        { 1, 1, 1, 1, 1, 1, 1 }
+        _dimensionMask
     );
 
     utilgl::deactivateCurrentTarget();

@@ -3,6 +3,8 @@
 #include <modules/pcclustering/misc/support.h>
 #include <modules/opengl/texture/textureutils.h>
 
+#include <bitset>
+
 namespace inviwo {
 
 const ProcessorInfo DensityMapRenderer::processorInfo_{
@@ -23,6 +25,7 @@ DensityMapRenderer::DensityMapRenderer()
     , _colorInport("color")
     , _outport("outport")
     , _dimensionOrderingString("_dimensionOrderingString", "Dimension Ordering")
+    , _dimensionMaskString("_dimensionMask", "Dimension Mask")
     , _transFunc("transferFunction", "Transfer Function")
     , _textBorder("_textBorder", "Text Border", 0.05f, 0.f, 1.f)
     , _shader("densitymaprenderer.frag")
@@ -45,6 +48,16 @@ DensityMapRenderer::DensityMapRenderer()
         }
 
         generateBuffers();
+    });
+
+    addProperty(_dimensionMaskString);
+    _dimensionMaskString.onChange([this]() {
+        std::string s = _dimensionMaskString.get();
+        if (s.empty())
+            _dimensionMask = 0;
+        else {
+            _dimensionMask = std::bitset<32>(s);
+        }
     });
 
     addProperty(_transFunc);
@@ -83,7 +96,7 @@ void DensityMapRenderer::process() {
         _textRenderer,
         _outport.getData()->getDimensions(),
         _dimensionOrdering,
-        {1, 1, 1, 1, 1, 1, 1}
+        _dimensionMask
     );
 
     utilgl::deactivateCurrentTarget();

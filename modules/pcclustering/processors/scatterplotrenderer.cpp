@@ -127,8 +127,8 @@ void ScatterPlotRenderer::process() {
 
     glDrawArraysInstanced(GL_POINTS, 0, 1, data->nValues);
 
-    glDisable(GL_POINT_SMOOTH);
     glBindVertexArray(0);
+    glDisable(GL_POINT_SMOOTH);
 
     _shader.deactivate();
     utilgl::deactivateCurrentTarget();

@@ -19,6 +19,8 @@
 #include <modules/fontrendering/fontrenderingmoduledefine.h>
 #include <modules/fontrendering/textrenderer.h>
 
+#include <bitset>
+
 namespace inviwo {
 
 class IVW_MODULE_PCCLUSTERING_API PCPRenderer : public Processor {
@@ -41,9 +43,12 @@ private:
 
     FloatProperty _horizontalBorder;
     FloatProperty _verticalBorder;
-    StringProperty _dimensionOrderingString;
 
+    StringProperty _dimensionOrderingString;
     std::vector<int> _dimensionOrdering;
+
+    StringProperty _dimensionMaskString;
+    std::bitset<32> _dimensionMask;
 
     TransferFunctionProperty _transFunc;
 
