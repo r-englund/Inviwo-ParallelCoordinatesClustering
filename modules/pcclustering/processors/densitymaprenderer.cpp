@@ -113,6 +113,8 @@ void DensityMapRenderer::renderDensityMap() {
     _shader.setUniform("_nDimensions", data->nDimensions);
     _shader.setUniform("_offset", _textBorder);
     _shader.setUniform("_hasColoringData", hasColoringData);
+    uint32_t dm = _dimensionMask.to_ulong();
+    _shader.setUniform("_dimensionMask", dm);
 
     glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 0, data->ssboBins);
     glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 1, data->ssboMinMax);

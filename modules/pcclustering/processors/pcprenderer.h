@@ -35,6 +35,7 @@ public:
 private:
     void invalidateBuffer();
     void renderParallelCoordinates();
+    void renderBackground();
 
     PCPDataInport _inport;
     ColoringDataInport _coloringData;
@@ -51,10 +52,12 @@ private:
     std::bitset<32> _dimensionMask;
 
     TransferFunctionProperty _transFunc;
+    //FloatProperty _textBorder;
 
     TextRenderer _textRenderer;
     
     Shader _shader;
+    Shader _backgroundShader;
     GLuint _vao;
     GLuint _vbo;
 

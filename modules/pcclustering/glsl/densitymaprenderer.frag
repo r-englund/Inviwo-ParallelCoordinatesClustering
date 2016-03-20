@@ -24,6 +24,8 @@ uniform int _nDimensions;
 
 uniform float _offset;
 
+uniform uint _dimensionMask;
+
 uniform bool _hasColoringData;
 uniform int _selectedDimension;
 uniform sampler2D _transFunc;
@@ -65,14 +67,26 @@ ivec2 getMinMax(int dimension) {
 
 void main() {
     vec2 texCoords = texCoord_.xy;
-
-    if (texCoords.y <= _offset)
-        discard;
-    
     texCoords.y = (texCoords.y - _offset) / (1.0 - _offset);
 
     const int bin = getBin(texCoords, _nBins);
     const int dim = getDimension(texCoords, _nDimensions);
+
+    if (texCoord_.y < _offset) {
+        uint useDimension = bitfieldExtract(_dimensionMask, dim, 1);
+        if (useDimension == 0)
+            FragData0 = vec4(vec3(0.25, 0.1, 0.1), 1.0);
+        else
+            FragData0 = vec4(vec3(0.1, 0.25, 0.1), 1.0);
+        return;
+    }
+
+    if (abs(_offset - texCoord_.y) <= 0.001) {
+        FragData0 = vec4(1.0, 1.0, 1.0, 1.0);
+        return;
+    }
+
+    
 
     const int value = getValue(bin, dim);
 

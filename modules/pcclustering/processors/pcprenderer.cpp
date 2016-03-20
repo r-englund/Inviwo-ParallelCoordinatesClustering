@@ -30,7 +30,9 @@ PCPRenderer::PCPRenderer()
     , _dimensionOrderingString("_dimensionOrderingString", "Dimension Ordering")
     , _dimensionMaskString("_dimensionMask", "Dimension Mask")
     , _transFunc("transferFunction", "Transfer Function")
+    //, _textBorder("_textBorder", "Text Border", 0.05f, 0.f, 1.f)
     , _shader("pcprenderer.vert", "pcprenderer.frag")
+    , _backgroundShader("pcprenderer_background.frag")
 {
     glGenVertexArrays(1, &_vao);
     glGenBuffers(1, &_vbo);
@@ -40,6 +42,7 @@ PCPRenderer::PCPRenderer()
     glEnableVertexAttribArray(0);
     glVertexAttribPointer(0, 1, GL_FLOAT, GL_FALSE, 0, 0);
     glBindVertexArray(0);
+
 
     glGenBuffers(1, &_dimensionOrderingBuffer);
 
@@ -75,6 +78,8 @@ PCPRenderer::PCPRenderer()
 
     addProperty(_transFunc);
 
+    //addProperty(_textBorder);
+
     _transFunc.get().clearPoints();
     _transFunc.get().addPoint(vec2(0, 1), vec4(0, 0, 0, 1));
     _transFunc.get().addPoint(vec2(1, 1), vec4(1, 1, 1, 1));
@@ -82,6 +87,7 @@ PCPRenderer::PCPRenderer()
     _inport.onChange([this]() { invalidateBuffer(); });
 
     _shader.onReload([this]() { invalidate(InvalidationLevel::InvalidOutput); });
+    _backgroundShader.onReload([this]() { invalidate(InvalidationLevel::InvalidOutput); });
 }
 
 PCPRenderer::~PCPRenderer() {
@@ -157,6 +163,7 @@ void PCPRenderer::process() {
     utilgl::activateAndClearTarget(_outport);
 
     renderParallelCoordinates();
+    renderBackground();
     renderTextOverlay(
         _textRenderer,
         _outport.getData()->getDimensions(),
@@ -204,5 +211,19 @@ void PCPRenderer::renderParallelCoordinates() {
     _shader.deactivate();
 }
 
+void PCPRenderer::renderBackground() {
+    std::shared_ptr<const ParallelCoordinatesPlotData> data = _inport.getData();
+
+    _backgroundShader.activate();
+    _backgroundShader.setUniform("_offset", _verticalBorder);
+    _backgroundShader.setUniform("_nDimensions", data->nDimensions);
+    uint32_t dm = _dimensionMask.to_ulong();
+    _backgroundShader.setUniform("_dimensionMask", dm);
+    glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 0, _dimensionOrderingBuffer);
+    utilgl::singleDrawImagePlaneRect();
+    _backgroundShader.deactivate();
+}
+
 }  // namespace
+
 

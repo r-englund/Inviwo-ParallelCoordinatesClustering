@@ -28,9 +28,9 @@ void renderTextOverlay(
 
         std::string text = std::to_string(dimensionOrdering[i]);
 
-        vec4 color = vec4(1.f);
+        vec4 color = vec4(1.0);
         if (!dimensionMask.test(i))
-            color.rgb = vec3(0.2f);
+            color.rgb = vec3(0.35f);
 
         renderer.render(text.c_str(), xPos, yPos, scale, color);
     }
