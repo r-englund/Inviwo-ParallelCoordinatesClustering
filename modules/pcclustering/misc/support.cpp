@@ -23,10 +23,10 @@ void renderTextOverlay(
         float xPos = (t - 0.5f) * 2.f;
 
         float offset = 2.f / float(dimensionOrdering.size());
-
+        
         xPos += offset / 2.f;
 
-        std::string text = std::to_string(dimensionOrdering[i]);
+        std::string text({ char(dimensionOrdering[i] + 'A') });
 
         vec4 color = vec4(1.0);
         if (!dimensionMask.test(i))
