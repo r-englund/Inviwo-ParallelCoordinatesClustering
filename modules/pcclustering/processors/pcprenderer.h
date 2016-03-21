@@ -44,6 +44,9 @@ private:
 
     FloatProperty _horizontalBorder;
     FloatProperty _verticalBorder;
+    
+    BoolProperty _lineSmoothing;
+    BoolProperty _depthTesting;
 
     StringProperty _dimensionOrderingString;
     std::vector<int> _dimensionOrdering;

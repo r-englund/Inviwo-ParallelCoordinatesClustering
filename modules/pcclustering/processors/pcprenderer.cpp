@@ -27,6 +27,8 @@ PCPRenderer::PCPRenderer()
     , _outport("image")
     , _horizontalBorder("_horizontalBorder", "Horizontal Border")
     , _verticalBorder("_verticalBorder", "Vertical Border")
+    , _lineSmoothing("_lineSmoothing", "Line Smoothing")
+    , _depthTesting("_depthTesting", "Depth Testing")
     , _dimensionOrderingString("_dimensionOrderingString", "Dimension Ordering")
     , _dimensionMaskString("_dimensionMask", "Dimension Mask")
     , _transFunc("transferFunction", "Transfer Function")
@@ -55,6 +57,9 @@ PCPRenderer::PCPRenderer()
     addProperty(_horizontalBorder);
     _horizontalBorder.onChange([this]() {invalidateBuffer(); });
     addProperty(_verticalBorder);
+
+    addProperty(_lineSmoothing);
+    addProperty(_depthTesting);
 
     addProperty(_dimensionOrderingString);
     _dimensionOrderingString.onChange([this]() {
@@ -162,7 +167,12 @@ void PCPRenderer::process() {
     utilgl::ClearColor colorState(glm::vec4(0.0));
     utilgl::activateAndClearTarget(_outport);
 
-    renderParallelCoordinates();
+    glFinish();
+    {
+        IVW_CPU_PROFILING("Weee");
+        renderParallelCoordinates();
+        glFinish();
+    }
     renderBackground();
     renderTextOverlay(
         _textRenderer,
@@ -171,16 +181,19 @@ void PCPRenderer::process() {
         _dimensionMask
     );
 
+
     utilgl::deactivateCurrentTarget();
 }
 
 void PCPRenderer::renderParallelCoordinates() {
     std::shared_ptr<const ParallelCoordinatesPlotData> data = _inport.getData();
 
-    utilgl::GlBoolState depthTest(GL_DEPTH_TEST, false);
+    utilgl::GlBoolState depthTest(GL_DEPTH_TEST, !_depthTesting);
     utilgl::BlendModeEquationState blendEquation(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA, GL_FUNC_ADD);
-    utilgl::GlBoolState lineSmooth(GL_LINE_SMOOTH, true);
-    glHint(GL_LINE_SMOOTH_HINT, GL_NICEST);
+
+    utilgl::GlBoolState lineSmooth(GL_LINE_SMOOTH, _lineSmoothing);
+    if (_lineSmoothing)
+        glHint(GL_LINE_SMOOTH_HINT, GL_NICEST);
 
     _shader.activate();
 
@@ -188,6 +201,7 @@ void PCPRenderer::renderParallelCoordinates() {
     _shader.setUniform("_nData", data->nValues / data->nDimensions);
     _shader.setUniform("_horizontalBorder", _horizontalBorder);
     _shader.setUniform("_verticalBorder", _verticalBorder);
+    _shader.setUniform("_depthTesting", !_depthTesting);
 
     TextureUnit tfUnit;
     utilgl::bindTexture(_transFunc, tfUnit);
