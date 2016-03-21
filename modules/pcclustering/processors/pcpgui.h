@@ -26,8 +26,8 @@ private:
     PCPDataInport _inport;
 
     IntProperty _nDimensions;
-
     IntProperty _nSubcluster;
+    IntProperty _coloringDimension;
 
     OptionPropertyInt _enabledDimensionsOptions;
     StringProperty _enabledDimensionsString;

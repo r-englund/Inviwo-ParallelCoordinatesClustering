@@ -22,6 +22,7 @@ PCPGui::PCPGui()
     , _inport("pcp.in")
     , _nDimensions("_nDimensions", "Number of Dimensions", 0, 0, 32)
     , _nSubcluster("_nSubcluster", "Dimensionality of subclusters", 0, 0, 100)
+    , _coloringDimension("_coloringDimension", "Coloring Dimension", 0, 0, 100)
     , _enabledDimensionsOptions("_enabledDimensionsOptions", "Enabled Dimensions")
     , _enabledDimensionsString("_enabledDimensionsString", "Enabled Dimensions")
     , _dimensionOrderingOptions("_dimensionOrderingOptions", "Dimension Ordering")
@@ -36,6 +37,8 @@ PCPGui::PCPGui()
     addProperty(_enabledDimensionsOptions);
     addProperty(_enabledDimensionsString);
     _enabledDimensionsString.setReadOnly(true);
+
+    addProperty(_coloringDimension);
 
     addProperty(_dimensionOrderingOptions);
     addProperty(_dimensionOrderingString);
@@ -152,6 +155,7 @@ PCPGui::PCPGui()
     _nDimensions.onChange([this]() {
         _nSubcluster.setMaxValue(_nDimensions);
         _nSubcluster = _nDimensions.get();
+        _coloringDimension.setMaxValue(_nDimensions - 1);
     });
 }
 
