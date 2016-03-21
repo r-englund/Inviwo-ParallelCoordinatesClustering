@@ -83,9 +83,13 @@ void PCPReader::load() {
         const float minValue = data->minMax[dim].first;
         const float maxValue = data->minMax[dim].second;
 
-        float& v = data->data[i];
-        v = (v - minValue) / (maxValue - minValue);
-        v = (v - 0.5f) * 2.f;
+        if (minValue == maxValue)
+            data->data[i] = 0.5f;
+        else {
+            float& v = data->data[i];
+            v = (v - minValue) / (maxValue - minValue);
+            v = (v - 0.5f) * 2.f;
+        }
     }
 
     _outport.setData(data);
