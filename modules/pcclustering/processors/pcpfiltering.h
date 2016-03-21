@@ -48,6 +48,8 @@ private:
     StringProperty _dimensionMaskString;
     uint32_t _dimensionMask;
 
+    IntProperty _parallelismSlider;
+
     Shader _countingShader;
     Shader _clusterDetectionShader;
     Shader _filteringShader;

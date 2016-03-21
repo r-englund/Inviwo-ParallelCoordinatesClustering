@@ -113,12 +113,18 @@ void DensityMapGenerator::process() {
     glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 0, data->ssboData);
     glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 1, _binningData->ssboBins);
 
-    glMemoryBarrier(GL_ALL_BARRIER_BITS);
-    glDispatchComputeGroupSizeARB(
-        data->nValues / _nBins, 1, 1,
-        _nBins, 1, 1
-    );
-    glMemoryBarrier(GL_ALL_BARRIER_BITS);
+    glFinish();
+    {
+        IVW_CPU_PROFILING("DensityMapGenerator");
+
+        glMemoryBarrier(GL_ALL_BARRIER_BITS);
+        glDispatchComputeGroupSizeARB(
+            data->nValues / _nBins, 1, 1,
+            _nBins, 1, 1
+            );
+        glMemoryBarrier(GL_ALL_BARRIER_BITS);
+        glFinish();
+    }
     _densityMapGeneratorShader.deactivate();
 
 
@@ -137,6 +143,7 @@ void DensityMapGenerator::process() {
     glMemoryBarrier(GL_ALL_BARRIER_BITS);
 
     _densityMapCounterShader.deactivate();
+    glFinish();
 
     _outport.setData(_binningData);
     LGL_ERROR;

@@ -13,12 +13,10 @@ layout (std430, binding = 2) readonly buffer Bins {
 uniform int _nBins;
 uniform int _nDimensions;
 uniform uint _dimensionMask;
+uniform int _nValues;
 
 int getBinIndex(float value, const int nBins) {
-    // const float rangeScaleFactor = (nBins - 1.0) / 2.0;
-    // return int((value + 1.0) * rangeScaleFactor);
-
-        return int(floor(((value + 1.0) / 2.0) * nBins));
+    return int(floor(((value + 1.0) / 2.0) * nBins));
 }
 
 bool isBinOccupied(int index, int dimension, const int nBins) {
@@ -30,6 +28,9 @@ float getValue(int id, int dim, const int nDimensions) {
 }
 
 void main() {
+    if ((gl_GlobalInvocationID.x * _nDimensions) >= _nValues)
+        return;
+
     // gl_GlobalInvocationID.x \in [0, _nValues / _nDimensions]
     bool isValidDataPoint = true;
     for (int dimension = 0; dimension < _nDimensions; ++dimension) {

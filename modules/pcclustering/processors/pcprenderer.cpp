@@ -169,7 +169,7 @@ void PCPRenderer::process() {
 
     glFinish();
     {
-        IVW_CPU_PROFILING("Weee");
+        IVW_CPU_PROFILING("PCPRenderer");
         renderParallelCoordinates();
         glFinish();
     }

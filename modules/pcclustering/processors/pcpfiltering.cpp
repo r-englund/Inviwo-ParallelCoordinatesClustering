@@ -26,6 +26,7 @@ PCPFiltering::PCPFiltering()
     , _coloringOutport("out.color")
     , _coloredBinOutport("out.coloredBin")
     , _coloringDimension("_coloringDimension", "Coloring Dimension", -1, -1, 15)
+    , _parallelismSlider("_parallelismSlider", "Parallelism Slider", 32, 1, 1024)
     , _dimensionMaskString("_dimensionMask", "Dimension Mask")
     , _countingShader({{ShaderType::Compute, "pcpfiltering_counting.comp" }}, Shader::Build::No)
     , _clusterDetectionShader({{ShaderType::Compute, "clusterdetection.comp" }}, Shader::Build::No)
@@ -40,6 +41,7 @@ PCPFiltering::PCPFiltering()
 
     addProperty(_coloringDimension);
     addProperty(_dimensionMaskString);
+    addProperty(_parallelismSlider);
     _dimensionMaskString.onChange([this]() {
         std::string s = _dimensionMaskString.get();
         if (s.empty())
@@ -115,7 +117,13 @@ void PCPFiltering::process() {
 
     _pcpData->nDimensions = pcpInData->nDimensions;
 
-    int dataValues = countElements(pcpInData.get(), binInData.get());
+    int dataValues = 0;
+    glFinish();
+    {
+        IVW_CPU_PROFILING("CountElements");
+        dataValues = countElements(pcpInData.get(), binInData.get());
+        glFinish();
+    }
 
     if (_coloringDimension >= 0 && _coloringDimension < _pcpData->nDimensions) {
         _pcpData->nValues = dataValues * _pcpData->nDimensions;
@@ -125,7 +133,12 @@ void PCPFiltering::process() {
         _coloredBinData->nBins = binInData->nBins;
         _coloredBinData->selectedDimension = _coloringDimension;
 
-        clusterDetection(binInData.get());
+        glFinish();
+        {
+            IVW_CPU_PROFILING("ClusterDetection");
+            clusterDetection(binInData.get());
+            glFinish();
+        }
 
         std::bitset<32> mask(_dimensionMask);
         _coloringData->hasData = mask.test(_coloringDimension);
@@ -136,7 +149,13 @@ void PCPFiltering::process() {
         _coloringData->hasData = false;
 
     }
-    filterData(pcpInData.get(), binInData.get(), _pcpData.get(), dataValues);
+    glFinish();
+    {
+        IVW_CPU_PROFILING("FilterData");
+        filterData(pcpInData.get(), binInData.get(), _pcpData.get(), dataValues);
+        glFinish();
+    }
+    
 
     _pcpOutport.setData(_pcpData);
     _coloringOutport.setData(_coloringData);
@@ -152,6 +171,7 @@ int PCPFiltering::countElements(const ParallelCoordinatesPlotData* inData,
     _countingShader.setUniform("_nBins", binData->nBins);
     uint32_t dm = _dimensionMask;
     _countingShader.setUniform("_dimensionMask", dm);
+    _countingShader.setUniform("_nValues", inData->nValues);
 
     // Storage for number of data values (not one value per dimension)
     glBindBuffer(GL_ATOMIC_COUNTER_BUFFER, _nValuesCounter);
@@ -171,8 +191,8 @@ int PCPFiltering::countElements(const ParallelCoordinatesPlotData* inData,
 
     glMemoryBarrier(GL_ALL_BARRIER_BITS);
     glDispatchComputeGroupSizeARB(
-        inData->nValues / inData->nDimensions, 1, 1,
-        1, 1, 1
+        int(ceil((inData->nValues / inData->nDimensions) / float(_parallelismSlider))), 1, 1,
+        _parallelismSlider, 1, 1
         );
     glMemoryBarrier(GL_ALL_BARRIER_BITS);
 
@@ -240,6 +260,7 @@ void PCPFiltering::filterData(const ParallelCoordinatesPlotData* inData,
     _filteringShader.setUniform("_nBins", binData->nBins);
     uint32_t dm = _dimensionMask;
     _filteringShader.setUniform("_dimensionMask", dm);
+    _filteringShader.setUniform("_nValues", inData->nValues);
 
     _filteringShader.setUniform("_hasColoringInformation", _coloringData->hasData);
 
@@ -287,8 +308,8 @@ void PCPFiltering::filterData(const ParallelCoordinatesPlotData* inData,
 
     glMemoryBarrier(GL_ALL_BARRIER_BITS);
     glDispatchComputeGroupSizeARB(
-        inData->nValues / inData->nDimensions, 1, 1,
-        1, 1, 1
+        int(ceil((inData->nValues / inData->nDimensions) / float(_parallelismSlider))), 1, 1,
+        _parallelismSlider, 1, 1
         );
     glMemoryBarrier(GL_ALL_BARRIER_BITS);
 
