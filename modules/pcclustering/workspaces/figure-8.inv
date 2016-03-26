@@ -35,10 +35,10 @@
         </Processor>
         <Processor type="org.inviwo.Background" identifier="Background 2">
             <InPorts>
-                <InPort type="org.inviwo.ImageInport" identifier="inport" id="ref60" />
+                <InPort type="org.inviwo.ImageInport" identifier="inport" id="ref4" />
             </InPorts>
             <OutPorts>
-                <OutPort type="org.inviwo.ImageOutport" identifier="outport" id="ref61" />
+                <OutPort type="org.inviwo.ImageOutport" identifier="outport" id="ref5" />
             </OutPorts>
             <Properties>
                 <Property type="org.inviwo.OptionPropertyInt" identifier="backgroundStyle">
@@ -63,9 +63,39 @@
                 </MetaDataItem>
             </MetaDataMap>
         </Processor>
+        <Processor type="org.inviwo.Background" identifier="Background 3">
+            <InPorts>
+                <InPort type="org.inviwo.ImageInport" identifier="inport" id="ref62" />
+            </InPorts>
+            <OutPorts>
+                <OutPort type="org.inviwo.ImageOutport" identifier="outport" id="ref63" />
+            </OutPorts>
+            <Properties>
+                <Property type="org.inviwo.OptionPropertyInt" identifier="backgroundStyle">
+                    <selectedIdentifier content="uniformColor" />
+                </Property>
+                <Property type="org.inviwo.FloatVec4Property" identifier="color1">
+                    <semantics semantics="Color" />
+                </Property>
+                <Property type="org.inviwo.FloatVec4Property" identifier="color2">
+                    <semantics semantics="Color" />
+                </Property>
+                <Property type="org.inviwo.IntVec2Property" identifier="checkerBoardSize">
+                    <visible content="0" />
+                </Property>
+                <Property type="org.inviwo.ButtonProperty" identifier="Switch colors" />
+            </Properties>
+            <MetaDataMap>
+                <MetaDataItem type="org.inviwo.ProcessorMetaData" key="org.inviwo.ProcessorMetaData">
+                    <position x="-800" y="-200" />
+                    <visibility content="1" />
+                    <selection content="0" />
+                </MetaDataItem>
+            </MetaDataMap>
+        </Processor>
         <Processor type="org.inviwo.CanvasGL" identifier="Canvas">
             <InPorts>
-                <InPort type="org.inviwo.ImageInport" identifier="inport" id="ref4" />
+                <InPort type="org.inviwo.ImageInport" identifier="inport" id="ref6" />
             </InPorts>
             <Properties>
                 <Property type="org.inviwo.CompositeProperty" identifier="inputSize">
@@ -121,15 +151,15 @@
                     <selection content="0" />
                 </MetaDataItem>
                 <MetaDataItem type="org.inviwo.ProcessorWidgetMetaData" key="org.inviwo.ProcessorWidgetMetaData">
-                    <position x="-1411" y="78" />
+                    <position x="-1396" y="85" />
                     <dimensions x="1184" y="778" />
-                    <visibility content="1" />
+                    <visibility content="0" />
                 </MetaDataItem>
             </MetaDataMap>
         </Processor>
         <Processor type="org.inviwo.CanvasGL" identifier="Canvas 2">
             <InPorts>
-                <InPort type="org.inviwo.ImageInport" identifier="inport" id="ref10" />
+                <InPort type="org.inviwo.ImageInport" identifier="inport" id="ref7" />
             </InPorts>
             <Properties>
                 <Property type="org.inviwo.CompositeProperty" identifier="inputSize">
@@ -141,7 +171,7 @@
                         <Property type="org.inviwo.IntVec2Property" identifier="customInputDimensions">
                             <visible content="0" />
                             <readonly content="1" />
-                            <value x="1079" y="819" />
+                            <value x="592" y="389" />
                         </Property>
                         <Property type="org.inviwo.BoolProperty" identifier="keepAspectRatio">
                             <visible content="0" />
@@ -182,20 +212,84 @@
                 <MetaDataItem type="org.inviwo.ProcessorMetaData" key="org.inviwo.ProcessorMetaData">
                     <position x="-100" y="75" />
                     <visibility content="1" />
-                    <selection content="1" />
+                    <selection content="0" />
                 </MetaDataItem>
                 <MetaDataItem type="org.inviwo.ProcessorWidgetMetaData" key="org.inviwo.ProcessorWidgetMetaData">
-                    <position x="-1418" y="167" />
+                    <position x="-1426" y="141" />
                     <dimensions x="592" y="389" />
+                    <visibility content="0" />
+                </MetaDataItem>
+            </MetaDataMap>
+        </Processor>
+        <Processor type="org.inviwo.CanvasGL" identifier="Canvas 3">
+            <InPorts>
+                <InPort type="org.inviwo.ImageInport" identifier="inport" id="ref64" />
+            </InPorts>
+            <Properties>
+                <Property type="org.inviwo.CompositeProperty" identifier="inputSize">
+                    <Properties>
+                        <Property type="org.inviwo.IntVec2Property" identifier="dimensions">
+                            <value x="1270" y="601" />
+                        </Property>
+                        <Property type="org.inviwo.BoolProperty" identifier="enableCustomInputDimensions" />
+                        <Property type="org.inviwo.IntVec2Property" identifier="customInputDimensions">
+                            <visible content="0" />
+                            <readonly content="1" />
+                            <value x="1270" y="808" />
+                        </Property>
+                        <Property type="org.inviwo.BoolProperty" identifier="keepAspectRatio">
+                            <visible content="0" />
+                        </Property>
+                        <Property type="org.inviwo.FloatProperty" identifier="aspectRatioScaling">
+                            <visible content="0" />
+                        </Property>
+                    </Properties>
+                    <collapsed content="0" />
+                </Property>
+                <Property type="org.inviwo.OptionPropertyEnumInt" identifier="visibleLayer" />
+                <Property type="org.inviwo.IntProperty" identifier="colorLayer_" displayName="Color Layer ID">
+                    <minvalue content="0" />
+                    <maxvalue content="0" />
+                    <increment content="1" />
+                    <semantics semantics="Default" />
+                    <usageMode content="0" />
+                    <visible content="0" />
+                    <readonly content="0" />
+                    <value content="0" />
+                </Property>
+                <Property type="org.inviwo.DirectoryProperty" identifier="layerDir">
+                    <absolutePath content="D:/alebo68/Dropbox/University/Projects/ParallelCoordinatesClustering/images/low_ratio_test2" />
+                    <workspaceRelativePath content="" />
+                    <ivwdataRelativePath content="" />
+                    <nameFilter>
+                        <filter>
+                            <extension content="*" />
+                            <description content="All Files" />
+                        </filter>
+                    </nameFilter>
+                    <acceptMode content="0" />
+                    <fileMode content="4" />
+                </Property>
+                <Property type="org.inviwo.ButtonProperty" identifier="saveLayer" />
+            </Properties>
+            <MetaDataMap>
+                <MetaDataItem type="org.inviwo.ProcessorMetaData" key="org.inviwo.ProcessorMetaData">
+                    <position x="-900" y="-25" />
+                    <visibility content="1" />
+                    <selection content="0" />
+                </MetaDataItem>
+                <MetaDataItem type="org.inviwo.ProcessorWidgetMetaData" key="org.inviwo.ProcessorWidgetMetaData">
+                    <position x="-1477" y="115" />
+                    <dimensions x="1270" y="601" />
                     <visibility content="1" />
                 </MetaDataItem>
             </MetaDataMap>
         </Processor>
         <Processor type="pers.bock.ClusterExport" identifier="Cluster Export">
             <InPorts>
-                <InPort type="Inport" identifier="in.raw" id="ref5" />
-                <InPort type="Inport" identifier="in.data" id="ref6" />
-                <InPort type="Inport" identifier="in.cluster" id="ref7" />
+                <InPort type="Inport" identifier="in.raw" id="ref8" />
+                <InPort type="Inport" identifier="in.data" id="ref9" />
+                <InPort type="Inport" identifier="in.cluster" id="ref10" />
             </InPorts>
             <Properties>
                 <Property type="org.inviwo.FileProperty" identifier="_outputFile">
@@ -223,19 +317,19 @@
         </Processor>
         <Processor type="pers.bock.ClusterRenderer" identifier="Cluster Renderer">
             <InPorts>
-                <InPort type="Inport" identifier="data" id="ref8" />
+                <InPort type="Inport" identifier="data" id="ref11" />
             </InPorts>
             <OutPorts>
                 <OutPort type="org.inviwo.ImageOutport" identifier="outport" />
             </OutPorts>
             <Properties>
-                <Property type="org.inviwo.TransferFunctionProperty" identifier="transferFunction" id="ref9">
+                <Property type="org.inviwo.TransferFunctionProperty" identifier="transferFunction" id="ref12">
                     <MetaDataMap>
                         <MetaDataItem type="org.inviwo.PropertyEditorWidgetMetaData" key="org.inviwo.PropertyEditorWidgetMetaData">
                             <position x="2262" y="92" />
                             <dimensions x="500" y="322" />
                             <visibility content="0" />
-                            <dockstatus content="DockedRight" />
+                            <dockstatus content="Floating" />
                         </MetaDataItem>
                     </MetaDataMap>
                     <transferFunction>
@@ -281,11 +375,11 @@
         </Processor>
         <Processor type="pers.bock.DensityMapFiltering" identifier="Density Map Filtering">
             <InPorts>
-                <InPort type="Inport" identifier="in.bins" id="ref11" />
-                <InPort type="Inport" identifier="in.pcp" id="ref12" />
+                <InPort type="Inport" identifier="in.bins" id="ref13" />
+                <InPort type="Inport" identifier="in.pcp" id="ref14" />
             </InPorts>
             <OutPorts>
-                <OutPort type="Outport" identifier="out.bins" id="ref13" />
+                <OutPort type="Outport" identifier="out.bins" id="ref15" />
             </OutPorts>
             <Properties>
                 <Property type="org.inviwo.OptionPropertyInt" identifier="_filteringMethod">
@@ -337,20 +431,20 @@
         </Processor>
         <Processor type="pers.bock.DensityMapRenderer" identifier="Density Map Renderer">
             <InPorts>
-                <InPort type="Inport" identifier="data" id="ref14" />
-                <InPort type="Inport" identifier="color" id="ref15" />
+                <InPort type="Inport" identifier="data" id="ref16" />
+                <InPort type="Inport" identifier="color" id="ref17" />
             </InPorts>
             <OutPorts>
-                <OutPort type="org.inviwo.ImageOutport" identifier="outport" id="ref18" />
+                <OutPort type="org.inviwo.ImageOutport" identifier="outport" id="ref20" />
             </OutPorts>
             <Properties>
-                <Property type="org.inviwo.StringProperty" identifier="_dimensionOrderingString" id="ref16">
+                <Property type="org.inviwo.StringProperty" identifier="_dimensionOrderingString" id="ref18">
                     <value content="01234" />
                 </Property>
-                <Property type="org.inviwo.StringProperty" identifier="_dimensionMask" id="ref17">
-                    <value content="11111" />
+                <Property type="org.inviwo.StringProperty" identifier="_dimensionMask" id="ref19">
+                    <value content="11001" />
                 </Property>
-                <Property type="org.inviwo.TransferFunctionProperty" identifier="transferFunction" id="ref19">
+                <Property type="org.inviwo.TransferFunctionProperty" identifier="transferFunction" id="ref21">
                     <transferFunction>
                         <maskMin content="0" />
                         <maskMax content="1" />
@@ -384,8 +478,8 @@
                     </transferFunction>
                 </Property>
                 <Property type="org.inviwo.FloatProperty" identifier="_renderScaling" />
-                <Property type="org.inviwo.FloatProperty" identifier="_textBorder" id="ref20">
-                    <value content="0.079999998" />
+                <Property type="org.inviwo.FloatProperty" identifier="_textBorder" id="ref22">
+                    <value content="0.053300001" />
                 </Property>
             </Properties>
             <MetaDataMap>
@@ -398,20 +492,20 @@
         </Processor>
         <Processor type="pers.bock.DensityMapRenderer" identifier="Density Map Renderer 2">
             <InPorts>
-                <InPort type="Inport" identifier="data" id="ref21" />
-                <InPort type="Inport" identifier="color" id="ref22" />
+                <InPort type="Inport" identifier="data" id="ref23" />
+                <InPort type="Inport" identifier="color" id="ref24" />
             </InPorts>
             <OutPorts>
-                <OutPort type="org.inviwo.ImageOutport" identifier="outport" id="ref25" />
+                <OutPort type="org.inviwo.ImageOutport" identifier="outport" id="ref27" />
             </OutPorts>
             <Properties>
-                <Property type="org.inviwo.StringProperty" identifier="_dimensionOrderingString" id="ref23">
+                <Property type="org.inviwo.StringProperty" identifier="_dimensionOrderingString" id="ref25">
                     <value content="01234" />
                 </Property>
-                <Property type="org.inviwo.StringProperty" identifier="_dimensionMask" id="ref24">
-                    <value content="11111" />
+                <Property type="org.inviwo.StringProperty" identifier="_dimensionMask" id="ref26">
+                    <value content="11001" />
                 </Property>
-                <Property type="org.inviwo.TransferFunctionProperty" identifier="transferFunction" id="ref26">
+                <Property type="org.inviwo.TransferFunctionProperty" identifier="transferFunction" id="ref28">
                     <MetaDataMap>
                         <MetaDataItem type="org.inviwo.PropertyEditorWidgetMetaData" key="org.inviwo.PropertyEditorWidgetMetaData">
                             <position x="0" y="0" />
@@ -453,8 +547,8 @@
                     </transferFunction>
                 </Property>
                 <Property type="org.inviwo.FloatProperty" identifier="_renderScaling" />
-                <Property type="org.inviwo.FloatProperty" identifier="_textBorder" id="ref27">
-                    <value content="0.079999998" />
+                <Property type="org.inviwo.FloatProperty" identifier="_textBorder" id="ref29">
+                    <value content="0.053300001" />
                 </Property>
             </Properties>
             <MetaDataMap>
@@ -467,10 +561,10 @@
         </Processor>
         <Processor type="org.inviwo.ImageLayoutGL" identifier="Image Layout">
             <InPorts>
-                <InPort type="org.inviwo.ImageMultiInport" identifier="multiinport" id="ref28" />
+                <InPort type="org.inviwo.ImageMultiInport" identifier="multiinport" id="ref30" />
             </InPorts>
             <OutPorts>
-                <OutPort type="org.inviwo.ImageOutport" identifier="outport" id="ref29" />
+                <OutPort type="org.inviwo.ImageOutport" identifier="outport" id="ref31" />
             </OutPorts>
             <Properties>
                 <Property type="org.inviwo.OptionPropertyEnumInt" identifier="layout" />
@@ -493,7 +587,7 @@
         </Processor>
         <Processor type="pers.bock.PCPReader" identifier="PCP Data Reader">
             <OutPorts>
-                <OutPort type="Outport" identifier="data" id="ref37" />
+                <OutPort type="Outport" identifier="data" id="ref32" />
             </OutPorts>
             <Properties>
                 <Property type="org.inviwo.FileProperty" identifier="filename">
@@ -559,22 +653,22 @@
         </Processor>
         <Processor type="pers.bock.PCPFiltering" identifier="PCP Filtering">
             <InPorts>
-                <InPort type="Inport" identifier="in.bins" id="ref30" />
-                <InPort type="Inport" identifier="in.pcp" id="ref31" />
+                <InPort type="Inport" identifier="in.bins" id="ref33" />
+                <InPort type="Inport" identifier="in.pcp" id="ref34" />
             </InPorts>
             <OutPorts>
-                <OutPort type="Outport" identifier="out.pcp" id="ref32" />
-                <OutPort type="Outport" identifier="out.color" id="ref33" />
-                <OutPort type="Outport" identifier="out.coloredBin" id="ref34" />
+                <OutPort type="Outport" identifier="out.pcp" id="ref35" />
+                <OutPort type="Outport" identifier="out.color" id="ref36" />
+                <OutPort type="Outport" identifier="out.coloredBin" id="ref37" />
             </OutPorts>
             <Properties>
-                <Property type="org.inviwo.IntProperty" identifier="_coloringDimension" id="ref35">
+                <Property type="org.inviwo.IntProperty" identifier="_coloringDimension" id="ref38">
                     <minvalue content="0" />
                     <maxvalue content="4" />
                     <value content="1" />
                 </Property>
-                <Property type="org.inviwo.StringProperty" identifier="_dimensionMask" id="ref36">
-                    <value content="11111" />
+                <Property type="org.inviwo.StringProperty" identifier="_dimensionMask" id="ref39">
+                    <value content="11001" />
                 </Property>
                 <Property type="org.inviwo.IntProperty" identifier="_parallelismSlider" />
             </Properties>
@@ -588,7 +682,7 @@
         </Processor>
         <Processor type="pers.bock.PCPGUI" identifier="PCP GUI">
             <InPorts>
-                <InPort type="Inport" identifier="pcp.in" id="ref38" />
+                <InPort type="Inport" identifier="pcp.in" id="ref40" />
             </InPorts>
             <Properties>
                 <Property type="org.inviwo.IntProperty" identifier="_nDimensions">
@@ -608,11 +702,11 @@
                         </option>
                     </options>
                 </Property>
-                <Property type="org.inviwo.StringProperty" identifier="_enabledDimensionsString" id="ref40">
+                <Property type="org.inviwo.StringProperty" identifier="_enabledDimensionsString" id="ref42">
                     <readonly content="1" />
-                    <value content="11111" />
+                    <value content="11001" />
                 </Property>
-                <Property type="org.inviwo.IntProperty" identifier="_coloringDimension" id="ref39">
+                <Property type="org.inviwo.IntProperty" identifier="_coloringDimension" id="ref41">
                     <maxvalue content="4" />
                     <value content="1" />
                 </Property>
@@ -640,7 +734,7 @@
                         </option>
                     </options>
                 </Property>
-                <Property type="org.inviwo.StringProperty" identifier="_dimensionOrderingString" id="ref41">
+                <Property type="org.inviwo.StringProperty" identifier="_dimensionOrderingString" id="ref43">
                     <readonly content="1" />
                     <value content="01234" />
                 </Property>
@@ -655,24 +749,28 @@
         </Processor>
         <Processor type="pers.bock.PCPRenderer" identifier="PCP Renderer">
             <InPorts>
-                <InPort type="Inport" identifier="data" id="ref42" />
+                <InPort type="Inport" identifier="data" id="ref44" />
                 <InPort type="Inport" identifier="color" />
             </InPorts>
             <OutPorts>
-                <OutPort type="org.inviwo.ImageOutport" identifier="image" id="ref43" />
+                <OutPort type="org.inviwo.ImageOutport" identifier="image" id="ref45" />
             </OutPorts>
             <Properties>
                 <Property type="org.inviwo.FloatProperty" identifier="_horizontalBorder" />
-                <Property type="org.inviwo.FloatProperty" identifier="_verticalBorder" id="ref44">
-                    <value content="0.079999998" />
+                <Property type="org.inviwo.FloatProperty" identifier="_verticalBorder" id="ref46">
+                    <value content="0.053300001" />
                 </Property>
-                <Property type="org.inviwo.BoolProperty" identifier="_lineSmoothing" />
-                <Property type="org.inviwo.BoolProperty" identifier="_depthTesting" />
-                <Property type="org.inviwo.StringProperty" identifier="_dimensionOrderingString" id="ref45">
+                <Property type="org.inviwo.BoolProperty" identifier="_lineSmoothing">
+                    <value content="1" />
+                </Property>
+                <Property type="org.inviwo.BoolProperty" identifier="_depthTesting">
+                    <value content="1" />
+                </Property>
+                <Property type="org.inviwo.StringProperty" identifier="_dimensionOrderingString" id="ref47">
                     <value content="01234" />
                 </Property>
-                <Property type="org.inviwo.StringProperty" identifier="_dimensionMask" id="ref46">
-                    <value content="11111" />
+                <Property type="org.inviwo.StringProperty" identifier="_dimensionMask" id="ref48">
+                    <value content="11001" />
                 </Property>
                 <Property type="org.inviwo.TransferFunctionProperty" identifier="transferFunction">
                     <MetaDataMap>
@@ -680,7 +778,7 @@
                             <position x="0" y="0" />
                             <dimensions x="256" y="256" />
                             <visibility content="0" />
-                            <dockstatus content="Floating" />
+                            <dockstatus content="DockedRight" />
                         </MetaDataItem>
                     </MetaDataMap>
                     <transferFunction>
@@ -704,32 +802,32 @@
                 <MetaDataItem type="org.inviwo.ProcessorMetaData" key="org.inviwo.ProcessorMetaData">
                     <position x="-800" y="-375" />
                     <visibility content="1" />
-                    <selection content="0" />
+                    <selection content="1" />
                 </MetaDataItem>
             </MetaDataMap>
         </Processor>
         <Processor type="pers.bock.PCPRenderer" identifier="PCP Renderer 2">
             <InPorts>
-                <InPort type="Inport" identifier="data" id="ref47" />
-                <InPort type="Inport" identifier="color" id="ref48" />
+                <InPort type="Inport" identifier="data" id="ref51" />
+                <InPort type="Inport" identifier="color" id="ref52" />
             </InPorts>
             <OutPorts>
-                <OutPort type="org.inviwo.ImageOutport" identifier="image" id="ref49" />
+                <OutPort type="org.inviwo.ImageOutport" identifier="image" id="ref53" />
             </OutPorts>
             <Properties>
                 <Property type="org.inviwo.FloatProperty" identifier="_horizontalBorder" />
-                <Property type="org.inviwo.FloatProperty" identifier="_verticalBorder" id="ref50">
-                    <value content="0.079999998" />
+                <Property type="org.inviwo.FloatProperty" identifier="_verticalBorder" id="ref54">
+                    <value content="0.053300001" />
                 </Property>
                 <Property type="org.inviwo.BoolProperty" identifier="_lineSmoothing" />
                 <Property type="org.inviwo.BoolProperty" identifier="_depthTesting" />
-                <Property type="org.inviwo.StringProperty" identifier="_dimensionOrderingString" id="ref51">
+                <Property type="org.inviwo.StringProperty" identifier="_dimensionOrderingString" id="ref55">
                     <value content="01234" />
                 </Property>
-                <Property type="org.inviwo.StringProperty" identifier="_dimensionMask" id="ref52">
-                    <value content="11111" />
+                <Property type="org.inviwo.StringProperty" identifier="_dimensionMask" id="ref56">
+                    <value content="11001" />
                 </Property>
-                <Property type="org.inviwo.TransferFunctionProperty" identifier="transferFunction" id="ref53">
+                <Property type="org.inviwo.TransferFunctionProperty" identifier="transferFunction" id="ref57">
                     <MetaDataMap>
                         <MetaDataItem type="org.inviwo.PropertyEditorWidgetMetaData" key="org.inviwo.PropertyEditorWidgetMetaData">
                             <position x="2226" y="96" />
@@ -781,10 +879,10 @@
         </Processor>
         <Processor type="pers.bock.PCPUpload" identifier="PCP Upload">
             <InPorts>
-                <InPort type="Inport" identifier="inData" id="ref54" />
+                <InPort type="Inport" identifier="inData" id="ref49" />
             </InPorts>
             <OutPorts>
-                <OutPort type="Outport" identifier="outdata" id="ref55" />
+                <OutPort type="Outport" identifier="outdata" id="ref50" />
             </OutPorts>
             <MetaDataMap>
                 <MetaDataItem type="org.inviwo.ProcessorMetaData" key="org.inviwo.ProcessorMetaData">
@@ -796,11 +894,11 @@
         </Processor>
         <Processor type="pers.bock.ScatterPlotRenderer" identifier="ScatterPlot Renderer">
             <InPorts>
-                <InPort type="Inport" identifier="data" id="ref56" />
-                <InPort type="Inport" identifier="color" id="ref57" />
+                <InPort type="Inport" identifier="data" id="ref58" />
+                <InPort type="Inport" identifier="color" id="ref59" />
             </InPorts>
             <OutPorts>
-                <OutPort type="org.inviwo.ImageOutport" identifier="image" id="ref58" />
+                <OutPort type="org.inviwo.ImageOutport" identifier="image" id="ref60" />
             </OutPorts>
             <Properties>
                 <Property type="org.inviwo.OptionPropertyInt" identifier="_xAxisSelection">
@@ -831,7 +929,6 @@
                             <value content="4" />
                         </option>
                     </options>
-                    <selectedIdentifier content="2" />
                 </Property>
                 <Property type="org.inviwo.OptionPropertyInt" identifier="_yAxisSelection">
                     <options>
@@ -861,12 +958,11 @@
                             <value content="4" />
                         </option>
                     </options>
-                    <selectedIdentifier content="4" />
                 </Property>
                 <Property type="org.inviwo.FloatProperty" identifier="_glyphSize">
                     <value content="0.12" />
                 </Property>
-                <Property type="org.inviwo.TransferFunctionProperty" identifier="transferFunction" id="ref59">
+                <Property type="org.inviwo.TransferFunctionProperty" identifier="transferFunction" id="ref61">
                     <MetaDataMap>
                         <MetaDataItem type="org.inviwo.PropertyEditorWidgetMetaData" key="org.inviwo.PropertyEditorWidgetMetaData">
                             <position x="342" y="92" />
@@ -919,262 +1015,266 @@
     </Processors>
     <Connections>
         <Connection>
-            <OutPort type="Outport" identifier="data" reference="ref37" />
-            <InPort type="Inport" identifier="inData" reference="ref54" />
+            <OutPort type="Outport" identifier="data" reference="ref32" />
+            <InPort type="Inport" identifier="inData" reference="ref49" />
         </Connection>
         <Connection>
-            <OutPort type="Outport" identifier="outdata" reference="ref55" />
-            <InPort type="Inport" identifier="data" reference="ref42" />
+            <OutPort type="Outport" identifier="outdata" reference="ref50" />
+            <InPort type="Inport" identifier="data" reference="ref44" />
         </Connection>
         <Connection>
             <OutPort type="org.inviwo.ImageOutport" identifier="outport" reference="ref3" />
-            <InPort type="org.inviwo.ImageInport" identifier="inport" reference="ref4" />
+            <InPort type="org.inviwo.ImageInport" identifier="inport" reference="ref6" />
         </Connection>
         <Connection>
-            <OutPort type="Outport" identifier="outdata" reference="ref55" />
+            <OutPort type="Outport" identifier="outdata" reference="ref50" />
             <InPort type="Inport" identifier="in.data" reference="ref0" />
         </Connection>
         <Connection>
-            <OutPort type="org.inviwo.ImageOutport" identifier="image" reference="ref43" />
-            <InPort type="org.inviwo.ImageMultiInport" identifier="multiinport" reference="ref28" />
-        </Connection>
-        <Connection>
-            <OutPort type="org.inviwo.ImageOutport" identifier="outport" reference="ref29" />
+            <OutPort type="org.inviwo.ImageOutport" identifier="outport" reference="ref31" />
             <InPort type="org.inviwo.ImageInport" identifier="inport" reference="ref2" />
         </Connection>
         <Connection>
             <OutPort type="Outport" identifier="out.data" reference="ref1" />
-            <InPort type="Inport" identifier="data" reference="ref14" />
+            <InPort type="Inport" identifier="data" reference="ref16" />
         </Connection>
         <Connection>
-            <OutPort type="org.inviwo.ImageOutport" identifier="outport" reference="ref18" />
-            <InPort type="org.inviwo.ImageMultiInport" identifier="multiinport" reference="ref28" />
+            <OutPort type="org.inviwo.ImageOutport" identifier="outport" reference="ref20" />
+            <InPort type="org.inviwo.ImageMultiInport" identifier="multiinport" reference="ref30" />
         </Connection>
         <Connection>
             <OutPort type="Outport" identifier="out.data" reference="ref1" />
-            <InPort type="Inport" identifier="in.bins" reference="ref11" />
+            <InPort type="Inport" identifier="in.bins" reference="ref13" />
         </Connection>
         <Connection>
-            <OutPort type="Outport" identifier="out.bins" reference="ref13" />
-            <InPort type="Inport" identifier="data" reference="ref21" />
+            <OutPort type="Outport" identifier="out.bins" reference="ref15" />
+            <InPort type="Inport" identifier="data" reference="ref23" />
         </Connection>
         <Connection>
-            <OutPort type="org.inviwo.ImageOutport" identifier="outport" reference="ref25" />
-            <InPort type="org.inviwo.ImageMultiInport" identifier="multiinport" reference="ref28" />
+            <OutPort type="org.inviwo.ImageOutport" identifier="outport" reference="ref27" />
+            <InPort type="org.inviwo.ImageMultiInport" identifier="multiinport" reference="ref30" />
         </Connection>
         <Connection>
-            <OutPort type="Outport" identifier="out.bins" reference="ref13" />
-            <InPort type="Inport" identifier="in.bins" reference="ref30" />
+            <OutPort type="Outport" identifier="out.bins" reference="ref15" />
+            <InPort type="Inport" identifier="in.bins" reference="ref33" />
         </Connection>
         <Connection>
-            <OutPort type="Outport" identifier="outdata" reference="ref55" />
-            <InPort type="Inport" identifier="in.pcp" reference="ref31" />
+            <OutPort type="Outport" identifier="outdata" reference="ref50" />
+            <InPort type="Inport" identifier="in.pcp" reference="ref34" />
         </Connection>
         <Connection>
-            <OutPort type="Outport" identifier="out.pcp" reference="ref32" />
-            <InPort type="Inport" identifier="data" reference="ref47" />
+            <OutPort type="Outport" identifier="out.pcp" reference="ref35" />
+            <InPort type="Inport" identifier="data" reference="ref51" />
         </Connection>
         <Connection>
-            <OutPort type="org.inviwo.ImageOutport" identifier="image" reference="ref49" />
-            <InPort type="org.inviwo.ImageMultiInport" identifier="multiinport" reference="ref28" />
+            <OutPort type="org.inviwo.ImageOutport" identifier="image" reference="ref53" />
+            <InPort type="org.inviwo.ImageMultiInport" identifier="multiinport" reference="ref30" />
         </Connection>
         <Connection>
-            <OutPort type="Outport" identifier="out.color" reference="ref33" />
-            <InPort type="Inport" identifier="color" reference="ref48" />
+            <OutPort type="Outport" identifier="out.color" reference="ref36" />
+            <InPort type="Inport" identifier="color" reference="ref52" />
         </Connection>
         <Connection>
-            <OutPort type="Outport" identifier="out.coloredBin" reference="ref34" />
-            <InPort type="Inport" identifier="data" reference="ref8" />
+            <OutPort type="Outport" identifier="out.coloredBin" reference="ref37" />
+            <InPort type="Inport" identifier="data" reference="ref11" />
         </Connection>
         <Connection>
-            <OutPort type="Outport" identifier="out.coloredBin" reference="ref34" />
-            <InPort type="Inport" identifier="color" reference="ref22" />
+            <OutPort type="Outport" identifier="out.coloredBin" reference="ref37" />
+            <InPort type="Inport" identifier="color" reference="ref24" />
         </Connection>
         <Connection>
-            <OutPort type="Outport" identifier="out.coloredBin" reference="ref34" />
-            <InPort type="Inport" identifier="color" reference="ref15" />
+            <OutPort type="Outport" identifier="out.coloredBin" reference="ref37" />
+            <InPort type="Inport" identifier="color" reference="ref17" />
         </Connection>
         <Connection>
-            <OutPort type="Outport" identifier="out.pcp" reference="ref32" />
-            <InPort type="Inport" identifier="in.data" reference="ref6" />
+            <OutPort type="Outport" identifier="out.pcp" reference="ref35" />
+            <InPort type="Inport" identifier="in.data" reference="ref9" />
         </Connection>
         <Connection>
-            <OutPort type="Outport" identifier="out.color" reference="ref33" />
-            <InPort type="Inport" identifier="in.cluster" reference="ref7" />
+            <OutPort type="Outport" identifier="out.color" reference="ref36" />
+            <InPort type="Inport" identifier="in.cluster" reference="ref10" />
         </Connection>
         <Connection>
-            <OutPort type="Outport" identifier="data" reference="ref37" />
-            <InPort type="Inport" identifier="in.raw" reference="ref5" />
+            <OutPort type="Outport" identifier="data" reference="ref32" />
+            <InPort type="Inport" identifier="in.raw" reference="ref8" />
         </Connection>
         <Connection>
-            <OutPort type="Outport" identifier="out.pcp" reference="ref32" />
-            <InPort type="Inport" identifier="data" reference="ref56" />
+            <OutPort type="Outport" identifier="out.pcp" reference="ref35" />
+            <InPort type="Inport" identifier="data" reference="ref58" />
         </Connection>
         <Connection>
-            <OutPort type="Outport" identifier="out.color" reference="ref33" />
-            <InPort type="Inport" identifier="color" reference="ref57" />
+            <OutPort type="Outport" identifier="out.color" reference="ref36" />
+            <InPort type="Inport" identifier="color" reference="ref59" />
         </Connection>
         <Connection>
-            <OutPort type="Outport" identifier="outdata" reference="ref55" />
-            <InPort type="Inport" identifier="in.pcp" reference="ref12" />
+            <OutPort type="Outport" identifier="outdata" reference="ref50" />
+            <InPort type="Inport" identifier="in.pcp" reference="ref14" />
         </Connection>
         <Connection>
-            <OutPort type="Outport" identifier="outdata" reference="ref55" />
-            <InPort type="Inport" identifier="pcp.in" reference="ref38" />
+            <OutPort type="Outport" identifier="outdata" reference="ref50" />
+            <InPort type="Inport" identifier="pcp.in" reference="ref40" />
         </Connection>
         <Connection>
-            <OutPort type="org.inviwo.ImageOutport" identifier="image" reference="ref58" />
-            <InPort type="org.inviwo.ImageInport" identifier="inport" reference="ref60" />
+            <OutPort type="org.inviwo.ImageOutport" identifier="image" reference="ref60" />
+            <InPort type="org.inviwo.ImageInport" identifier="inport" reference="ref4" />
         </Connection>
         <Connection>
-            <OutPort type="org.inviwo.ImageOutport" identifier="outport" reference="ref61" />
-            <InPort type="org.inviwo.ImageInport" identifier="inport" reference="ref10" />
+            <OutPort type="org.inviwo.ImageOutport" identifier="outport" reference="ref5" />
+            <InPort type="org.inviwo.ImageInport" identifier="inport" reference="ref7" />
+        </Connection>
+        <Connection>
+            <OutPort type="org.inviwo.ImageOutport" identifier="image" reference="ref45" />
+            <InPort type="org.inviwo.ImageInport" identifier="inport" reference="ref62" />
+        </Connection>
+        <Connection>
+            <OutPort type="org.inviwo.ImageOutport" identifier="outport" reference="ref63" />
+            <InPort type="org.inviwo.ImageInport" identifier="inport" reference="ref64" />
         </Connection>
     </Connections>
     <PropertyLinks>
         <PropertyLink>
-            <SourceProperty type="org.inviwo.TransferFunctionProperty" identifier="transferFunction" reference="ref9" />
-            <DestinationProperty type="org.inviwo.TransferFunctionProperty" identifier="transferFunction" reference="ref53" />
+            <SourceProperty type="org.inviwo.TransferFunctionProperty" identifier="transferFunction" reference="ref12" />
+            <DestinationProperty type="org.inviwo.TransferFunctionProperty" identifier="transferFunction" reference="ref57" />
         </PropertyLink>
         <PropertyLink>
-            <SourceProperty type="org.inviwo.TransferFunctionProperty" identifier="transferFunction" reference="ref9" />
-            <DestinationProperty type="org.inviwo.TransferFunctionProperty" identifier="transferFunction" reference="ref59" />
+            <SourceProperty type="org.inviwo.TransferFunctionProperty" identifier="transferFunction" reference="ref12" />
+            <DestinationProperty type="org.inviwo.TransferFunctionProperty" identifier="transferFunction" reference="ref61" />
         </PropertyLink>
         <PropertyLink>
-            <SourceProperty type="org.inviwo.StringProperty" identifier="_dimensionOrderingString" reference="ref16" />
-            <DestinationProperty type="org.inviwo.StringProperty" identifier="_dimensionOrderingString" reference="ref41" />
+            <SourceProperty type="org.inviwo.StringProperty" identifier="_dimensionOrderingString" reference="ref18" />
+            <DestinationProperty type="org.inviwo.StringProperty" identifier="_dimensionOrderingString" reference="ref43" />
         </PropertyLink>
         <PropertyLink>
-            <SourceProperty type="org.inviwo.StringProperty" identifier="_dimensionMask" reference="ref17" />
-            <DestinationProperty type="org.inviwo.StringProperty" identifier="_enabledDimensionsString" reference="ref40" />
+            <SourceProperty type="org.inviwo.StringProperty" identifier="_dimensionMask" reference="ref19" />
+            <DestinationProperty type="org.inviwo.StringProperty" identifier="_enabledDimensionsString" reference="ref42" />
         </PropertyLink>
         <PropertyLink>
-            <SourceProperty type="org.inviwo.TransferFunctionProperty" identifier="transferFunction" reference="ref19" />
-            <DestinationProperty type="org.inviwo.TransferFunctionProperty" identifier="transferFunction" reference="ref26" />
+            <SourceProperty type="org.inviwo.TransferFunctionProperty" identifier="transferFunction" reference="ref21" />
+            <DestinationProperty type="org.inviwo.TransferFunctionProperty" identifier="transferFunction" reference="ref28" />
         </PropertyLink>
         <PropertyLink>
-            <SourceProperty type="org.inviwo.FloatProperty" identifier="_textBorder" reference="ref20" />
-            <DestinationProperty type="org.inviwo.FloatProperty" identifier="_textBorder" reference="ref27" />
+            <SourceProperty type="org.inviwo.FloatProperty" identifier="_textBorder" reference="ref22" />
+            <DestinationProperty type="org.inviwo.FloatProperty" identifier="_textBorder" reference="ref29" />
         </PropertyLink>
         <PropertyLink>
-            <SourceProperty type="org.inviwo.FloatProperty" identifier="_textBorder" reference="ref20" />
-            <DestinationProperty type="org.inviwo.FloatProperty" identifier="_verticalBorder" reference="ref44" />
+            <SourceProperty type="org.inviwo.FloatProperty" identifier="_textBorder" reference="ref22" />
+            <DestinationProperty type="org.inviwo.FloatProperty" identifier="_verticalBorder" reference="ref46" />
         </PropertyLink>
         <PropertyLink>
-            <SourceProperty type="org.inviwo.StringProperty" identifier="_dimensionOrderingString" reference="ref23" />
-            <DestinationProperty type="org.inviwo.StringProperty" identifier="_dimensionOrderingString" reference="ref41" />
+            <SourceProperty type="org.inviwo.StringProperty" identifier="_dimensionOrderingString" reference="ref25" />
+            <DestinationProperty type="org.inviwo.StringProperty" identifier="_dimensionOrderingString" reference="ref43" />
         </PropertyLink>
         <PropertyLink>
-            <SourceProperty type="org.inviwo.StringProperty" identifier="_dimensionMask" reference="ref24" />
-            <DestinationProperty type="org.inviwo.StringProperty" identifier="_enabledDimensionsString" reference="ref40" />
+            <SourceProperty type="org.inviwo.StringProperty" identifier="_dimensionMask" reference="ref26" />
+            <DestinationProperty type="org.inviwo.StringProperty" identifier="_enabledDimensionsString" reference="ref42" />
         </PropertyLink>
         <PropertyLink>
-            <SourceProperty type="org.inviwo.TransferFunctionProperty" identifier="transferFunction" reference="ref26" />
-            <DestinationProperty type="org.inviwo.TransferFunctionProperty" identifier="transferFunction" reference="ref19" />
+            <SourceProperty type="org.inviwo.TransferFunctionProperty" identifier="transferFunction" reference="ref28" />
+            <DestinationProperty type="org.inviwo.TransferFunctionProperty" identifier="transferFunction" reference="ref21" />
         </PropertyLink>
         <PropertyLink>
-            <SourceProperty type="org.inviwo.TransferFunctionProperty" identifier="transferFunction" reference="ref26" />
-            <DestinationProperty type="org.inviwo.TransferFunctionProperty" identifier="transferFunction" reference="ref53" />
+            <SourceProperty type="org.inviwo.TransferFunctionProperty" identifier="transferFunction" reference="ref28" />
+            <DestinationProperty type="org.inviwo.TransferFunctionProperty" identifier="transferFunction" reference="ref57" />
         </PropertyLink>
         <PropertyLink>
-            <SourceProperty type="org.inviwo.FloatProperty" identifier="_textBorder" reference="ref27" />
-            <DestinationProperty type="org.inviwo.FloatProperty" identifier="_textBorder" reference="ref20" />
+            <SourceProperty type="org.inviwo.FloatProperty" identifier="_textBorder" reference="ref29" />
+            <DestinationProperty type="org.inviwo.FloatProperty" identifier="_textBorder" reference="ref22" />
         </PropertyLink>
         <PropertyLink>
-            <SourceProperty type="org.inviwo.FloatProperty" identifier="_textBorder" reference="ref27" />
-            <DestinationProperty type="org.inviwo.FloatProperty" identifier="_verticalBorder" reference="ref50" />
+            <SourceProperty type="org.inviwo.FloatProperty" identifier="_textBorder" reference="ref29" />
+            <DestinationProperty type="org.inviwo.FloatProperty" identifier="_verticalBorder" reference="ref54" />
         </PropertyLink>
         <PropertyLink>
-            <SourceProperty type="org.inviwo.IntProperty" identifier="_coloringDimension" reference="ref35" />
-            <DestinationProperty type="org.inviwo.IntProperty" identifier="_coloringDimension" reference="ref39" />
+            <SourceProperty type="org.inviwo.IntProperty" identifier="_coloringDimension" reference="ref38" />
+            <DestinationProperty type="org.inviwo.IntProperty" identifier="_coloringDimension" reference="ref41" />
         </PropertyLink>
         <PropertyLink>
-            <SourceProperty type="org.inviwo.StringProperty" identifier="_dimensionMask" reference="ref36" />
-            <DestinationProperty type="org.inviwo.StringProperty" identifier="_enabledDimensionsString" reference="ref40" />
+            <SourceProperty type="org.inviwo.StringProperty" identifier="_dimensionMask" reference="ref39" />
+            <DestinationProperty type="org.inviwo.StringProperty" identifier="_enabledDimensionsString" reference="ref42" />
         </PropertyLink>
         <PropertyLink>
-            <SourceProperty type="org.inviwo.IntProperty" identifier="_coloringDimension" reference="ref39" />
-            <DestinationProperty type="org.inviwo.IntProperty" identifier="_coloringDimension" reference="ref35" />
+            <SourceProperty type="org.inviwo.IntProperty" identifier="_coloringDimension" reference="ref41" />
+            <DestinationProperty type="org.inviwo.IntProperty" identifier="_coloringDimension" reference="ref38" />
         </PropertyLink>
         <PropertyLink>
-            <SourceProperty type="org.inviwo.StringProperty" identifier="_enabledDimensionsString" reference="ref40" />
-            <DestinationProperty type="org.inviwo.StringProperty" identifier="_dimensionMask" reference="ref17" />
+            <SourceProperty type="org.inviwo.StringProperty" identifier="_enabledDimensionsString" reference="ref42" />
+            <DestinationProperty type="org.inviwo.StringProperty" identifier="_dimensionMask" reference="ref19" />
         </PropertyLink>
         <PropertyLink>
-            <SourceProperty type="org.inviwo.StringProperty" identifier="_enabledDimensionsString" reference="ref40" />
-            <DestinationProperty type="org.inviwo.StringProperty" identifier="_dimensionMask" reference="ref24" />
+            <SourceProperty type="org.inviwo.StringProperty" identifier="_enabledDimensionsString" reference="ref42" />
+            <DestinationProperty type="org.inviwo.StringProperty" identifier="_dimensionMask" reference="ref26" />
         </PropertyLink>
         <PropertyLink>
-            <SourceProperty type="org.inviwo.StringProperty" identifier="_enabledDimensionsString" reference="ref40" />
-            <DestinationProperty type="org.inviwo.StringProperty" identifier="_dimensionMask" reference="ref36" />
+            <SourceProperty type="org.inviwo.StringProperty" identifier="_enabledDimensionsString" reference="ref42" />
+            <DestinationProperty type="org.inviwo.StringProperty" identifier="_dimensionMask" reference="ref39" />
         </PropertyLink>
         <PropertyLink>
-            <SourceProperty type="org.inviwo.StringProperty" identifier="_enabledDimensionsString" reference="ref40" />
-            <DestinationProperty type="org.inviwo.StringProperty" identifier="_dimensionMask" reference="ref46" />
+            <SourceProperty type="org.inviwo.StringProperty" identifier="_enabledDimensionsString" reference="ref42" />
+            <DestinationProperty type="org.inviwo.StringProperty" identifier="_dimensionMask" reference="ref48" />
         </PropertyLink>
         <PropertyLink>
-            <SourceProperty type="org.inviwo.StringProperty" identifier="_enabledDimensionsString" reference="ref40" />
-            <DestinationProperty type="org.inviwo.StringProperty" identifier="_dimensionMask" reference="ref52" />
+            <SourceProperty type="org.inviwo.StringProperty" identifier="_enabledDimensionsString" reference="ref42" />
+            <DestinationProperty type="org.inviwo.StringProperty" identifier="_dimensionMask" reference="ref56" />
         </PropertyLink>
         <PropertyLink>
-            <SourceProperty type="org.inviwo.StringProperty" identifier="_dimensionOrderingString" reference="ref41" />
-            <DestinationProperty type="org.inviwo.StringProperty" identifier="_dimensionOrderingString" reference="ref16" />
+            <SourceProperty type="org.inviwo.StringProperty" identifier="_dimensionOrderingString" reference="ref43" />
+            <DestinationProperty type="org.inviwo.StringProperty" identifier="_dimensionOrderingString" reference="ref18" />
         </PropertyLink>
         <PropertyLink>
-            <SourceProperty type="org.inviwo.StringProperty" identifier="_dimensionOrderingString" reference="ref41" />
-            <DestinationProperty type="org.inviwo.StringProperty" identifier="_dimensionOrderingString" reference="ref23" />
+            <SourceProperty type="org.inviwo.StringProperty" identifier="_dimensionOrderingString" reference="ref43" />
+            <DestinationProperty type="org.inviwo.StringProperty" identifier="_dimensionOrderingString" reference="ref25" />
         </PropertyLink>
         <PropertyLink>
-            <SourceProperty type="org.inviwo.StringProperty" identifier="_dimensionOrderingString" reference="ref41" />
-            <DestinationProperty type="org.inviwo.StringProperty" identifier="_dimensionOrderingString" reference="ref45" />
+            <SourceProperty type="org.inviwo.StringProperty" identifier="_dimensionOrderingString" reference="ref43" />
+            <DestinationProperty type="org.inviwo.StringProperty" identifier="_dimensionOrderingString" reference="ref47" />
         </PropertyLink>
         <PropertyLink>
-            <SourceProperty type="org.inviwo.StringProperty" identifier="_dimensionOrderingString" reference="ref41" />
-            <DestinationProperty type="org.inviwo.StringProperty" identifier="_dimensionOrderingString" reference="ref51" />
+            <SourceProperty type="org.inviwo.StringProperty" identifier="_dimensionOrderingString" reference="ref43" />
+            <DestinationProperty type="org.inviwo.StringProperty" identifier="_dimensionOrderingString" reference="ref55" />
         </PropertyLink>
         <PropertyLink>
-            <SourceProperty type="org.inviwo.FloatProperty" identifier="_verticalBorder" reference="ref44" />
-            <DestinationProperty type="org.inviwo.FloatProperty" identifier="_textBorder" reference="ref20" />
+            <SourceProperty type="org.inviwo.FloatProperty" identifier="_verticalBorder" reference="ref46" />
+            <DestinationProperty type="org.inviwo.FloatProperty" identifier="_textBorder" reference="ref22" />
         </PropertyLink>
         <PropertyLink>
-            <SourceProperty type="org.inviwo.StringProperty" identifier="_dimensionOrderingString" reference="ref45" />
-            <DestinationProperty type="org.inviwo.StringProperty" identifier="_dimensionOrderingString" reference="ref41" />
+            <SourceProperty type="org.inviwo.StringProperty" identifier="_dimensionOrderingString" reference="ref47" />
+            <DestinationProperty type="org.inviwo.StringProperty" identifier="_dimensionOrderingString" reference="ref43" />
         </PropertyLink>
         <PropertyLink>
-            <SourceProperty type="org.inviwo.StringProperty" identifier="_dimensionOrderingString" reference="ref45" />
-            <DestinationProperty type="org.inviwo.StringProperty" identifier="_dimensionOrderingString" reference="ref51" />
+            <SourceProperty type="org.inviwo.StringProperty" identifier="_dimensionOrderingString" reference="ref47" />
+            <DestinationProperty type="org.inviwo.StringProperty" identifier="_dimensionOrderingString" reference="ref55" />
         </PropertyLink>
         <PropertyLink>
-            <SourceProperty type="org.inviwo.StringProperty" identifier="_dimensionMask" reference="ref46" />
-            <DestinationProperty type="org.inviwo.StringProperty" identifier="_enabledDimensionsString" reference="ref40" />
+            <SourceProperty type="org.inviwo.StringProperty" identifier="_dimensionMask" reference="ref48" />
+            <DestinationProperty type="org.inviwo.StringProperty" identifier="_enabledDimensionsString" reference="ref42" />
         </PropertyLink>
         <PropertyLink>
-            <SourceProperty type="org.inviwo.FloatProperty" identifier="_verticalBorder" reference="ref50" />
-            <DestinationProperty type="org.inviwo.FloatProperty" identifier="_textBorder" reference="ref27" />
+            <SourceProperty type="org.inviwo.FloatProperty" identifier="_verticalBorder" reference="ref54" />
+            <DestinationProperty type="org.inviwo.FloatProperty" identifier="_textBorder" reference="ref29" />
         </PropertyLink>
         <PropertyLink>
-            <SourceProperty type="org.inviwo.StringProperty" identifier="_dimensionOrderingString" reference="ref51" />
-            <DestinationProperty type="org.inviwo.StringProperty" identifier="_dimensionOrderingString" reference="ref41" />
+            <SourceProperty type="org.inviwo.StringProperty" identifier="_dimensionOrderingString" reference="ref55" />
+            <DestinationProperty type="org.inviwo.StringProperty" identifier="_dimensionOrderingString" reference="ref43" />
         </PropertyLink>
         <PropertyLink>
-            <SourceProperty type="org.inviwo.StringProperty" identifier="_dimensionOrderingString" reference="ref51" />
-            <DestinationProperty type="org.inviwo.StringProperty" identifier="_dimensionOrderingString" reference="ref45" />
+            <SourceProperty type="org.inviwo.StringProperty" identifier="_dimensionOrderingString" reference="ref55" />
+            <DestinationProperty type="org.inviwo.StringProperty" identifier="_dimensionOrderingString" reference="ref47" />
         </PropertyLink>
         <PropertyLink>
-            <SourceProperty type="org.inviwo.StringProperty" identifier="_dimensionMask" reference="ref52" />
-            <DestinationProperty type="org.inviwo.StringProperty" identifier="_enabledDimensionsString" reference="ref40" />
+            <SourceProperty type="org.inviwo.StringProperty" identifier="_dimensionMask" reference="ref56" />
+            <DestinationProperty type="org.inviwo.StringProperty" identifier="_enabledDimensionsString" reference="ref42" />
         </PropertyLink>
         <PropertyLink>
-            <SourceProperty type="org.inviwo.TransferFunctionProperty" identifier="transferFunction" reference="ref53" />
-            <DestinationProperty type="org.inviwo.TransferFunctionProperty" identifier="transferFunction" reference="ref9" />
+            <SourceProperty type="org.inviwo.TransferFunctionProperty" identifier="transferFunction" reference="ref57" />
+            <DestinationProperty type="org.inviwo.TransferFunctionProperty" identifier="transferFunction" reference="ref12" />
         </PropertyLink>
         <PropertyLink>
-            <SourceProperty type="org.inviwo.TransferFunctionProperty" identifier="transferFunction" reference="ref53" />
-            <DestinationProperty type="org.inviwo.TransferFunctionProperty" identifier="transferFunction" reference="ref26" />
+            <SourceProperty type="org.inviwo.TransferFunctionProperty" identifier="transferFunction" reference="ref57" />
+            <DestinationProperty type="org.inviwo.TransferFunctionProperty" identifier="transferFunction" reference="ref28" />
         </PropertyLink>
         <PropertyLink>
-            <SourceProperty type="org.inviwo.TransferFunctionProperty" identifier="transferFunction" reference="ref59" />
-            <DestinationProperty type="org.inviwo.TransferFunctionProperty" identifier="transferFunction" reference="ref9" />
+            <SourceProperty type="org.inviwo.TransferFunctionProperty" identifier="transferFunction" reference="ref61" />
+            <DestinationProperty type="org.inviwo.TransferFunctionProperty" identifier="transferFunction" reference="ref12" />
         </PropertyLink>
     </PropertyLinks>
     <InviwoSetup>

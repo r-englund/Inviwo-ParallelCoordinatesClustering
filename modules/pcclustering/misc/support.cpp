@@ -30,7 +30,7 @@ void renderTextOverlay(
 
         vec4 color = vec4(1.0);
         if (!dimensionMask.test(dimensionOrdering[i]))
-            color.rgb = vec3(0.35f);
+            color.rgb = vec3(0.5f);
 
         renderer.render(text.c_str(), xPos, yPos, scale, color);
     }

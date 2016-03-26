@@ -30,9 +30,9 @@ void main() {
     if (texCoord_.y < _offset) {
         uint useDimension = bitfieldExtract(_dimensionMask, dim, 1);
         if (useDimension == 0)
-            FragData0 = vec4(vec3(0.25, 0.1, 0.1), 1.0);
+            FragData0 = vec4(vec3(0.35, 0.1, 0.1), 1.0);
         else
-            FragData0 = vec4(vec3(0.1, 0.25, 0.1), 1.0);
+            FragData0 = vec4(vec3(0.1, 0.35, 0.1), 1.0);
         return;
     }
 
