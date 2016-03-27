@@ -66,6 +66,17 @@ void PCPFileConverter::load() {
     }
     LogInfo("Dimensions: " << dimensions);
 
+    int32_t nDataItems;
+    {
+        std::string line;
+        std::getline(inFile, line);
+        std::stringstream s(line);
+        int d;
+        s >> d;
+        nDataItems = static_cast<int32_t>(d);
+    }
+    LogInfo("Number of Data Items: " << int(nDataItems));
+
     LogInfo("Creating Min/Max structure");
     std::vector<std::pair<float, float>> minMax;
     for (int i = 0; i < dimensions; ++i)
@@ -73,12 +84,14 @@ void PCPFileConverter::load() {
 
     LogInfo("Creating data structure");
     std::vector<float> data;
-    data.reserve(131072);
+    data.reserve(nDataItems * dimensions);
     int i = 0;
     std::string line;
     LogInfo("Start loading data");
+    std::stringstream s;
     while (std::getline(inFile, line)) {
-        std::stringstream s(line);
+        s.clear();
+        s.str(line);
         for (int j = 0; j < dimensions; ++j) {
             float value;
             s >> value;

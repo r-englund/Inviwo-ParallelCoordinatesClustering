@@ -36,6 +36,7 @@ DensityMapGenerator::DensityMapGenerator()
     , _inport("in.data")
     , _outport("out.data")
     , _nBins("_nBins", "# Bins", 32, 1, 2048)
+    , _invalidate("_invalidate", "Invalidate")
     , _densityMapGeneratorShader({{ShaderType::Compute, "densitymapgenerator.comp" }}, Shader::Build::No)
     , _densityMapCounterShader({{ShaderType::Compute, "densitymapcounter.comp" }}, Shader::Build::No)
 {
@@ -69,6 +70,9 @@ DensityMapGenerator::DensityMapGenerator()
     _binningData = std::make_shared<BinningData>();
     glGenBuffers(1, &_binningData->ssboBins);
     glGenBuffers(1, &_binningData->ssboMinMax);
+
+    addProperty(_invalidate);
+    _invalidate.onChange([this]() {invalidate(InvalidationLevel::InvalidOutput); });
 }
 
 DensityMapGenerator::~DensityMapGenerator() {}

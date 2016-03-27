@@ -50,6 +50,8 @@ private:
 
     IntProperty _parallelismSlider;
 
+    ButtonProperty _invalidate;
+
     Shader _countingShader;
     Shader _clusterDetectionShader;
     Shader _filteringShader;

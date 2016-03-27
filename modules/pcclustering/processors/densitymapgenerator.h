@@ -34,6 +34,8 @@ private:
 
     IntProperty _nBins;
 
+    ButtonProperty _invalidate;
+
     Shader _densityMapGeneratorShader;
     Shader _densityMapCounterShader;
 

@@ -28,6 +28,7 @@ PCPFiltering::PCPFiltering()
     , _coloringDimension("_coloringDimension", "Coloring Dimension", -1, -1, 15)
     , _parallelismSlider("_parallelismSlider", "Parallelism Slider", 32, 1, 1024)
     , _dimensionMaskString("_dimensionMask", "Dimension Mask")
+    , _invalidate("_invalidate", "Invalidate")
     , _countingShader({{ShaderType::Compute, "pcpfiltering_counting.comp" }}, Shader::Build::No)
     , _clusterDetectionShader({{ShaderType::Compute, "clusterdetection.comp" }}, Shader::Build::No)
     , _filteringShader({ { ShaderType::Compute, "pcpfiltering_filtering.comp" } }, Shader::Build::No)
@@ -96,6 +97,8 @@ PCPFiltering::PCPFiltering()
     _coloredBinData = std::make_shared<ColoredBinData>();
     glGenBuffers(1, &_coloredBinData->ssboIndices);
 
+    addProperty(_invalidate);
+    _invalidate.onChange([this]() {invalidate(InvalidationLevel::InvalidOutput); });
     //glGenBuffers(1, &_nClustersBuffer);
 }
 
@@ -243,6 +246,8 @@ void PCPFiltering::clusterDetection(const BinningData* binData) {
     int nClusters = p[0];
     glUnmapBuffer(GL_SHADER_STORAGE_BUFFER);
     glBindBuffer(GL_SHADER_STORAGE_BUFFER, 0);
+
+    LogInfo("Number of Clusters: " << nClusters);
 
     _coloringData->nClusters = nClusters;
     _coloredBinData->nClusters = nClusters;

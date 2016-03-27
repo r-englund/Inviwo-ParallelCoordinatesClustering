@@ -32,6 +32,7 @@ PCPRenderer::PCPRenderer()
     , _dimensionOrderingString("_dimensionOrderingString", "Dimension Ordering")
     , _dimensionMaskString("_dimensionMask", "Dimension Mask")
     , _transFunc("transferFunction", "Transfer Function")
+    , _invalidate("invalidate", "Invalidate")
     //, _textBorder("_textBorder", "Text Border", 0.05f, 0.f, 1.f)
     , _shader("pcprenderer.vert", "pcprenderer.frag")
     , _backgroundShader("pcprenderer_background.frag")
@@ -83,6 +84,8 @@ PCPRenderer::PCPRenderer()
 
     addProperty(_transFunc);
 
+    addProperty(_invalidate);
+
     //addProperty(_textBorder);
 
     _transFunc.get().clearPoints();
@@ -93,6 +96,8 @@ PCPRenderer::PCPRenderer()
 
     _shader.onReload([this]() { invalidate(InvalidationLevel::InvalidOutput); });
     _backgroundShader.onReload([this]() { invalidate(InvalidationLevel::InvalidOutput); });
+
+    _invalidate.onChange([this]() {invalidate(InvalidationLevel::InvalidOutput); });
 }
 
 PCPRenderer::~PCPRenderer() {

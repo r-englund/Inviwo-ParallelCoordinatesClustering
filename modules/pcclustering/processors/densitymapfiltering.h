@@ -46,6 +46,8 @@ private:
     // Topology
     IntProperty _nClusters;
 
+    ButtonProperty _invalidate;
+
     Shader _percentageFiltering;
     Shader _topologyFiltering;
 

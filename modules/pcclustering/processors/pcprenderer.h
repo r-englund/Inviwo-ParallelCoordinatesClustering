@@ -55,7 +55,8 @@ private:
     std::bitset<32> _dimensionMask;
 
     TransferFunctionProperty _transFunc;
-    //FloatProperty _textBorder;
+
+    ButtonProperty _invalidate;
 
     TextRenderer _textRenderer;
     

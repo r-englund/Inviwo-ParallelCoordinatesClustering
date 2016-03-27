@@ -29,6 +29,7 @@ DensityMapFiltering::DensityMapFiltering()
     , _filteringMethod("_filteringMethod", "Filtering Method")
     , _percentage("_percentage", "Percentage")
     , _nClusters("_nClusters", "Number of Clusters", 1, 0, 64)
+    , _invalidate("_invalidate", "Invalidate")
     , _percentageFiltering({{ShaderType::Compute, "densitymapfiltering_percentage.comp" }}, Shader::Build::No)
     , _topologyFiltering({{ShaderType::Compute, "densitymapfiltering_topology.comp", }}, Shader::Build::No)
 {
@@ -77,6 +78,9 @@ DensityMapFiltering::DensityMapFiltering()
     _binningData->ssboBins = 0;
     _binningData->ssboMinMax = 0;
     //glGenBuffers(1, &_binningData->ssboBins);
+
+    addProperty(_invalidate);
+    _invalidate.onChange([this]() {invalidate(InvalidationLevel::InvalidOutput); });
 }
 
 DensityMapFiltering::~DensityMapFiltering() {}
