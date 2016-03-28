@@ -1,7 +1,7 @@
 import os
 import sys
 
-workspaces = ["performance_measurements_out5d.inv", "performance_measurements_data.txt.inv"]
+workspaces = ["performance_measurements_out5d.inv", "performance_measurements_data.txt.inv", "performance_measurements_low_ratio_data.inv", "performance_measurements_low_ratio_data_2.inv", "performance_measurements_gps.inv", "performance_measurements_radar.inv"]
 
 inviwoExe = "inviwo-cli.exe"
 if len(sys.argv) == 2:

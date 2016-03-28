@@ -5,6 +5,7 @@ import csv
 import functools
 
 file = sys.argv[1]
+print(file)
 
 f = open(file)
 
@@ -12,6 +13,14 @@ destFile = file[:-5] + ".txt"
 print(destFile)
 
 content = f.readlines()
+
+# Remove all ProcessorNetworkEvaluatior lines
+
+print(len(content))
+content = [k for k in content if 'ProcessorNetworkEvaluator' not in k]
+# content = filter(lambda k: 'ProcessorNetworkEvaluator' in k, content)
+# print(content)
+print(len(content))
 
 offset = -1;
 for i, j in enumerate(content):
