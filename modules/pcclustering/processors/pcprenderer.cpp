@@ -31,6 +31,8 @@ PCPRenderer::PCPRenderer()
     , _depthTesting("_depthTesting", "Depth Testing")
     , _dimensionOrderingString("_dimensionOrderingString", "Dimension Ordering")
     , _dimensionMaskString("_dimensionMask", "Dimension Mask")
+    , _enableTextRendering("_enableTextRendering", "Text Rendering")
+    , _alphaFactor("_alphaFactor", "Alpha Factor", 1.f, 1.f, 100000.f)
     , _transFunc("transferFunction", "Transfer Function")
     , _invalidate("invalidate", "Invalidate")
     //, _textBorder("_textBorder", "Text Border", 0.05f, 0.f, 1.f)
@@ -61,6 +63,10 @@ PCPRenderer::PCPRenderer()
 
     addProperty(_lineSmoothing);
     addProperty(_depthTesting);
+
+    addProperty(_alphaFactor);
+
+    addProperty(_enableTextRendering);
 
     addProperty(_dimensionOrderingString);
     _dimensionOrderingString.onChange([this]() {
@@ -179,12 +185,14 @@ void PCPRenderer::process() {
         glFinish();
     }
     renderBackground();
-    renderTextOverlay(
-        _textRenderer,
-        _outport.getData()->getDimensions(),
-        _dimensionOrdering,
-        _dimensionMask
-    );
+    if (_enableTextRendering) {
+        renderTextOverlay(
+            _textRenderer,
+            _outport.getData()->getDimensions(),
+            _dimensionOrdering,
+            _dimensionMask
+        );
+    }
 
 
     utilgl::deactivateCurrentTarget();
@@ -207,6 +215,7 @@ void PCPRenderer::renderParallelCoordinates() {
     _shader.setUniform("_horizontalBorder", _horizontalBorder);
     _shader.setUniform("_verticalBorder", _verticalBorder);
     _shader.setUniform("_depthTesting", !_depthTesting);
+    _shader.setUniform("_alphaFactor", _alphaFactor);
 
     TextureUnit tfUnit;
     utilgl::bindTexture(_transFunc, tfUnit);

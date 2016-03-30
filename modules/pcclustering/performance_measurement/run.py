@@ -1,7 +1,33 @@
 import os
 import sys
 
-workspaces = ["performance_measurements_out5d.inv", "performance_measurements_data.txt.inv", "performance_measurements_low_ratio_data.inv", "performance_measurements_low_ratio_data_2.inv", "performance_measurements_gps.inv", "performance_measurements_radar.inv"]
+workspaces = [
+ #    "performance_measurements_out5d_32.inv",
+	# "performance_measurements_out5d_256.inv",
+	# "performance_measurements_out5d_512.inv",
+	# "performance_measurements_out5d_768.inv",
+	# "performance_measurements_out5d_1024.inv",
+ #    "performance_measurements_data.txt_32.inv", 
+	# "performance_measurements_data.txt_256.inv", 
+	# "performance_measurements_data.txt_512.inv", 
+	# "performance_measurements_data.txt_768.inv", 
+	# "performance_measurements_data.txt_1024.inv", 
+ #    "performance_measurements_gps_32.inv",
+	# "performance_measurements_gps_256.inv",
+	# "performance_measurements_gps_512.inv",
+	# "performance_measurements_gps_768.inv",
+	# "performance_measurements_gps_1024.inv",
+ #    "performance_measurements_radar_32.inv",
+	# "performance_measurements_radar_256.inv",
+	# "performance_measurements_radar_512.inv",
+	# "performance_measurements_radar_768.inv",
+	# "performance_measurements_radar_1024.inv",
+    "performance_measurements_synthetic_32.inv",
+    "performance_measurements_synthetic_256.inv",
+    "performance_measurements_synthetic_512.inv",
+    "performance_measurements_synthetic_768.inv",
+    "performance_measurements_synthetic_1024.inv"
+]
 
 inviwoExe = "inviwo-cli.exe"
 if len(sys.argv) == 2:
@@ -26,5 +52,5 @@ for w in workspaces:
 
     os.rename(logFile, os.getcwd() + "/" + w[25:-4] + ".html")
 
-    os.system('python convert.py ' + os.getcwd() + "/" + w[25:-4] + ".html")
+    #os.system('python convert.py ' + os.getcwd() + "/" + w[25:-4] + ".html")
     # parseHtml(os.getcwd() + "/" + w[25:-4] + ".html")

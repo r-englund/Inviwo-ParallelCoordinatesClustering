@@ -55,6 +55,9 @@ private:
     std::bitset<32> _dimensionMask;
 
     TransferFunctionProperty _transFunc;
+    FloatProperty _alphaFactor;
+
+    BoolProperty _enableTextRendering;
 
     ButtonProperty _invalidate;
 

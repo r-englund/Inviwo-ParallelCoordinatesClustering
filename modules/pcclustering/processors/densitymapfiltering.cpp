@@ -129,10 +129,15 @@ void DensityMapFiltering::process() {
 
     std::shared_ptr<const BinningData> inData = _binInport.getData();
 
-    if (_filteringMethod.get() == FilteringMethodOptionPercentage)
-        filterBinsPercentage(inData.get(), _binningData.get());
-    else
-        filterBinsTopology(inData.get(), _binningData.get());
+    glFinish();
+    {
+        IVW_CPU_PROFILING("DensityMapFiltering");
+        if (_filteringMethod.get() == FilteringMethodOptionPercentage)
+            filterBinsPercentage(inData.get(), _binningData.get());
+        else
+            filterBinsTopology(inData.get(), _binningData.get());
+    glFinish();
+    }
 
     _binOutport.setData(_binningData);
 }

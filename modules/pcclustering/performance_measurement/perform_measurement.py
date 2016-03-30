@@ -1,7 +1,7 @@
 import inviwo
 import inviwoqt
 
-nTests = 100
+nTests = 25
 
 print("###" + str(nTests) + "###")
 

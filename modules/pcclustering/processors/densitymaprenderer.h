@@ -49,6 +49,8 @@ private:
 
     ImageOutport _outport;
 
+    BoolProperty _enableTextRendering;
+
     TransferFunctionProperty _transFunc;
     FloatProperty _textBorder;
 

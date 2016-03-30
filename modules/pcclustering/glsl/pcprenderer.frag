@@ -4,14 +4,15 @@ in flat int nClusters;
 uniform int _nData;
 uniform bool _hasColoringData;
 uniform sampler2D _transFunc;
+uniform float _alphaFactor;
 
 uniform bool _depthTesting;
 
 void main() {
     float alpha = 1.0;
     if (!_depthTesting) {
-        alpha = 250.0 / float(_nData);
-        alpha = clamp(alpha, 0.05, 0.1);
+        alpha = _alphaFactor / float(_nData);
+        alpha = clamp(alpha, 0.0, 0.25);
     }
 
     if (_hasColoringData) {

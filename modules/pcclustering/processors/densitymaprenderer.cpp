@@ -26,6 +26,7 @@ DensityMapRenderer::DensityMapRenderer()
     , _outport("outport")
     , _dimensionOrderingString("_dimensionOrderingString", "Dimension Ordering")
     , _dimensionMaskString("_dimensionMask", "Dimension Mask")
+    , _enableTextRendering("_enableTextRendering", "Enable Text Rendering")
     , _transFunc("transferFunction", "Transfer Function")
     , _textBorder("_textBorder", "Text Border", 0.05f, 0.f, 1.f)
     , _shader("densitymaprenderer.frag")
@@ -37,6 +38,8 @@ DensityMapRenderer::DensityMapRenderer()
     _colorInport.setOptional(true);
     
     addPort(_outport);
+
+    addProperty(_enableTextRendering);
 
     addProperty(_dimensionOrderingString);
     _dimensionOrderingString.onChange([this]() {
@@ -92,12 +95,14 @@ void DensityMapRenderer::process() {
     utilgl::activateAndClearTarget(_outport);
 
     renderDensityMap();
-    renderTextOverlay(
-        _textRenderer,
-        _outport.getData()->getDimensions(),
-        _dimensionOrdering,
-        _dimensionMask
-    );
+    if (_enableTextRendering) {
+        renderTextOverlay(
+            _textRenderer,
+            _outport.getData()->getDimensions(),
+            _dimensionOrdering,
+            _dimensionMask
+        );
+    }
 
     utilgl::deactivateCurrentTarget();
 }
