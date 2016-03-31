@@ -71,7 +71,7 @@ DensityMapGenerator::DensityMapGenerator()
     glGenBuffers(1, &_binningData->ssboBins);
     glGenBuffers(1, &_binningData->ssboMinMax);
 
-    addProperty(_invalidate);
+    //addProperty(_invalidate);
     _invalidate.onChange([this]() {invalidate(InvalidationLevel::InvalidOutput); });
 }
 

@@ -32,17 +32,20 @@ PCPGui::PCPGui()
 
     addProperty(_nDimensions);
     _nDimensions.setReadOnly(true);
+    _nDimensions.setVisible(false);
 
     addProperty(_nSubcluster);
     addProperty(_enabledDimensionsOptions);
     addProperty(_enabledDimensionsString);
     _enabledDimensionsString.setReadOnly(true);
+    _enabledDimensionsString.setVisible(false);
 
     addProperty(_coloringDimension);
 
     addProperty(_dimensionOrderingOptions);
     addProperty(_dimensionOrderingString);
     _dimensionOrderingString.setReadOnly(true);
+    _dimensionOrderingString.setVisible(false);
 
     _enabledDimensionsOptions.onChange([this]() {
         if (_isUpdating)

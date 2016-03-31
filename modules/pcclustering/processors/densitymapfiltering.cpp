@@ -79,7 +79,7 @@ DensityMapFiltering::DensityMapFiltering()
     _binningData->ssboMinMax = 0;
     //glGenBuffers(1, &_binningData->ssboBins);
 
-    addProperty(_invalidate);
+    //addProperty(_invalidate);
     _invalidate.onChange([this]() {invalidate(InvalidationLevel::InvalidOutput); });
 }
 
