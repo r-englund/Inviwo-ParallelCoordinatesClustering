@@ -20,6 +20,7 @@ set(HEADER_FILES
     ${CMAKE_CURRENT_SOURCE_DIR}/processors/pcpreader.h
     ${CMAKE_CURRENT_SOURCE_DIR}/processors/pcprenderer.h
     ${CMAKE_CURRENT_SOURCE_DIR}/processors/pcpupload.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/processors/pcpuploadrenderer.h
     ${CMAKE_CURRENT_SOURCE_DIR}/processors/scatterplotrenderer.h
 )
 ivw_group("Header Files" ${HEADER_FILES})
@@ -41,6 +42,7 @@ set(SOURCE_FILES
     ${CMAKE_CURRENT_SOURCE_DIR}/processors/pcpreader.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/processors/pcprenderer.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/processors/pcpupload.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/processors/pcpuploadrenderer.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/processors/scatterplotrenderer.cpp
 )
 ivw_group("Source Files" ${SOURCE_FILES})
