@@ -42,7 +42,7 @@ DensityMapFiltering::DensityMapFiltering()
     addPort(_binOutport);
 
     _filteringMethod.addOption("percentage", "Percentage", FilteringMethodOptionPercentage);
-    _filteringMethod.addOption("topology", "Topology", FilteringMethodOptionTopological);
+    _filteringMethod.addOption("topology", "Density Gradient", FilteringMethodOptionTopological);
     addProperty(_filteringMethod);
 
     _filteringMethod.onChange([this]() { recreateBuffers(); });
