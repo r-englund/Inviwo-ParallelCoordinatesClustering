@@ -178,11 +178,11 @@ void PCPRenderer::process() {
     utilgl::ClearColor colorState(glm::vec4(0.0));
     utilgl::activateAndClearTarget(_outport);
 
-    glFinish();
+    //glFinish();
     {
-        IVW_CPU_PROFILING("PCPRenderer");
+        //IVW_CPU_PROFILING("PCPRenderer");
         renderParallelCoordinates();
-        glFinish();
+        //glFinish();
     }
     renderBackground();
     if (_enableTextRendering) {

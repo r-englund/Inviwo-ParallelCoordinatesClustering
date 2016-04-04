@@ -121,12 +121,12 @@ void PCPFiltering::process() {
     _pcpData->nDimensions = pcpInData->nDimensions;
 
     int dataValues = 0;
-    glFinish();
-    {
-        IVW_CPU_PROFILING("CountElements");
+    //glFinish();
+    //{
+        //IVW_CPU_PROFILING("CountElements");
         dataValues = countElements(pcpInData.get(), binInData.get());
-        glFinish();
-    }
+        //glFinish();
+    //}
 
     if (_coloringDimension >= 0 && _coloringDimension < _pcpData->nDimensions) {
         _pcpData->nValues = dataValues * _pcpData->nDimensions;
@@ -136,12 +136,12 @@ void PCPFiltering::process() {
         _coloredBinData->nBins = binInData->nBins;
         _coloredBinData->selectedDimension = _coloringDimension;
 
-        glFinish();
-        {
-            IVW_CPU_PROFILING("ClusterDetection");
+        //glFinish();
+        //{
+            //IVW_CPU_PROFILING("ClusterDetection");
             clusterDetection(binInData.get());
-            glFinish();
-        }
+            //glFinish();
+        //}
 
         std::bitset<32> mask(_dimensionMask);
         _coloringData->hasData = mask.test(_coloringDimension);
@@ -152,12 +152,12 @@ void PCPFiltering::process() {
         _coloringData->hasData = false;
 
     }
-    glFinish();
-    {
-        IVW_CPU_PROFILING("FilterData");
+    //glFinish();
+    //{
+        //IVW_CPU_PROFILING("FilterData");
         filterData(pcpInData.get(), binInData.get(), _pcpData.get(), dataValues);
-        glFinish();
-    }
+        //glFinish();
+    //}
     
 
     _pcpOutport.setData(_pcpData);
