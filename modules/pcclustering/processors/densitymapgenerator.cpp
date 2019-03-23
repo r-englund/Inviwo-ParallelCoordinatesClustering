@@ -1,6 +1,7 @@
 #include <modules/pcclustering/processors/densitymapgenerator.h>
 
 #include <modules/opengl/texture/textureutils.h>
+#include <inviwo/core/util/clock.h>
 
 //#include "volumesource.h"
 //#include <inviwo/core/resources/resourcemanager.h>

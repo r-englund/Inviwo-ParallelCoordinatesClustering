@@ -1,5 +1,7 @@
 #include <modules/pcclustering/processors/pcpreader.h>
 
+#include <inviwo/core/util/filesystem.h>
+
 //#include "volumesource.h"
 //#include <inviwo/core/resources/resourcemanager.h>
 //#include <inviwo/core/resources/templateresource.h>

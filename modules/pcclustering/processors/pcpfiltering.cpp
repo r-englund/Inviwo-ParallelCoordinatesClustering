@@ -1,7 +1,7 @@
 #include <modules/pcclustering/processors/pcpfiltering.h>
 
 #include <modules/opengl/texture/textureutils.h>
-
+#include <inviwo/core/util/clock.h>
 #include <bitset>
 
 namespace inviwo {

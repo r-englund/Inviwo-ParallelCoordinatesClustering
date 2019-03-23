@@ -1,6 +1,7 @@
 #include <modules/pcclustering/processors/densitymapfiltering.h>
 
 #include <modules/opengl/texture/textureutils.h>
+#include <inviwo/core/util/clock.h>
 
 namespace {
     const int FilteringMethodOptionPercentage = 0;

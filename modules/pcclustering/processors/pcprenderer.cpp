@@ -3,6 +3,7 @@
 #include <modules/pcclustering/misc/support.h>
 
 #include <modules/opengl/texture/textureutils.h>
+#include <inviwo/core/util/clock.h>
 
 #include <bitset>
 
