@@ -14,6 +14,7 @@ set(HEADER_FILES
     ${CMAKE_CURRENT_SOURCE_DIR}/processors/densitymapfiltering.h
     ${CMAKE_CURRENT_SOURCE_DIR}/processors/densitymapgenerator.h
     ${CMAKE_CURRENT_SOURCE_DIR}/processors/densitymaprenderer.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/processors/otherclustering.h
     ${CMAKE_CURRENT_SOURCE_DIR}/processors/pcpfileconverter.h
     ${CMAKE_CURRENT_SOURCE_DIR}/processors/pcpfiltering.h
     ${CMAKE_CURRENT_SOURCE_DIR}/processors/pcpgui.h
@@ -23,6 +24,9 @@ set(HEADER_FILES
     ${CMAKE_CURRENT_SOURCE_DIR}/processors/pcpuploadrenderer.h
     ${CMAKE_CURRENT_SOURCE_DIR}/processors/radarplotrenderer.h
     ${CMAKE_CURRENT_SOURCE_DIR}/processors/scatterplotrenderer.h
+
+    ${CMAKE_CURRENT_SOURCE_DIR}/ext/dbscan/dbscan.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/ext/kmeans/src/kmeans.h
 )
 ivw_group("Header Files" ${HEADER_FILES})
 
@@ -37,6 +41,7 @@ set(SOURCE_FILES
     ${CMAKE_CURRENT_SOURCE_DIR}/processors/densitymapfiltering.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/processors/densitymapgenerator.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/processors/densitymaprenderer.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/processors/otherclustering.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/processors/pcpfileconverter.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/processors/pcpfiltering.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/processors/pcpgui.cpp
@@ -46,6 +51,11 @@ set(SOURCE_FILES
     ${CMAKE_CURRENT_SOURCE_DIR}/processors/pcpuploadrenderer.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/processors/radarplotrenderer.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/processors/scatterplotrenderer.cpp
+
+    ${CMAKE_CURRENT_SOURCE_DIR}/ext/dbscan/dbscan.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/ext/kmeans/src/kmeans.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/ext/kmeans/src/point.cpp
+
 )
 ivw_group("Source Files" ${SOURCE_FILES})
 
