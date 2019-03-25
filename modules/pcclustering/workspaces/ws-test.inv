@@ -193,9 +193,9 @@
         </Processor>
         <Processor type="pers.bock.ClusterExport" identifier="Cluster Export">
             <InPorts>
-                <InPort type="Inport" identifier="in.raw" id="ref0" />
-                <InPort type="Inport" identifier="in.data" id="ref1" />
-                <InPort type="Inport" identifier="in.cluster" id="ref2" />
+                <InPort type="Inport" identifier="in_raw" id="ref0" />
+                <InPort type="Inport" identifier="in_data" id="ref1" />
+                <InPort type="Inport" identifier="in_cluster" id="ref2" />
             </InPorts>
             <Properties>
                 <Property type="org.inviwo.FileProperty" identifier="_outputFile">
@@ -281,11 +281,11 @@
         </Processor>
         <Processor type="pers.bock.DensityMapFiltering" identifier="Density Map Filtering">
             <InPorts>
-                <InPort type="Inport" identifier="in.bins" id="ref11" />
-                <InPort type="Inport" identifier="in.pcp" id="ref12" />
+                <InPort type="Inport" identifier="in_bins" id="ref11" />
+                <InPort type="Inport" identifier="in_pcp" id="ref12" />
             </InPorts>
             <OutPorts>
-                <OutPort type="Outport" identifier="out.bins" id="ref13" />
+                <OutPort type="Outport" identifier="out_bins" id="ref13" />
             </OutPorts>
             <Properties>
                 <Property type="org.inviwo.OptionPropertyInt" identifier="_filteringMethod">
@@ -318,10 +318,10 @@
         </Processor>
         <Processor type="pers.bock.DensityMapGenerator" identifier="Density Map Generator">
             <InPorts>
-                <InPort type="Inport" identifier="in.data" id="ref14" />
+                <InPort type="Inport" identifier="in_data" id="ref14" />
             </InPorts>
             <OutPorts>
-                <OutPort type="Outport" identifier="out.data" id="ref15" />
+                <OutPort type="Outport" identifier="out_data" id="ref15" />
             </OutPorts>
             <Properties>
                 <Property type="org.inviwo.IntProperty" identifier="_nBins" />
@@ -521,7 +521,7 @@
         </Processor>
         <Processor type="pers.bock.PCPFileConverter" identifier="PCP File Converter">
             <Properties>
-                <Property type="org.inviwo.FileProperty" identifier="in.filename">
+                <Property type="org.inviwo.FileProperty" identifier="in_filename">
                     <absolutePath content="D:/alebo68/Box Sync/ScreenSpacePC/data/only_4_clusters_no_noise.txt" />
                     <workspaceRelativePath content="" />
                     <ivwdataRelativePath content="" />
@@ -534,7 +534,7 @@
                     <acceptMode content="0" />
                     <fileMode content="0" />
                 </Property>
-                <Property type="org.inviwo.FileProperty" identifier="out.filename">
+                <Property type="org.inviwo.FileProperty" identifier="out_filename">
                     <absolutePath content="D:/only_4_clusters_no_noise.dat" />
                     <workspaceRelativePath content="" />
                     <ivwdataRelativePath content="" />
@@ -559,13 +559,13 @@
         </Processor>
         <Processor type="pers.bock.PCPFiltering" identifier="PCP Filtering">
             <InPorts>
-                <InPort type="Inport" identifier="in.bins" id="ref35" />
-                <InPort type="Inport" identifier="in.pcp" id="ref36" />
+                <InPort type="Inport" identifier="in_bins" id="ref35" />
+                <InPort type="Inport" identifier="in_pcp" id="ref36" />
             </InPorts>
             <OutPorts>
-                <OutPort type="Outport" identifier="out.pcp" id="ref37" />
-                <OutPort type="Outport" identifier="out.color" id="ref38" />
-                <OutPort type="Outport" identifier="out.coloredBin" id="ref39" />
+                <OutPort type="Outport" identifier="out_pcp" id="ref37" />
+                <OutPort type="Outport" identifier="out_color" id="ref38" />
+                <OutPort type="Outport" identifier="out_coloredBin" id="ref39" />
             </OutPorts>
             <Properties>
                 <Property type="org.inviwo.IntProperty" identifier="_coloringDimension" id="ref40">
@@ -589,7 +589,7 @@
         </Processor>
         <Processor type="pers.bock.PCPGUI" identifier="PCP GUI">
             <InPorts>
-                <InPort type="Inport" identifier="pcp.in" id="ref47" />
+                <InPort type="Inport" identifier="pcp_in" id="ref47" />
             </InPorts>
             <Properties>
                 <Property type="org.inviwo.IntProperty" identifier="_nDimensions">
@@ -958,7 +958,7 @@
         </Connection>
         <Connection>
             <OutPort type="Outport" identifier="outdata" reference="ref33" />
-            <InPort type="Inport" identifier="in.data" reference="ref14" />
+            <InPort type="Inport" identifier="in_data" reference="ref14" />
         </Connection>
         <Connection>
             <OutPort type="org.inviwo.ImageOutport" identifier="image" reference="ref43" />
@@ -969,7 +969,7 @@
             <InPort type="org.inviwo.ImageInport" identifier="inport" reference="ref3" />
         </Connection>
         <Connection>
-            <OutPort type="Outport" identifier="out.data" reference="ref15" />
+            <OutPort type="Outport" identifier="out_data" reference="ref15" />
             <InPort type="Inport" identifier="data" reference="ref16" />
         </Connection>
         <Connection>
@@ -977,11 +977,11 @@
             <InPort type="org.inviwo.ImageMultiInport" identifier="multiinport" reference="ref30" />
         </Connection>
         <Connection>
-            <OutPort type="Outport" identifier="out.data" reference="ref15" />
-            <InPort type="Inport" identifier="in.bins" reference="ref11" />
+            <OutPort type="Outport" identifier="out_data" reference="ref15" />
+            <InPort type="Inport" identifier="in_bins" reference="ref11" />
         </Connection>
         <Connection>
-            <OutPort type="Outport" identifier="out.bins" reference="ref13" />
+            <OutPort type="Outport" identifier="out_bins" reference="ref13" />
             <InPort type="Inport" identifier="data" reference="ref23" />
         </Connection>
         <Connection>
@@ -989,15 +989,15 @@
             <InPort type="org.inviwo.ImageMultiInport" identifier="multiinport" reference="ref30" />
         </Connection>
         <Connection>
-            <OutPort type="Outport" identifier="out.bins" reference="ref13" />
-            <InPort type="Inport" identifier="in.bins" reference="ref35" />
+            <OutPort type="Outport" identifier="out_bins" reference="ref13" />
+            <InPort type="Inport" identifier="in_bins" reference="ref35" />
         </Connection>
         <Connection>
             <OutPort type="Outport" identifier="outdata" reference="ref33" />
-            <InPort type="Inport" identifier="in.pcp" reference="ref36" />
+            <InPort type="Inport" identifier="in_pcp" reference="ref36" />
         </Connection>
         <Connection>
-            <OutPort type="Outport" identifier="out.pcp" reference="ref37" />
+            <OutPort type="Outport" identifier="out_pcp" reference="ref37" />
             <InPort type="Inport" identifier="data" reference="ref51" />
         </Connection>
         <Connection>
@@ -1005,48 +1005,48 @@
             <InPort type="org.inviwo.ImageMultiInport" identifier="multiinport" reference="ref30" />
         </Connection>
         <Connection>
-            <OutPort type="Outport" identifier="out.color" reference="ref38" />
+            <OutPort type="Outport" identifier="out_color" reference="ref38" />
             <InPort type="Inport" identifier="color" reference="ref52" />
         </Connection>
         <Connection>
-            <OutPort type="Outport" identifier="out.coloredBin" reference="ref39" />
+            <OutPort type="Outport" identifier="out_coloredBin" reference="ref39" />
             <InPort type="Inport" identifier="data" reference="ref9" />
         </Connection>
         <Connection>
-            <OutPort type="Outport" identifier="out.coloredBin" reference="ref39" />
+            <OutPort type="Outport" identifier="out_coloredBin" reference="ref39" />
             <InPort type="Inport" identifier="color" reference="ref24" />
         </Connection>
         <Connection>
-            <OutPort type="Outport" identifier="out.coloredBin" reference="ref39" />
+            <OutPort type="Outport" identifier="out_coloredBin" reference="ref39" />
             <InPort type="Inport" identifier="color" reference="ref17" />
         </Connection>
         <Connection>
-            <OutPort type="Outport" identifier="out.pcp" reference="ref37" />
-            <InPort type="Inport" identifier="in.data" reference="ref1" />
+            <OutPort type="Outport" identifier="out_pcp" reference="ref37" />
+            <InPort type="Inport" identifier="in_data" reference="ref1" />
         </Connection>
         <Connection>
-            <OutPort type="Outport" identifier="out.color" reference="ref38" />
-            <InPort type="Inport" identifier="in.cluster" reference="ref2" />
+            <OutPort type="Outport" identifier="out_color" reference="ref38" />
+            <InPort type="Inport" identifier="in_cluster" reference="ref2" />
         </Connection>
         <Connection>
             <OutPort type="Outport" identifier="data" reference="ref34" />
-            <InPort type="Inport" identifier="in.raw" reference="ref0" />
+            <InPort type="Inport" identifier="in_raw" reference="ref0" />
         </Connection>
         <Connection>
-            <OutPort type="Outport" identifier="out.pcp" reference="ref37" />
+            <OutPort type="Outport" identifier="out_pcp" reference="ref37" />
             <InPort type="Inport" identifier="data" reference="ref58" />
         </Connection>
         <Connection>
-            <OutPort type="Outport" identifier="out.color" reference="ref38" />
+            <OutPort type="Outport" identifier="out_color" reference="ref38" />
             <InPort type="Inport" identifier="color" reference="ref59" />
         </Connection>
         <Connection>
             <OutPort type="Outport" identifier="outdata" reference="ref33" />
-            <InPort type="Inport" identifier="in.pcp" reference="ref12" />
+            <InPort type="Inport" identifier="in_pcp" reference="ref12" />
         </Connection>
         <Connection>
             <OutPort type="Outport" identifier="outdata" reference="ref33" />
-            <InPort type="Inport" identifier="pcp.in" reference="ref47" />
+            <InPort type="Inport" identifier="pcp_in" reference="ref47" />
         </Connection>
         <Connection>
             <OutPort type="org.inviwo.ImageOutport" identifier="image" reference="ref60" />

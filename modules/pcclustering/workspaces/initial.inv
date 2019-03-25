@@ -343,11 +343,11 @@
         </Processor>
         <Processor type="pers.bock.DensityMapFiltering" identifier="Density Map Filtering">
             <InPorts>
-                <InPort type="Inport" identifier="in.bins" id="ref20" />
-                <InPort type="Inport" identifier="in.pcp" id="ref21" />
+                <InPort type="Inport" identifier="in_bins" id="ref20" />
+                <InPort type="Inport" identifier="in_pcp" id="ref21" />
             </InPorts>
             <OutPorts>
-                <OutPort type="Outport" identifier="out.bins" id="ref22" />
+                <OutPort type="Outport" identifier="out_bins" id="ref22" />
             </OutPorts>
             <Properties>
                 <Property type="org.inviwo.OptionPropertyInt" identifier="_filteringMethod">
@@ -381,10 +381,10 @@
         </Processor>
         <Processor type="pers.bock.DensityMapGenerator" identifier="Density Map Generator">
             <InPorts>
-                <InPort type="Inport" identifier="in.data" id="ref0" />
+                <InPort type="Inport" identifier="in_data" id="ref0" />
             </InPorts>
             <OutPorts>
-                <OutPort type="Outport" identifier="out.data" id="ref1" />
+                <OutPort type="Outport" identifier="out_data" id="ref1" />
             </OutPorts>
             <Properties>
                 <Property type="org.inviwo.IntProperty" identifier="_nBins" />
@@ -565,7 +565,7 @@
         </Processor>
         <Processor type="pers.bock.PCPFileConverter" identifier="PCP File Converter">
             <Properties>
-                <Property type="org.inviwo.FileProperty" identifier="in.filename">
+                <Property type="org.inviwo.FileProperty" identifier="in_filename">
                     <absolutePath content="D:/alebo68/Dropbox/University/Projects/ParallelCoordinatesClustering/data.txt" />
                     <workspaceRelativePath content="" />
                     <ivwdataRelativePath content="" />
@@ -578,7 +578,7 @@
                     <acceptMode content="0" />
                     <fileMode content="0" />
                 </Property>
-                <Property type="org.inviwo.FileProperty" identifier="out.filename">
+                <Property type="org.inviwo.FileProperty" identifier="out_filename">
                     <absolutePath content="D:/data.txt.dat" />
                     <workspaceRelativePath content="" />
                     <ivwdataRelativePath content="" />
@@ -603,12 +603,12 @@
         </Processor>
         <Processor type="pers.bock.PCPFiltering" identifier="PCP Filtering">
             <InPorts>
-                <InPort type="Inport" identifier="in.bins" id="ref38" />
-                <InPort type="Inport" identifier="in.pcp" id="ref39" />
+                <InPort type="Inport" identifier="in_bins" id="ref38" />
+                <InPort type="Inport" identifier="in_pcp" id="ref39" />
             </InPorts>
             <OutPorts>
-                <OutPort type="Outport" identifier="out.pcp" id="ref40" />
-                <OutPort type="Outport" identifier="out.pcp.negative" id="ref41" />
+                <OutPort type="Outport" identifier="out_pcp" id="ref40" />
+                <OutPort type="Outport" identifier="out_pcp_negative" id="ref41" />
             </OutPorts>
             <MetaDataMap>
                 <MetaDataItem type="org.inviwo.ProcessorMetaData" key="org.inviwo.ProcessorMetaData">
@@ -711,10 +711,10 @@
         </Connection>
         <Connection>
             <OutPort type="Outport" identifier="outdata" reference="ref28" />
-            <InPort type="Inport" identifier="in.data" reference="ref0" />
+            <InPort type="Inport" identifier="in_data" reference="ref0" />
         </Connection>
         <Connection>
-            <OutPort type="Outport" identifier="out.data" reference="ref1" />
+            <OutPort type="Outport" identifier="out_data" reference="ref1" />
             <InPort type="Inport" identifier="data" reference="ref2" />
         </Connection>
         <Connection>
@@ -726,24 +726,24 @@
             <InPort type="org.inviwo.ImageInport" identifier="inport" reference="ref4" />
         </Connection>
         <Connection>
-            <OutPort type="Outport" identifier="out.pcp" reference="ref40" />
+            <OutPort type="Outport" identifier="out_pcp" reference="ref40" />
             <InPort type="Inport" identifier="data" reference="ref44" />
         </Connection>
         <Connection>
-            <OutPort type="Outport" identifier="out.data" reference="ref1" />
-            <InPort type="Inport" identifier="in.bins" reference="ref20" />
+            <OutPort type="Outport" identifier="out_data" reference="ref1" />
+            <InPort type="Inport" identifier="in_bins" reference="ref20" />
         </Connection>
         <Connection>
             <OutPort type="Outport" identifier="outdata" reference="ref28" />
-            <InPort type="Inport" identifier="in.pcp" reference="ref21" />
+            <InPort type="Inport" identifier="in_pcp" reference="ref21" />
         </Connection>
         <Connection>
-            <OutPort type="Outport" identifier="out.bins" reference="ref22" />
+            <OutPort type="Outport" identifier="out_bins" reference="ref22" />
             <InPort type="Inport" identifier="data" reference="ref25" />
         </Connection>
         <Connection>
-            <OutPort type="Outport" identifier="out.bins" reference="ref22" />
-            <InPort type="Inport" identifier="in.bins" reference="ref38" />
+            <OutPort type="Outport" identifier="out_bins" reference="ref22" />
+            <InPort type="Inport" identifier="in_bins" reference="ref38" />
         </Connection>
         <Connection>
             <OutPort type="org.inviwo.ImageOutport" identifier="outport" reference="ref26" />
@@ -779,7 +779,7 @@
         </Connection>
         <Connection>
             <OutPort type="Outport" identifier="outdata" reference="ref28" />
-            <InPort type="Inport" identifier="in.pcp" reference="ref39" />
+            <InPort type="Inport" identifier="in_pcp" reference="ref39" />
         </Connection>
         <Connection>
             <OutPort type="org.inviwo.ImageOutport" identifier="outport" reference="ref17" />
@@ -826,7 +826,7 @@
             <InPort type="Inport" identifier="inData" reference="ref27" />
         </Connection>
         <Connection>
-            <OutPort type="Outport" identifier="out.pcp.negative" reference="ref41" />
+            <OutPort type="Outport" identifier="out_pcp_negative" reference="ref41" />
             <InPort type="Inport" identifier="data" reference="ref46" />
         </Connection>
     </Connections>

@@ -31,8 +31,8 @@ const ProcessorInfo PCPFileConverter::getProcessorInfo() const {
 
 PCPFileConverter::PCPFileConverter()
     : Processor()
-    , _inputFile("in.filename", "Input File")
-    , _outputFile("out.filename", "Output File")
+    , _inputFile("in_filename", "Input File")
+    , _outputFile("out_filename", "Output File")
     , _convert("convert", "Convert data")
 {
     _convert.onChange([this]() { load(); });

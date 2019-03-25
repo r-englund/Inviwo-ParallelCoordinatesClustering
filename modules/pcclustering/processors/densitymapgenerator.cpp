@@ -34,8 +34,8 @@ const ProcessorInfo DensityMapGenerator::getProcessorInfo() const {
 
 DensityMapGenerator::DensityMapGenerator()
     : Processor()
-    , _inport("in.data")
-    , _outport("out.data")
+    , _inport("in_data")
+    , _outport("out_data")
     , _nBins("_nBins", "# Bins", 32, 1, 2048)
     , _invalidate("_invalidate", "Invalidate")
     , _densityMapGeneratorShader({{ShaderType::Compute, "densitymapgenerator.comp" }}, Shader::Build::No)

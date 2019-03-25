@@ -11,7 +11,7 @@ uniform bool _depthTesting;
 void main() {
     float alpha = 1.0;
     if (!_depthTesting) {
-        alpha = _alphaFactor / float(_nData);
+        alpha = _alphaFactor * 1000.0 / float(_nData);
         alpha = clamp(alpha, 0.0, 0.25);
     }
 

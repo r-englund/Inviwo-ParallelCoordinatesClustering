@@ -24,9 +24,9 @@ const ProcessorInfo DensityMapFiltering::getProcessorInfo() const {
 
 DensityMapFiltering::DensityMapFiltering()
     : Processor()
-    , _binInport("in.bins")
-    , _pcpInport("in.pcp")
-    , _binOutport("out.bins")
+    , _binInport("in_bins")
+    , _pcpInport("in_pcp")
+    , _binOutport("out_bins")
     , _filteringMethod("_filteringMethod", "Filtering Method")
     , _percentage("_percentage", "Percentage")
     , _nClusters("_nClusters", "Number of Clusters", 1, 0, 64)

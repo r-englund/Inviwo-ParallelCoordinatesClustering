@@ -19,7 +19,7 @@ const ProcessorInfo PCPGui::getProcessorInfo() const {
 
 PCPGui::PCPGui()
     : Processor()
-    , _inport("pcp.in")
+    , _inport("pcp_in")
     , _nDimensions("_nDimensions", "Number of Dimensions", 0, 0, 32)
     , _nSubcluster("_nSubcluster", "Dimensionality of subclusters", 0, 0, 100)
     , _coloringDimension("_coloringDimension", "Coloring Dimension", 0, 0, 100)

@@ -31,9 +31,9 @@ const ProcessorInfo ClusterExport::getProcessorInfo() const {
 
 ClusterExport::ClusterExport()
     : Processor()
-    , _rawDataInport("in.raw")
-    , _dataInport("in.data")
-    , _clusterInport("in.cluster")
+    , _rawDataInport("in_raw")
+    , _dataInport("in_data")
+    , _clusterInport("in_cluster")
     , _outputFile("_outputFile", "Output File")
     , _export("_export", "Export")
 {

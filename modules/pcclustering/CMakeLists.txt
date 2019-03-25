@@ -21,6 +21,7 @@ set(HEADER_FILES
     ${CMAKE_CURRENT_SOURCE_DIR}/processors/pcprenderer.h
     ${CMAKE_CURRENT_SOURCE_DIR}/processors/pcpupload.h
     ${CMAKE_CURRENT_SOURCE_DIR}/processors/pcpuploadrenderer.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/processors/radarplotrenderer.h
     ${CMAKE_CURRENT_SOURCE_DIR}/processors/scatterplotrenderer.h
 )
 ivw_group("Header Files" ${HEADER_FILES})
@@ -43,6 +44,7 @@ set(SOURCE_FILES
     ${CMAKE_CURRENT_SOURCE_DIR}/processors/pcprenderer.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/processors/pcpupload.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/processors/pcpuploadrenderer.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/processors/radarplotrenderer.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/processors/scatterplotrenderer.cpp
 )
 ivw_group("Source Files" ${SOURCE_FILES})
@@ -61,6 +63,9 @@ set(SHADER_FILES
     ${CMAKE_CURRENT_SOURCE_DIR}/glsl/pcpfiltering_filtering.comp
     ${CMAKE_CURRENT_SOURCE_DIR}/glsl/pcprenderer.vert
     ${CMAKE_CURRENT_SOURCE_DIR}/glsl/pcprenderer.frag
+    ${CMAKE_CURRENT_SOURCE_DIR}/glsl/radarplotlines.frag
+    ${CMAKE_CURRENT_SOURCE_DIR}/glsl/radarplotrenderer.vert
+    ${CMAKE_CURRENT_SOURCE_DIR}/glsl/radarplotrenderer.frag
     ${CMAKE_CURRENT_SOURCE_DIR}/glsl/scatterplotrenderer.vert
     ${CMAKE_CURRENT_SOURCE_DIR}/glsl/scatterplotrenderer.frag
 )
