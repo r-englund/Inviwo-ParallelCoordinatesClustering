@@ -25,7 +25,8 @@ set(HEADER_FILES
     ${CMAKE_CURRENT_SOURCE_DIR}/processors/radarplotrenderer.h
     ${CMAKE_CURRENT_SOURCE_DIR}/processors/scatterplotrenderer.h
 
-    ${CMAKE_CURRENT_SOURCE_DIR}/ext/dbscan/dbscan.h
+    # ${CMAKE_CURRENT_SOURCE_DIR}/ext/dbscan/dbscan.h
+    
     ${CMAKE_CURRENT_SOURCE_DIR}/ext/kmeans/src/kmeans.h
 )
 ivw_group("Header Files" ${HEADER_FILES})

@@ -154,7 +154,7 @@ void RadarPlotRenderer::process() {
     utilgl::ClearColor colorState(glm::vec4(0.0));
     utilgl::activateAndClearTarget(_outport);
 
-    utilgl::GlBoolState alpha(GL_ALPHA, true);
+    //utilgl::GlBoolState alpha(GL_ALPHA, true);
     utilgl::GlBoolState depthTest(GL_DEPTH_TEST, false);
     utilgl::BlendModeEquationState blendEquation(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA, GL_FUNC_ADD);
 
@@ -182,7 +182,7 @@ void RadarPlotRenderer::process() {
 
     glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 0, data->ssboData);
 
-    glDrawArraysInstanced(GL_LINE_LOOP, 0, data->nDimensions, data->nValues);
+    glDrawArraysInstanced(GL_LINE_LOOP, 0, data->nDimensions, data->nValues / data->nDimensions);
     _shader.deactivate();
 
     

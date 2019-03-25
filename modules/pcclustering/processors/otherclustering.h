@@ -31,21 +31,21 @@ public:
 
 private:
     PCPRawDataInport _inport;
+    std::shared_ptr<ParallelCoordinatesPlotData> _outportData;
+    PCPDataOutport _outport;
+
 
     bool _dbScanDirty = true;
-    std::shared_ptr<ParallelCoordinatesPlotData> _dbScanData;
     std::shared_ptr<ColoringData> _dbScanColoringData;
-    PCPDataOutport _dbscanPcpOutport;
     ColoringDataOutport _dbscanColoringOutport;
 
     bool _kmeansDirty = true;
-    std::shared_ptr<ParallelCoordinatesPlotData> _kmeansData;
     std::shared_ptr<ColoringData> _kmeansColoringData;
-    PCPDataOutport _kmeansPcpOutport;
     ColoringDataOutport _kmeansColoringOutport;
 
     IntProperty _dbscanMinClusters;
     FloatProperty _dbscanEpsilon;
+    IntProperty _dbscanMinPoints;
 
     IntProperty _kMeansk;
 

@@ -1,5 +1,6 @@
 #include "dbscan.h"
 
+#pragma optimize ("", off)
 namespace dbscan {
 
 int DBSCAN::run()
@@ -85,7 +86,8 @@ vector<int> DBSCAN::calculateCluster(Point point)
     vector<int> clusterIndex;
     for( iter = m_points.begin(); iter != m_points.end(); ++iter)
     {
-        if ( calculateDistance(point, *iter) <= m_epsilon )
+        double d = calculateDistance(point, *iter);
+        if ( d <= m_epsilon )
         {
             clusterIndex.push_back(index);
         }
