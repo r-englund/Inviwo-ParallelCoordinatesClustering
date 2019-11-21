@@ -83,21 +83,19 @@ set(SHADER_FILES
 ivw_group("Shader Files" ${SHADER_FILES})
 
 #--------------------------------------------------------------------
-# Add definition
-ivw_add_definition(__CL_ENABLE_EXCEPTIONS)
-
-#--------------------------------------------------------------------
 # Create module
 ivw_create_module(${SOURCE_FILES} ${HEADER_FILES} ${SHADER_FILES})
+
+target_compile_definitions(inviwo-module-pcclustering PRIVATE __CL_ENABLE_EXCEPTIONS)
 
 #--------------------------------------------------------------------
 # Handle external resources
 if(IVW_USE_GENERATED_RESOURCES)
 #--------------------------------------------------------------------
 # Generate shader resource (if GENERATE_SHADER_RESOURCES is checked)
-ivw_generate_shader_resource(${CMAKE_CURRENT_SOURCE_DIR}/glsl ${SHADER_FILES})
+    ivw_generate_shader_resource(${CMAKE_CURRENT_SOURCE_DIR}/glsl ${SHADER_FILES})
 else()
 #--------------------------------------------------------------------
 # Add shader directory to pack
-ivw_add_to_module_pack(${CMAKE_CURRENT_SOURCE_DIR}/glsl)
+    ivw_add_to_module_pack(${CMAKE_CURRENT_SOURCE_DIR}/glsl)
 endif()

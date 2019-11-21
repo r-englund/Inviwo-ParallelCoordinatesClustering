@@ -69,9 +69,11 @@ RadarPlotRenderer::RadarPlotRenderer()
     addProperty(_invalidate);
     addProperty(_transFunc);
 
-    _transFunc.get().clearPoints();
-    _transFunc.get().addPoint(vec2(0, 1), vec4(0, 0, 0, 1));
-    _transFunc.get().addPoint(vec2(1, 1), vec4(1, 1, 1, 1));
+    auto& tf = _transFunc.get();
+    tf.clear();
+    tf.add(0, vec4(0, 0, 0, 1));
+    tf.add(1, vec4(1, 1, 1, 1));
+    _transFunc.setCurrentStateAsDefault();
 
     _inport.onChange([this]() { invalidateBuffer(); });
 
