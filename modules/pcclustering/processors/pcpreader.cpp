@@ -57,7 +57,7 @@ void PCPReader::load() {
     }
 
 
-    ParallelCoordinatesPlotRawData* data = new ParallelCoordinatesPlotRawData;
+    auto data = std::make_shared<ParallelCoordinatesPlotRawData>();
     LogInfo("Dataset information");
 
     int8_t dimensions;

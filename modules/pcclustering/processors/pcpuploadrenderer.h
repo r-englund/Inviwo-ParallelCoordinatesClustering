@@ -70,9 +70,9 @@ private:
 
     GLuint _dimensionOrderingBuffer;
 
-    GLsizei* _multiDrawCount;
-    GLsizei* _multiDrawIndices;
-    GLsizei* _drawElements;
+    std::vector<GLsizei> _multiDrawCount;
+    std::vector<GLsizei> _multiDrawIndices;
+    std::vector<GLsizei> _drawElements;
 
 };
 

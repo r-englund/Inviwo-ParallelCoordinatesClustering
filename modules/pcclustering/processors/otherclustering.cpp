@@ -76,12 +76,10 @@ PCPOtherClustering::PCPOtherClustering()
 
 PCPOtherClustering::~PCPOtherClustering() {}
 
-#pragma optimize ( "", off)
-
 void PCPOtherClustering::process() {
     std::shared_ptr<const ParallelCoordinatesPlotRawData> inData = _inport.getData();
-    const int nValues = inData->data.size();
-    const int nDimensions = inData->minMax.size();
+    const int nValues = static_cast<int>(inData->data.size());
+    const int nDimensions = static_cast<int>(inData->minMax.size());
     const int nItems = nValues / nDimensions;
 
     _outportData->nValues = nValues;

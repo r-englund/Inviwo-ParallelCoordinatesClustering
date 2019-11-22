@@ -26,8 +26,8 @@ PCPFiltering::PCPFiltering()
     , _coloringOutport("out_color")
     , _coloredBinOutport("out_coloredBin")
     , _coloringDimension("_coloringDimension", "Coloring Dimension", -1, -1, 15)
-    , _parallelismSlider("_parallelismSlider", "Parallelism Slider", 32, 1, 1024)
     , _dimensionMaskString("_dimensionMask", "Dimension Mask")
+    , _parallelismSlider("_parallelismSlider", "Parallelism Slider", 32, 1, 1024)
     , _invalidate("_invalidate", "Invalidate")
     , _countingShader({{ShaderType::Compute, "pcpfiltering_counting.comp" }}, Shader::Build::No)
     , _clusterDetectionShader({{ShaderType::Compute, "clusterdetection.comp" }}, Shader::Build::No)
@@ -257,7 +257,7 @@ void PCPFiltering::clusterDetection(const BinningData* binData) {
 
 void PCPFiltering::filterData(const ParallelCoordinatesPlotData* inData,
                               const BinningData* binData,
-                              ParallelCoordinatesPlotData* outData, int nElements
+                              ParallelCoordinatesPlotData* outData, int 
     )
 {
     _filteringShader.activate();

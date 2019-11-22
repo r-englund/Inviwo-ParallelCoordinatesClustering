@@ -106,9 +106,9 @@ void PCPFileConverter::load() {
 
     LogInfo("Copying Min/Max data");
     std::vector<float> minMaxValues(minMax.size() * 2);
-    for (int i = 0; i < dimensions; ++i) {
-        minMaxValues[i * 2] = minMax[i].first;
-        minMaxValues[i * 2 + 1] = minMax[i].second;
+    for (int j = 0; j < dimensions; ++j) {
+        minMaxValues[j * 2] = minMax[j].first;
+        minMaxValues[j * 2 + 1] = minMax[j].second;
     }
 
     int64_t nValues = data.size();

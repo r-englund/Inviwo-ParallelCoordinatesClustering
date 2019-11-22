@@ -35,8 +35,8 @@ ClusterRenderer::ClusterRenderer()
     : Processor()
     , _inport("data")
     , _outport("outport")
-    , _shader("clusterrenderer.frag")
-    , _transFunc("transferFunction", "Transfer Function")
+    , _transFunc("transferFunction", "Transfer Function") 
+    , _shader("clusterrenderer.frag") 
 {
     addPort(_inport);
     addPort(_outport);

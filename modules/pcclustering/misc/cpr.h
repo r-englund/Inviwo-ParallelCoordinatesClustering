@@ -21,7 +21,8 @@ authors and should not be interpreted as representing official policies, either
 expressed or implied, of the FreeBSD Project.
 */
 
-constexpr int factorial(int n) {
+template<typename T>
+constexpr T factorial(T n) {
     return n > 0 ? n * factorial(n - 1) : 1;
 }
 
@@ -73,7 +74,7 @@ std::vector<std::vector<T>> cPr(
     // Compute the number of permutations according to
     // http://mathworld.wolfram.com/Permutation.html
     // nCr = n! / r!(n-r)!
-    const int nPermutations = factorial(set.size()) / factorial(n) * factorial(set.size() - n);
+    const size_t nPermutations = factorial(set.size()) / factorial(n) * factorial(set.size() - n);
     // Preallocate that amount of memory for efficiency
     result.reserve(nPermutations);
 

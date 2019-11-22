@@ -4,6 +4,8 @@
 
 #include <modules/opengl/texture/textureutils.h>
 
+#include <inviwo/core/util/zip.h>
+
 #include <bitset>
 
 #define PRIM_RESTART (GLsizei(-1))
@@ -33,16 +35,13 @@ PCPUploadRenderer::PCPUploadRenderer()
     , _depthTesting("_depthTesting", "Depth Testing")
     , _dimensionOrderingString("_dimensionOrderingString", "Dimension Ordering")
     , _dimensionMaskString("_dimensionMask", "Dimension Mask")
-    , _enableTextRendering("_enableTextRendering", "Text Rendering")
-    , _alphaFactor("_alphaFactor", "Alpha Factor", 1.f, 1.f, 100000.f)
     , _transFunc("transferFunction", "Transfer Function")
+    , _alphaFactor("_alphaFactor", "Alpha Factor", 1.f, 1.f, 100000.f)
+    , _enableTextRendering("_enableTextRendering", "Text Rendering")
     , _invalidate("invalidate", "Invalidate")
     //, _textBorder("_textBorder", "Text Border", 0.05f, 0.f, 1.f)
     , _shader("pcprenderer_upload.vert", "pcprenderer.frag")
     , _backgroundShader("pcprenderer_background.frag")
-    , _multiDrawCount(nullptr)
-    , _multiDrawIndices(nullptr)
-    , _drawElements(nullptr)
 {
     glGenVertexArrays(1, &_vao);
     glGenBuffers(1, &_vbo);
@@ -140,9 +139,9 @@ void PCPUploadRenderer::invalidateBuffer() {
         return;
 
     std::shared_ptr<const ParallelCoordinatesPlotRawData> data = _inport.getData();
-    int nValues = data->data.size();
-    int nDimensions = data->minMax.size();
-    int nLines = nValues / nDimensions;
+    const size_t nValues = data->data.size();
+    const int nDimensions = static_cast<int>(data->minMax.size());
+    const size_t nLines = nValues / nDimensions;
 
     std::vector<float> values;
     values.reserve(nValues * 2);
@@ -164,23 +163,23 @@ void PCPUploadRenderer::invalidateBuffer() {
     glBindBuffer(GL_ARRAY_BUFFER, 0);
 
 
-    delete _multiDrawCount;
-    delete _multiDrawIndices;
+    _multiDrawCount.clear();
+    _multiDrawIndices.clear();
 
-    _multiDrawCount = new GLsizei[nLines];
-    _multiDrawIndices = new GLsizei[nLines];
+    _multiDrawCount.resize(nLines);
+    _multiDrawIndices.resize(nLines);
 
-    for (int i = 0; i < nLines; ++i) {
-        _multiDrawCount[i] = data->minMax.size();
-        _multiDrawIndices[i] = i * data->minMax.size();
+    for (auto&& [count, indices] : util::zip(_multiDrawCount, _multiDrawIndices)){
+        count = static_cast<int>(data->minMax.size());
+        indices = static_cast<int>(i * data->minMax.size());
     }
 
     
-    delete _drawElements;
-    _drawElements = new GLsizei[data->data.size() + nLines];
+    _drawElements.clear();
+    _drawElements.resize(data->data.size() + nLines);
     int k = 0;
-    for (int i = 0; i < nLines; ++i) {
-        int baseIndex = i * (nDimensions + 1);
+    for (size_t l = 0; l < nLines; ++l) {
+        int baseIndex = l * (nDimensions + 1);
         for (int j = 0; j < nDimensions; ++j, ++k) {
             _drawElements[baseIndex + j] = k;
             std::cout << k << std::endl;
@@ -300,7 +299,7 @@ void PCPUploadRenderer::renderParallelCoordinates() {
     glEnable(GL_PRIMITIVE_RESTART);
     glPrimitiveRestartIndex(PRIM_RESTART);
 
-    glDrawElements(GL_LINE_STRIP, nValues / nDimensions, GL_UNSIGNED_INT, _drawElements);
+    glDrawElements(GL_LINE_STRIP, nValues / nDimensions, GL_UNSIGNED_INT, _drawElements.data());
 
 
     glDisable(GL_PRIMITIVE_RESTART);

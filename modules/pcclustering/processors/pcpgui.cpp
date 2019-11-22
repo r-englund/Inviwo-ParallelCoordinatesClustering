@@ -60,12 +60,12 @@ PCPGui::PCPGui()
         for (int i = 0; i < _nDimensions; ++i) {
             std::string is = std::to_string(i);
 
-            auto it = std::find(tokens.begin(), tokens.end(), is);
+            if (std::find(tokens.begin(), tokens.end(), is) == tokens.end()) {
 
-            if (it == tokens.end())
                 result.push_back('0');
-            else
+            } else {
                 result.push_back('1');
+            }
         }
 
         std::reverse(result.begin(), result.end());

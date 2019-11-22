@@ -4,9 +4,10 @@
 #include <cmath>
 #include "point.h"
 
-Point::Point(int num_dimensions, bool init_zeros)
-  : cluster_(-1),
-    dimensions_(num_dimensions) {
+Point::Point(int num_dimensions, bool init_zeros) 
+    : dimensions_(num_dimensions) 
+    , cluster_(-1)
+     {
   if (init_zeros) {  // default is true.
     for (int idx = 0; idx < dimensions_; ++idx) {
       data_.push_back(0.0);

@@ -39,6 +39,7 @@ private:
     
     BinningDataInport _inport;
     ColoredBinDataInport _colorInport;
+    ImageOutport _outport;
 
     StringProperty _dimensionOrderingString;
     std::vector<int> _dimensionOrdering;
@@ -47,7 +48,6 @@ private:
     std::bitset<32> _dimensionMask;
 
 
-    ImageOutport _outport;
 
     BoolProperty _enableTextRendering;
 
