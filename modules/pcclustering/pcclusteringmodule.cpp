@@ -4,6 +4,7 @@
 
 #include <modules/pcclustering/processors/clusterexport.h>
 #include <modules/pcclustering/processors/clusterrenderer.h>
+#include <modules/pcclustering/processors/dataframetopcprawdata.h>
 #include <modules/pcclustering/processors/densitymapfiltering.h>
 #include <modules/pcclustering/processors/densitymapgenerator.h>
 #include <modules/pcclustering/processors/densitymaprenderer.h>
@@ -27,6 +28,7 @@ PCClusteringModule::PCClusteringModule(InviwoApplication* app)
 
     registerProcessor<ClusterExport>();
     registerProcessor<ClusterRenderer>();
+    registerProcessor<DataFrameToPCPRawData>();
     registerProcessor<DensityMapFiltering>();
     registerProcessor<DensityMapGenerator>();
     registerProcessor<DensityMapRenderer>();

@@ -4,59 +4,56 @@ ivw_module(PCClustering)
 
 #--------------------------------------------------------------------
 # Add header files
-set(HEADER_FILES   
-    ${CMAKE_CURRENT_SOURCE_DIR}/datastructures/pcpdata.h
-    ${CMAKE_CURRENT_SOURCE_DIR}/misc/cpr.h
-    ${CMAKE_CURRENT_SOURCE_DIR}/misc/parallelcoordinates_axis_permutation.h
-    ${CMAKE_CURRENT_SOURCE_DIR}/misc/support.h
-    ${CMAKE_CURRENT_SOURCE_DIR}/processors/clusterexport.h
-    ${CMAKE_CURRENT_SOURCE_DIR}/processors/clusterrenderer.h
-    ${CMAKE_CURRENT_SOURCE_DIR}/processors/densitymapfiltering.h
-    ${CMAKE_CURRENT_SOURCE_DIR}/processors/densitymapgenerator.h
-    ${CMAKE_CURRENT_SOURCE_DIR}/processors/densitymaprenderer.h
-    ${CMAKE_CURRENT_SOURCE_DIR}/processors/otherclustering.h
-    ${CMAKE_CURRENT_SOURCE_DIR}/processors/pcpfileconverter.h
-    ${CMAKE_CURRENT_SOURCE_DIR}/processors/pcpfiltering.h
-    ${CMAKE_CURRENT_SOURCE_DIR}/processors/pcpgui.h
-    ${CMAKE_CURRENT_SOURCE_DIR}/processors/pcpreader.h
-    ${CMAKE_CURRENT_SOURCE_DIR}/processors/pcprenderer.h
-    ${CMAKE_CURRENT_SOURCE_DIR}/processors/pcpupload.h
-    ${CMAKE_CURRENT_SOURCE_DIR}/processors/pcpuploadrenderer.h
-    ${CMAKE_CURRENT_SOURCE_DIR}/processors/radarplotrenderer.h
-    ${CMAKE_CURRENT_SOURCE_DIR}/processors/scatterplotrenderer.h
-
-    # ${CMAKE_CURRENT_SOURCE_DIR}/ext/dbscan/dbscan.h
-    
-    ${CMAKE_CURRENT_SOURCE_DIR}/ext/kmeans/src/kmeans.h
+set(HEADER_FILES
+    datastructures/pcpdata.h
+    ext/kmeans/src/kmeans.h
+    misc/cpr.h
+    misc/parallelcoordinates_axis_permutation.h
+    misc/support.h
+    processors/clusterexport.h
+    processors/clusterrenderer.h
+    processors/dataframetopcprawdata.h
+    processors/densitymapfiltering.h
+    processors/densitymapgenerator.h
+    processors/densitymaprenderer.h
+    processors/otherclustering.h
+    processors/pcpfileconverter.h
+    processors/pcpfiltering.h
+    processors/pcpgui.h
+    processors/pcpreader.h
+    processors/pcprenderer.h
+    processors/pcpupload.h
+    processors/pcpuploadrenderer.h
+    processors/radarplotrenderer.h
+    processors/scatterplotrenderer.h
 )
 ivw_group("Header Files" ${HEADER_FILES})
 
 #--------------------------------------------------------------------
 # Add source files
 set(SOURCE_FILES
-    ${CMAKE_CURRENT_SOURCE_DIR}/datastructures/pcpdata.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/misc/parallelcoordinates_axis_permutation.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/misc/support.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/processors/clusterexport.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/processors/clusterrenderer.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/processors/densitymapfiltering.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/processors/densitymapgenerator.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/processors/densitymaprenderer.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/processors/otherclustering.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/processors/pcpfileconverter.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/processors/pcpfiltering.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/processors/pcpgui.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/processors/pcpreader.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/processors/pcprenderer.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/processors/pcpupload.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/processors/pcpuploadrenderer.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/processors/radarplotrenderer.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/processors/scatterplotrenderer.cpp
-
-    ${CMAKE_CURRENT_SOURCE_DIR}/ext/dbscan/dbscan.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/ext/kmeans/src/kmeans.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/ext/kmeans/src/point.cpp
-
+    datastructures/pcpdata.cpp
+    ext/dbscan/dbscan.cpp
+    ext/kmeans/src/kmeans.cpp
+    ext/kmeans/src/point.cpp
+    misc/parallelcoordinates_axis_permutation.cpp
+    misc/support.cpp
+    processors/clusterexport.cpp
+    processors/clusterrenderer.cpp
+    processors/dataframetopcprawdata.cpp
+    processors/densitymapfiltering.cpp
+    processors/densitymapgenerator.cpp
+    processors/densitymaprenderer.cpp
+    processors/otherclustering.cpp
+    processors/pcpfileconverter.cpp
+    processors/pcpfiltering.cpp
+    processors/pcpgui.cpp
+    processors/pcpreader.cpp
+    processors/pcprenderer.cpp
+    processors/pcpupload.cpp
+    processors/pcpuploadrenderer.cpp
+    processors/radarplotrenderer.cpp
+    processors/scatterplotrenderer.cpp
 )
 ivw_group("Source Files" ${SOURCE_FILES})
 
@@ -87,6 +84,10 @@ ivw_group("Shader Files" ${SHADER_FILES})
 ivw_create_module(${SOURCE_FILES} ${HEADER_FILES} ${SHADER_FILES})
 
 target_compile_definitions(inviwo-module-pcclustering PRIVATE __CL_ENABLE_EXCEPTIONS)
+
+set_property(TARGET inviwo-module-pcclustering PROPERTY CXX_STANDARD 20)
+
+set_target_properties(inviwo-module-pcclustering PROPERTIES DISABLE_PRECOMPILE_HEADERS ON)
 
 #--------------------------------------------------------------------
 # Handle external resources
